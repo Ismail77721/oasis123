@@ -35,8 +35,9 @@
   if(!this.s)return;F.ensure(this.s);
   this.calculateWater();const now=Date.now();
   const connected=i=>this.irrigated(i);
-  const changes=F.updateIrrigation(this.s,connected,now);
-  const jobs=F.tick(this.s,connected,now);
+  const paused=this.updateEditClock?.(now)||false;
+  const changes=!paused&&F.updateIrrigation(this.s,connected,now);
+  const jobs=paused?{changed:false,completed:[]}:F.tick(this.s,connected,now);
   if(changes||jobs.changed){if(jobs.completed.length){this.lastWorkNotice=now;this.notify('🧺 Работа выполнена: '+jobs.completed.map(x=>x.action==='harvest'?'сбор урожая':'посадка').join(', '));}
    if(now-(this.lastPeriodicSave||0)>12000){this.lastPeriodicSave=now;this.save();}}
   oldRender.call(this);
@@ -51,6 +52,7 @@
  M.showMarketSquare=function(){const drawer=get('market-counter');if(drawer)drawer.hidden=true;this.currentStall='square';};
  M.openMarket=function(stall){
   this.closeAllPanels();this.closeCropInfo();get('quests-panel').hidden=true;get('help-panel').hidden=true;
+  get('market-coins').textContent='🪙 '+Math.floor(this.s.coins);
   get('market-screen').hidden=false;this.marketOpen=true;document.body.classList.add('market-active');this.playSound?.('click');this.guideEvent('market');
   if(stall&&stall!=='produce'&&stall!=='square')this.renderMarketTab(stall);
   else this.showMarketSquare();
@@ -80,7 +82,6 @@
   this.closeCropInfo();this.closeAllPanels();this.guideEvent('buildMenu');
   const hint=document.querySelector('[data-build="canal"] small');if(hint)hint.textContent='Провести воду · '+OasisProgression.canalPrice(this.s)+' 🪙';
   get('build-menu').hidden=false;
-  document.querySelector('[data-build="remove"]')?.addEventListener('click',()=>{this.s.tool='remove';this.save();this.render();},{once:true});
  };
  M.hitCell=function(x,y){
   const hits=this.cells||[];let best=null,distance=Infinity;
@@ -116,9 +117,10 @@
  M.clearLongPress=function(){if(this.longPressTimer){clearTimeout(this.longPressTimer);this.longPressTimer=0;}};
  const oldBegin=M.beginMapPointer,oldMove=M.moveMapPointer,oldEnd=M.endMapPointer;
  M.beginMapPointer=function(p){
-  this.clearLongPress();this.longPressHandled=false;this.swipeActive=false;this.swipeTargets=new Set();
+  this.clearLongPress();this.longPressHandled=false;this.swipeActive=false;this.swipeCandidate=null;this.swipeTargets=new Set();
   oldBegin.call(this,p);
-  if(!get('start-menu').hidden||this.marketOpen||!get('crop-info').hidden)return;
+  if(!get('start-menu').hidden||this.marketOpen||!get('crop-info').hidden||document.querySelector('.ui-modal:not([hidden])'))return;
+  if(this.s.tool==='plant'&&this.visibleBuildingAt?.(p.x,p.y))return;
   const cell=this.hitCell(p.x,p.y),t=cell&&this.s.tiles[cell.i];
   this.swipeCandidate=this.s.tool==='plant'&&t?.crop&&OasisTimeSystem.isReady(t)?{i:cell.i,x:p.x,y:p.y,lastX:p.x,lastY:p.y}:null;
   if(cell&&(t?.crop||t?.canal)&&this.s.tool==='plant'){
@@ -200,14 +202,21 @@
   for(const [id,cfg] of Object.entries(F.jobs)){
    const w=this.s.workers[id],box=node('div','worker-card');box.append(node('h4',null,cfg.icon+' '+cfg.name));
    box.append(node('p',null,'Найм '+cfg.cost+' 🪙 · оплата '+cfg.salary+' 🪙 за игровые сутки.'));
-   box.append(node('p',null,w.hired?(w.state==='paused'?'Нет денег на оплату':w.state==='idle'?'Ожидает работу':w.state==='travel'?'Идёт к участку':'Возвращается в хозяйство'):'Пока не нанят'));
+   box.append(node('p',null,w.hired?(w.dayOffUntil>Date.now()?'Сегодня выходной':w.state==='paused'?'Нет денег на оплату':w.state==='idle'?'Ожидает работу':w.state==='travel'?'Идёт к участку':'Возвращается в хозяйство'):'Пока не нанят'));
    if(!w.hired){const b=node('button',null,'Нанять · '+cfg.cost+' 🪙');b.disabled=this.s.coins<cfg.cost;b.addEventListener('click',()=>{const result=F.hire(this.s,id);this.notify(result.ok?cfg.name+' нанят!':result.reason);if(result.ok){this.save();this.render();}this.renderHome();});box.append(b);}
+   if(w.hired){
+    const off=w.dayOffUntil>Date.now();
+    const rest=node('button',null,off?'Вернуть к работе':'Дать выходной');
+    rest.type='button';rest.addEventListener('click',()=>{F.setDayOff(this.s,id,!off);this.save();this.render();this.renderHome();});
+    box.append(rest);
+   }
    target.append(box);
   }
  };
  M.drawWorkerIndicator=function(){
   const marker=this.workerMarker;if(!marker)return;
   if(this.marketOpen||!get('start-menu').hidden){marker.style.display='none';return;}
+  if(this.s.tool!=='plant'){marker.style.display='none';return;}
   const active=Object.entries(this.s.workers||{}).find(([id,w])=>w.hired&&w.state==='travel'&&this.cells.some(c=>c.i===w.target));
   if(!active){marker.style.display='none';return;}
   const [id,w]=active,cell=this.cells.find(c=>c.i===w.target);if(!cell)return;

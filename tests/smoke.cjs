@@ -1,7 +1,7 @@
 'use strict';
 const assert=require('assert'),fs=require('fs'),vm=require('vm'),path=require('path').resolve(__dirname,'..')+'/';
 let store={};const elements={};const groups={};
-function element(id){return elements[id]??=({id,hidden:true,textContent:'',style:{},dataset:{},children:[],classList:{toggle(){}},addEventListener(name,fn){this.handlers??={};(this.handlers[name]??=[]).push(fn)},click(){(this.handlers?.click||[]).forEach(fn=>fn({target:this}))},append(...xs){this.children.push(...xs)},replaceChildren(){this.children=[]},set disabled(v){this._disabled=v},get disabled(){return this._disabled}});}
+function element(id){return elements[id]??=({id,hidden:true,textContent:'',style:{},dataset:{},children:[],classList:{toggle(){},add(){}},addEventListener(name,fn){this.handlers??={};(this.handlers[name]??=[]).push(fn)},click(){(this.handlers?.click||[]).forEach(fn=>fn({target:this}))},append(...xs){this.children.push(...xs)},querySelector(q){return this.children.find(c=>'.'+c.className===q)},setAttribute(){},get valueAsNumber(){return this.value===''?NaN:Number(this.value)},replaceChildren(){this.children=[]},set disabled(v){this._disabled=v},get disabled(){return this._disabled}});}
 for(const [selector,ids] of Object.entries({
  '#toolbar button':['build','inventory','quests','market'],
  '#build-menu-actions button':['canal','buildings','upgrades','cancel'],
@@ -30,7 +30,7 @@ scene.s.coins=300;scene.s.selectedBuilding='sheep';scene.s.tool='building';tap(1
 scene.s.inventory.clover=10;scene.openFarm(136);element('farm-actions').children.at(-1).click();assert(scene.s.tiles[136].productionAt>0);assert.strictEqual(scene.s.inventory.clover,7);
 scene.s.tiles[136].productionAt=Date.now()-1;scene.openFarm(136);element('farm-actions').children.at(-1).click();assert.strictEqual(scene.s.inventory.wool,2);
 scene.openMarket('produce');let product=element('market-items').children.find(x=>x.children?.[0]?.children?.[0]?.textContent?.includes('Шерсть'));
-assert(product);product.children[1].children[0].click();assert.strictEqual(scene.s.inventory.wool,0);
+assert(product);product.children[1].children[2].click();assert.strictEqual(scene.s.inventory.wool,1);
 scene.s.totalSold=1850;scene.s.coins=1000;scene.openMarket('seeds');
 let fig=element('market-items').children.find(x=>x.children?.[0]?.children?.[0]?.textContent?.includes('Инжир'));fig.children[1].children[0].click();scene.closeMarket();
 tap(104);pick('fig');assert.strictEqual(scene.s.tiles[104].crop,'fig');scene.s.tiles[104].plantedAt-=800000;tap(104);assert.strictEqual(scene.s.tiles[104].crop,'fig');

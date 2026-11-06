@@ -23,12 +23,12 @@ for(const id of names.crop){
 }
 for(const id of ['sheep','camel','apiary','mill','loom'])assert(fs.statSync(path.join(root,'assets/art/building-'+id+'.png')).size>3000);
 const html=read('index.html'),load=read('js/scenes/LoadingScene.js'),scene=read('js/scenes/SceneV200.js');
-assert.match(html,/SceneV200\.js\?v=1\.9\.1/);
+assert.match(html,/SceneV200\.js\?v=2\.0\.0/);
 assert.match(load,/sprite-terrain-/);
 assert.match(load,/sprite-icon-/);
 for(const id of ['produce','seeds','orders','tools','sadaka'])assert.match(html,new RegExp('data-stall="'+id+'"[^>]*><img src="assets/sprites/'));
 assert(!html.includes('assets/art/ref-market.png'), 'Old screenshot extract should not be on market');
-assert.match(scene,/M\.drawCanal=function/);
+assert.match(read('js/scenes/SceneV210.js'),/M\.drawCanal = function/);
 assert.match(scene,/M\.drawFence=function/);
 assert.match(scene,/M\.renderArtwork=function/);
 assert.match(scene,/M\.drawCultivatedSoil=function/);
@@ -56,9 +56,7 @@ const sc=new MainScene();sc.add={image};sc.textures={exists:()=>true,get:()=>({g
 sc.art=[];sc.s={tiles:Array.from({length:256},()=>({})),seedBank:{},inventory:{}};sc.connected=new Set([120]);
 sc.s.tiles[80]={crop:'dates'};sc.renderArtwork(80,sc.s.tiles[80],130,170,40,20);
 assert(calls.includes('art-dates-ripe'),'palm art never rendered');
-assert(sc.art[80].displayWidth>70,'trees should overhang their square tile');
-sc.drawCanal({},7,8,120,135,160,40,20);
-assert(calls.some(k=>k.startsWith('sprite-terrain-canal')),'no canal sprite drawn');
+assert(sc.art[80].displayWidth>40&&sc.art[80].displayWidth<70,'trees should overhang a square tile with reduced width');
 sc.drawFence({},230,30,40,20,16);
 assert(calls.includes('sprite-terrain-fence-straight'),'fence drawn as old geometry instead of sprites');
 assert(calls.includes('sprite-terrain-gate'),'actual gate texture missing');

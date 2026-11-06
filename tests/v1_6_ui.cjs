@@ -24,8 +24,8 @@ scene.g=new Proxy({}, {get(){return function(){}}});scene.overlay=scene.g;scene.
 scene.openStorage();assert.equal(el('storage-items').children.length,3);assert.deepEqual(el('storage-items').children.map(g=>g.children[0].textContent),['🌱 Семена и саженцы','🧺 Сырьё','📦 Готовая продукция']);
 // HUD replaces old game title with level + resources and no visible barakat.
 scene.render();assert(el('family-hud').textContent.includes('Каналы'));assert(!el('family-hud').textContent.includes('Баракат'));
-// Interact with 4x4 house on the map; show needs, upgrades and land.
-const ids=C.OasisFamilyLand.footprint(s),c=scene.cells.find(v=>v.i===ids[6]);assert(c);
+// Interact with the house on the map; show needs, upgrades and land.
+const ids=C.OasisFamilyLand.footprint(s),c=scene.cells.find(v=>v.i===ids.at(-1));assert(c);
 scene.onMapTap({x:c.x,y:c.y});assert.equal(el('home-panel').hidden,false,'tap house must open home');
 assert(el('home-family').children.length>0);assert(el('home-land').children.length>0);assert(el('home-upgrades').children.length>0);
 const upgrades=el('home-upgrades').children[0],land=el('home-land').children[0];

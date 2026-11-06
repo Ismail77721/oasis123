@@ -39,7 +39,7 @@
   });
   return changed;
  }
- function canUseTile(s,i,connected){const t=s.tiles[i];return !!t&&i!==C.wellIndex&&!window.OasisFamilyLand?.isHome?.(s,i)&&!t.building&&!t.canal&&!t.crop&&connected(i);}
+ function canUseTile(s,i,connected){const t=s.tiles[i];return !!t&&i!==C.wellIndex&&!window.OasisFamilyLand?.isHome?.(s,i)&&window.OasisMapLayout?.buildingAt(s,i)==null&&!t.building&&!t.canal&&!t.crop&&connected(i);}
  function uproot(s,i){
   const t=s.tiles[i];if(!t||!t.crop)return{ok:false,reason:'Здесь нет растения'};
   const id=t.crop; s.seedBank[id]=(s.seedBank[id]||0)+1;
@@ -58,15 +58,24 @@
   s.coins=round(s.coins-cfg.cost);Object.assign(w,{hired:true,state:'idle',target:-1,paidAt:now,startedAt:now});
   return{ok:true,cost:cfg.cost};
  }
+ function setDayOff(s,id,off,now=Date.now()){
+  const w=s.workers?.[id];if(!w?.hired)return;
+  w.dayOffUntil=off?now+dayMS():0;
+  w.state='idle';w.target=-1;w.from=-1;w.paidAt=now;
+ }
  function chooseTask(s,id,connected,now){
-  const ready=(t)=>!!(t?.crop&&connected(s.tiles.indexOf(t))&&window.OasisTimeSystem.isReady(t,now));
-  if(id==='collector'||id==='gardener'){
-   for(let i=0;i<s.tiles.length;i++)if(ready(s.tiles[i]))return{index:i,action:'harvest'};
+  const reserved=new Set(Object.values(s.workers).filter(w=>w.state==='travel').map(w=>w.target));
+  const collector=s.workers.collector;
+  const collectorAvailable=collector.hired&&collector.state!=='paused'&&!(collector.dayOffUntil>now);
+  if(id==='collector'||!collectorAvailable){
+   for(let i=0;i<s.tiles.length;i++){
+    if(!reserved.has(i)&&connected(i)&&window.OasisTimeSystem.isReady(s.tiles[i],now))return{index:i,action:'harvest'};
+   }
   }
   if(id==='gardener'){
    const seeds=Object.keys(C.crops).filter(k=>(s.seedBank[k]||0)>0&&C.crops[k].unlock<=window.OasisProgression.level(s));
    const seed=seeds.includes(s.selectedCrop)?s.selectedCrop:seeds.includes('clover')?'clover':seeds[0];
-   if(seed)for(let i=0;i<s.tiles.length;i++)if(canUseTile(s,i,connected))return{index:i,action:'plant',seed};
+   if(seed)for(let i=0;i<s.tiles.length;i++)if(!reserved.has(i)&&canUseTile(s,i,connected))return{index:i,action:'plant',seed};
   }
   return null;
  }
@@ -74,6 +83,8 @@
   ensure(s);let changed=false,completed=[];
   for(const [id,cfg] of Object.entries(jobs)){
    const w=s.workers[id];if(!w.hired)continue;
+   if(w.dayOffUntil>now)continue;
+   if(w.dayOffUntil){w.paidAt=w.dayOffUntil;w.dayOffUntil=0;changed=true;}
    const since=now-(Number(w.paidAt)||now);
    if(since>=dayMS()){
     const periods=Math.min(30,Math.floor(since/dayMS()));const due=cfg.salary*periods;
@@ -110,5 +121,5 @@
   s.coins=round(s.coins-st.amount);s.zakat.paidAt=now;s.zakat.startAt=s.coins>=ZAKAT_NISAB?now:0;s.zakat.dueAt=0;s.zakat.dueAmount=0;
   return{ok:true,amount:st.amount};
  }
- window.OasisFarmSystems={ensure,updateIrrigation,uproot,dismantle,hire,tick,zakatStatus,payZakat,notes,jobs,nisab:ZAKAT_NISAB,dayMS};
+ window.OasisFarmSystems={ensure,updateIrrigation,uproot,dismantle,hire,setDayOff,tick,zakatStatus,payZakat,notes,jobs,nisab:ZAKAT_NISAB,dayMS};
 })();

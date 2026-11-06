@@ -9,7 +9,9 @@ for(const file of ['js/config.js','js/core/ProgressionSystem.js','js/core/GameSt
 const L=context.OasisFamilyLand,G=context.OasisGameState,E=context.OasisEconomy,C=context.OASIS_CONFIG,B=context.OASIS_BUILDINGS,S=context.OasisSadaka;
 let s=G.createNew();
 assert.equal(C.worldSize,16);assert.equal(C.wellIndex,119);assert.equal(s.tiles.length,256);
-assert.equal(C.dayMinutes,60);assert.equal(C.nightMinutes,60);assert.equal(s.house.level,1);assert.equal(L.footprint(s).length,16);
+assert.equal(C.dayMinutes,60);assert.equal(C.nightMinutes,60);assert.equal(s.house.level,1);assert.equal(L.footprint(s).length,4);
+const legacy=G.normalize({...s,house:{row:s.house.row,col:s.house.col,level:s.house.level}});
+assert.equal(L.footprint(legacy).length,16);
 assert(!L.footprint(s).includes(C.wellIndex));
 assert.equal(E.plant(s,L.footprint(s)[0],'clover').ok,false,'house must reject planting');
 assert(B.mill&&B.loom&&B.mill.product==='flour'&&B.loom.product==='cloth');

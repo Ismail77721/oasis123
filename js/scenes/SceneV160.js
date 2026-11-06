@@ -14,7 +14,7 @@ function marketRow(ctx,title,desc,buttons){return ctx.marketRow(title,desc,butto
 function currentStock(s,item){return item.category==='seed'?s.seedBank[item.id]||0:s.inventory[item.id]||0;}
 function itemLabel(item){return (item.category==='seed'?'🌱 ':L.icons(item.id)+' ')+(item.category==='seed'?'Семена '+L.labels(item.id):L.labels(item.id));}
 MP.create=function(){oldCreate.call(this);L.ensure(this.s);
- const stop=el('stop-build');if(stop)stop.addEventListener('click',()=>{this.s.tool='plant';this.save();this.render();this.notify('Режим строительства завершён');});
+ const stop=el('stop-build');if(stop)stop.addEventListener('click',()=>{this.updateEditClock?.(Date.now());this.s.tool='plant';this.resetEditDraft?.();this.save();this.render();this.notify('Режим строительства завершён');});
  el('home-close')?.addEventListener('click',()=>this.closeHome());
  el('home-panel')?.addEventListener('click',e=>{if(e.target===el('home-panel'))this.closeHome();});
  el('reply-modal-close')?.addEventListener('click',()=>{el('reply-modal').hidden=true;});
@@ -31,8 +31,8 @@ MP.showBlessing=function(message){text('reply-modal-text',message||'Да воз�
 MP.productName=function(id){if(L.labels(id)!==id)return L.icons(id)+' '+L.labels(id);return oldName.call(this,id);};
 MP.openHome=function(){if(!this.s)return;this.closeAllPanels();this.renderHome();el('home-panel').hidden=false;this.playSound?.('click');};
 MP.renderHome=function(){L.ensure(this.s);
- const s=this.s,f=s.family,level=s.house.level;
- text('home-intro','Семейный дом · уровень '+level+'/5 · уютный дворик площадью 4×4 участка');
+ const s=this.s,f=s.family,level=s.house.level,side=L.houseSide(s.house);
+ text('home-intro','Семейный дом · уровень '+level+'/5 · дворик '+side+'×'+side+' клетки');
  const panel=el('home-family');panel.replaceChildren();
  const section=node('section','home-section');section.append(node('h3',null,'🍲 Потребности семьи'));
  if(f.met){section.append(node('p',null,'✅ Семья обеспечена. Следующая потребность через '+formatTime((f.nextDueAt-Date.now())/1000)+'.'));}
@@ -112,11 +112,15 @@ MP.drawHouseImage=function(){
  if(cells.some(c=>!c))return;
  const centerX=cells.reduce((a,c)=>a+c.x,0)/cells.length,centerY=cells.reduce((a,c)=>a+c.y,0)/cells.length;
  const tw=cells[0].w,th=cells[0].h,level=this.s.house.level||1;
- const w=tw*4.05,h=tw*3.15,key='art-home-'+level;
+ const side=L.houseSide?.(this.s.house)||4,w=tw*side*.94,key='art-home-'+level;
+ const source=this.textures?.exists?.(key)?this.textures.get?.(key)?.getSourceImage?.():null;
+ const h=w*(source?.width?source.height/source.width:.8);
+ const baseline=centerY+th*(side/2-.15);
  if(this.textures?.exists?.(key)&&this.add?.image){
-  if(!this.homeSprite){this.homeSprite=this.add.image(centerX,centerY,key).setOrigin(.5,.82);}
+  if(!this.homeSprite){this.homeSprite=this.add.image(centerX,centerY,key).setOrigin(.5,.91);}
   if(this.homeSprite.texture.key!==key)this.homeSprite.setTexture(key);
-  this.homeSprite.setDisplaySize(w,h).setPosition(centerX,centerY+th*.8).setDepth(100+Math.round(centerY+th*.75));
+  this.homeSprite.setFlipX?.(Boolean(this.s.house.flipped));
+  this.homeSprite.setDisplaySize(w,h).setPosition(centerX,baseline).setDepth(110+Math.round(baseline));
   if(OasisTimeSystem.getPhase()==='night')this.homeSprite.setTint(0xb2b6c8);else this.homeSprite.clearTint();
  }else{
   const g=this.g;g.fillStyle(0xb87e4e);g.fillRect(centerX-tw*.6,centerY-th*1.3,tw*1.2,th*1.2);

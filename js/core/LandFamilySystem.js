@@ -14,16 +14,17 @@
  const validSide=n=>SIDES.includes(n)?n:16;
  function setWorld(side){C.worldSize=validSide(side);const offset=(C.worldSize-16)/2;C.wellIndex=(7+offset)*C.worldSize+(7+offset);}
  const oldNew=G.createNew,oldNormalize=G.normalize;
- function footprint(s,row=s.house?.row,col=s.house?.col){const n=s.worldSize||C.worldSize,ids=[];for(let r=0;r<4;r++)for(let c=0;c<4;c++)ids.push((row+r)*n+col+c);return ids;}
- function occupied(s,row,col){const n=s.worldSize||C.worldSize;if(row<0||col<0||row+4>n||col+4>n)return true;return footprint(s,row,col).some(i=>i===C.wellIndex||s.tiles[i]?.crop||s.tiles[i]?.canal||s.tiles[i]?.building);}
+ const houseSide=house=>house ? (house.size===2 ? 2 : 4) : 2;
+ function footprint(s,row=s.house?.row,col=s.house?.col){const n=s.worldSize||C.worldSize,ids=[],side=houseSide(s.house);for(let r=0;r<side;r++)for(let c=0;c<side;c++)ids.push((row+r)*n+col+c);return ids;}
+ function occupied(s,row,col){const n=s.worldSize||C.worldSize;if(row<0||col<0||row+houseSide(s.house)>n||col+houseSide(s.house)>n)return true;return footprint(s,row,col).some(i=>i===C.wellIndex||s.tiles[i]?.crop||s.tiles[i]?.canal||s.tiles[i]?.building);}
  function placeHouse(s){
   if(s.house&&Number.isInteger(s.house.row)&&Number.isInteger(s.house.col)&&!occupied(s,s.house.row,s.house.col))return;
   const offset=(s.worldSize-16)/2;
   const candidates=[[11+offset,1+offset],[11+offset,2+offset],[10+offset,1+offset],[1+offset,11+offset]];
   for(let row=1;row<=s.worldSize-5;row++)for(let col=1;col<=s.worldSize-5;col++)candidates.push([row,col]);
   const where=candidates.find(([r,c])=>!occupied(s,r,c));
-  if(where)s.house={row:where[0],col:where[1],level:Math.min(HOUSE_MAX,Math.max(1,s.house?.level||s.houseLevel||1))};
-  else s.house={row:Math.max(0,11+offset),col:Math.max(0,1+offset),level:1};
+  if(where)s.house={size:houseSide(s.house),row:where[0],col:where[1],level:Math.min(HOUSE_MAX,Math.max(1,s.house?.level||s.houseLevel||1))};
+  else s.house={size:houseSide(s.house),row:Math.max(0,11+offset),col:Math.max(0,1+offset),level:1};
  }
  function isHome(s,index){if(!s?.house)return false;return footprint(s).includes(index);}
  function foodNeeds(s){
@@ -51,6 +52,10 @@
  function ensure(s,now=Date.now()){
   if(!s)return s;
   s.worldSize=C.worldSize;
+  const well=s.wellPosition;
+  if(well&&Number.isInteger(well.row)&&Number.isInteger(well.col)&&well.row>=0&&well.col>=0&&well.row<s.worldSize&&well.col<s.worldSize){
+   C.wellIndex=well.row*s.worldSize+well.col;
+  }
   if(!s.inventory)s.inventory={};
   for(const b of Object.values(B))if(!Number.isFinite(s.inventory[b.product]))s.inventory[b.product]=0;
   if(!s.seedBank)s.seedBank={};
@@ -62,6 +67,11 @@
  G.createNew=function(){setWorld(16);return ensure(oldNew());};
  G.normalize=function(s){setWorld(validSide(s?.worldSize));const fresh=oldNormalize(s);
   if(s?.house && s.worldSize && fresh.worldSize!==s.worldSize){const shift=(fresh.worldSize-s.worldSize)/2;fresh.house={...s.house,row:s.house.row+shift,col:s.house.col+shift};}
+  const n=fresh.worldSize;
+  if(s?.wellPosition&&s.worldSize&&n!==s.worldSize){
+   const shift=(n-s.worldSize)/2;
+   fresh.wellPosition={row:s.wellPosition.row+shift,col:s.wellPosition.col+shift};
+  }
   return ensure(fresh);
  };
  function upgradeHome(s){ensure(s);const lv=s.house.level;if(lv>=HOUSE_MAX)return{ok:false,reason:'Дом полностью улучшен'};
@@ -91,10 +101,14 @@
   for(let r=0;r<oldN;r++)for(let c=0;c<oldN;c++)cells[(r+2)*newN+c+2]=s.tiles[r*oldN+c];
   s.tiles=cells;s.worldSize=newN;s.coins=round(s.coins-price);
   if(s.house){s.house.row+=2;s.house.col+=2;}
-  setWorld(newN);return{ok:true,price,newSize:newN};
+  if(s.wellPosition){s.wellPosition.row+=2;s.wellPosition.col+=2;}
+  for(const w of Object.values(s.workers||{})){
+   for(const key of ['target','from'])if(w[key]>=0)w[key]=(Math.floor(w[key]/oldN)+2)*newN+w[key]%oldN+2;
+  }
+  setWorld(newN);ensure(s);return{ok:true,price,newSize:newN};
  }
  const oldPlant=E.plant;
- E.plant=function(s,index,id,now){if(isHome(s,index))return{ok:false,reason:'Участок занят домом семьи'};return oldPlant(s,index,id,now);};
+ E.plant=function(s,index,id,now){if(isHome(s,index))return{ok:false,reason:'Участок занят домом семьи'};if(window.OasisMapLayout?.buildingAt(s,index)!=null)return{ok:false,reason:'Участок занят постройкой'};return oldPlant(s,index,id,now);};
  // Make orders with 1-4 different products; never duplicate slot contents and include seeds later.
  function available(s){const lv=window.OasisProgression.level(s),items=[];
   for(const [id,c] of Object.entries(C.crops))if(c.unlock<=lv){items.push({id,category:'raw',price:c.sellPrice});if(lv>=4)items.push({id,category:'seed',price:c.seedCost});}
@@ -142,5 +156,5 @@
  };
  const labels=id=>PRODUCT_NAMES[id]||C.crops[id]?.title||id;
  const icons=id=>PRODUCT_ICONS[id]||C.crops[id]?.icon||'📦';
- window.OasisFamilyLand={SIDES,ensure,placeHouse,isHome,footprint,upgradeHome,feed,buyFood,expansionPrice,expand,labels,icons,HOUSE_MAX,ensureFamily};
+ window.OasisFamilyLand={SIDES,ensure,placeHouse,isHome,footprint,upgradeHome,feed,buyFood,expansionPrice,expand,labels,icons,HOUSE_MAX,ensureFamily,houseSide};
 })();

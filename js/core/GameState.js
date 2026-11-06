@@ -44,7 +44,7 @@
   }
   x.tiles=cells.map(t=>{if(t.crop&&!OASIS_CONFIG.crops[t.crop])t.crop=null;if(t.building&&!OASIS_BUILDINGS[t.building])t.building=null;return t;});
   if(!OASIS_CONFIG.crops[x.selectedCrop])x.selectedCrop='watermelon';
-  if(!['plant','canal','building','remove'].includes(x.tool))x.tool='plant';
+  x.tool='plant';
   return x;
  }
  window.OasisGameState={createNew:fresh,normalize,tile};

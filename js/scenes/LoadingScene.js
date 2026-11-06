@@ -5,7 +5,8 @@ class LoadingScene extends Phaser.Scene {
   for(const id of crops)for(const stage of ['grow','ripe'])this.load.image('art-'+id+'-'+stage,'assets/art/'+id+'-'+stage+'.png');
   this.load.image('art-building-sheep','assets/art/building-sheep.png');
   this.load.image('art-building-camel','assets/art/building-camel.png');
-  for(const id of ['apiary','oilpress','olivepress','mill','loom'])this.load.image('art-building-'+id,'assets/art/building-'+id+'.png');
+  for(const id of ['apiary','mill','loom'])this.load.image('art-building-'+id,'assets/art/building-'+id+'.png');
+  for(const id of ['oilpress','olivepress'])this.load.image('art-building-'+id,'assets/art/'+id+'-v2.webp?v=2.0.0');
   for(let n=1;n<=5;n++)this.load.image('art-home-'+n,'assets/art/home-'+n+'.png');
   this.load.image('art-well','assets/art/well.png');
   this.load.image('art-ground','assets/art/ground-desert.png');

@@ -1,6 +1,6 @@
 class MainScene extends Phaser.Scene {
- constructor(){super('MainScene');this.cells=[];this.message='';this.lastMessage=0;this.mapZoom=1.65;this.panX=0;this.panY=0;this.art=[];this.wasGesture=false;this.dragPointer=null;this.pinchStart=null;}
- create(){this.s=OasisSaveSystem.load();OasisEconomy.ensureOrders(this.s);this.g=this.add.graphics();this.overlay=this.add.graphics().setDepth(10000);this.input.on('pointerdown',p=>this.beginMapPointer(p));this.input.on('pointermove',p=>this.moveMapPointer(p));this.input.on('pointerup',p=>this.endMapPointer(p));this.input.on('pointerupoutside',p=>this.endMapPointer(p));this.scale.on('resize',()=>this.render());this.audio=window.OasisAudio||null;if(this.audio)this.audio.attach();this.bindToolbar();this.bindMarket();this.bindExtra();this.bindBuildings();this.setupHelp();this.setupQuests();this.setupMapControls();this.setupMenu();this.setupLiveGuide();OasisDailyQuests.ensure(this.s);this.time.addEvent({delay:1000,loop:true,callback:()=>this.render()});this.notify('Добро пожаловать в ОАЗИС');this.render();this.openMainMenu();}
+ constructor(){super('MainScene');this.cells=[];this.message='';this.lastMessage=0;this.mapZoom=1;this.panX=0;this.panY=0;this.art=[];this.wasGesture=false;this.dragPointer=null;this.pinchStart=null;}
+ create(){this.s=OasisSaveSystem.load();OasisEconomy.ensureOrders(this.s);this.g=this.add.graphics();this.overlay=this.add.graphics().setDepth(10000);this.input.on('pointerdown',p=>this.beginMapPointer(p));this.input.on('pointermove',p=>this.moveMapPointer(p));this.input.on('pointerup',p=>this.endMapPointer(p));this.input.on('pointerupoutside',()=>{this.clearLongPress?.();this.dragPointer=null;this.pinchStart=null;this.swipeCandidate=null;if(this.swipeActive)this.save();this.swipeActive=false;});this.scale.on('resize',()=>this.render());this.audio=window.OasisAudio||null;if(this.audio)this.audio.attach();this.bindToolbar();this.bindMarket();this.bindExtra();this.bindBuildings();this.setupHelp();this.setupQuests();this.setupMapControls();this.setupMenu();this.setupLiveGuide();OasisDailyQuests.ensure(this.s);this.time.addEvent({delay:1000,loop:true,callback:()=>{if(!document.hidden)this.render();}});this.notify('Добро пожаловать в ОАЗИС');this.render();this.openMainMenu();}
  setupMenu(){
   this.menuMode='continue';
   const menu=document.getElementById('start-menu'),profile=document.getElementById('profile-screen'),tutorial=document.getElementById('tutorial-screen');
@@ -143,8 +143,10 @@ class MainScene extends Phaser.Scene {
   }));
   document.getElementById('build-menu-close').addEventListener('click',()=>this.closePanel('build-menu'));
   document.querySelectorAll('#build-menu-actions button').forEach(b=>b.addEventListener('click',()=>{
-   this.closePanel('build-menu');const a=b.dataset.build;
-   if(a==='canal'){this.s.tool='canal';this.notify('💧 Коснись земли, чтобы проложить канал. Стройка активна до выхода.');this.guideEvent('canalMode');}
+   this.closePanel('build-menu');this.resetEditDraft?.();const a=b.dataset.build;
+   if(a==='canal'){this.s.tool='canal';this.notify('Выбери начало и конец канала. Для одной клетки выбери начало и подтверди');this.guideEvent('canalMode');}
+   else if(a==='move'){this.s.tool='move';this.notify('Выбери объект на карте, затем новое место');}
+   else if(a==='remove'){this.s.tool='remove';this.notify('Выбери растение или канал для расчистки');}
    else if(a==='buildings')this.openBuildings();
    else if(a==='upgrades')this.openUpgrades();
    else{this.s.tool='plant';this.notify('🌱 Коснись пустого участка для посадки');}
@@ -228,12 +230,14 @@ class MainScene extends Phaser.Scene {
  setupMapControls(){
   for(const button of document.querySelectorAll('#map-controls button'))button.addEventListener('click',()=>{
    const mode=button.dataset.map;
-   if(mode==='reset'){this.mapZoom=1.65;this.panX=0;this.panY=0;this.notify('Карта показана целиком');}
+   this.manualMapZoom=true;
+   if(mode==='reset'){this.mapZoom=1;this.panX=0;this.panY=0;this.notify('Карта показана целиком');}
    else this.changeZoom(mode==='in'?1.25:1/1.25);
    this.render();
   });
  }
  changeZoom(factor){
+  this.manualMapZoom=true;
   const old=this.mapZoom||1;
   this.mapZoom=Math.min(3.5,Math.max(1,old*factor));
   if(this.mapZoom<=1){this.panX=0;this.panY=0;}
@@ -241,9 +245,9 @@ class MainScene extends Phaser.Scene {
  }
  clampPan(){
   const w=this.scale.width||390,h=this.scale.height||800;
-  const n=OASIS_CONFIG.worldSize;const tw=Math.max(12,Math.min((w-20)/n,Math.max(100,h-245)/(n*.52)))*(this.mapZoom||1);
+  const n=OASIS_CONFIG.worldSize,{height,tw}=this.mapGeometry(w,h);
   const maxX=Math.max(12,(tw*n-w)/2+tw*.5);
-  const maxY=Math.max(12,(tw*n*.52-Math.max(120,h-245))/2+tw);
+  const maxY=Math.max(12,(tw*n*.52-height)/2+tw);
   this.panX=Math.max(-maxX,Math.min(maxX,this.panX||0));
   this.panY=Math.max(-maxY,Math.min(maxY,this.panY||0));
  }
@@ -259,6 +263,7 @@ class MainScene extends Phaser.Scene {
   const a=this.input.pointer1,b=this.input.pointer2;
   if(a&&b&&a.isDown&&b.isDown){
    if(!this.pinchStart)this.pinchStart={dist:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),zoom:this.mapZoom};
+   this.manualMapZoom=true;
    this.mapZoom=Math.min(3.5,Math.max(1,this.pinchStart.zoom*Math.hypot(a.x-b.x,a.y-b.y)/Math.max(1,this.pinchStart.dist)));
    this.wasGesture=true;this.dragPointer=null;this.clampPan();this.render();return;
   }
@@ -340,13 +345,28 @@ class MainScene extends Phaser.Scene {
    for(const [id,c] of [...Object.entries(OASIS_CONFIG.crops),...Object.entries(OASIS_BUILDINGS)]){
     const productId=c.product||id,count=this.s.inventory[productId]||0,price=c.sellPrice||c.price;
     const name=c.product?this.productName(c.product):c.icon+' '+c.title;
-    rows.append(this.marketRow(name,'В амбаре: '+count+' · цена '+price+' 🪙/шт',[
-     {text:'Продать всё',disabled:count<1,onClick:()=>{
-      const result=OasisEconomy.sell(this.s,productId);
-      if(!result.ok){this.marketNotice(result.reason);return;}
-      this.save();this.playSound('coin');this.notify('Продано за '+result.net+' 🪙');this.render();this.renderQuests();this.renderMarketTab(stall);this.marketNotice('Получено '+result.net+' монет');
-     }}
-    ]));
+    const row=this.marketRow(name,'В амбаре: '+count+' · цена '+price+' 🪙/шт',[]);
+    const actions=row.querySelector('.item-actions');
+    const input=document.createElement('input'),sell=document.createElement('button'),all=document.createElement('button');
+    input.type='number';input.min='1';input.step='1';input.max=String(count);input.inputMode='numeric';
+    input.value=count?'1':'';input.disabled=count<1;input.setAttribute('aria-label','Количество для продажи — '+name);
+    sell.type=all.type='button';all.textContent='Всё';all.disabled=count<1;
+    const refresh=()=>{
+     const qty=input.valueAsNumber,valid=Number.isInteger(qty)&&qty>=1&&qty<=count;
+     sell.disabled=!valid;sell.textContent=valid?'Продать · '+qty*price+' 🪙':'Продать';
+    };
+    input.addEventListener('input',refresh);all.addEventListener('click',()=>{input.value=String(count);refresh();});
+    const commit=()=>{
+     if(sell.disabled)return;
+     const result=OasisEconomy.sell(this.s,productId,input.valueAsNumber);
+     if(!result.ok){this.marketNotice(result.reason);return;}
+     const counter=document.getElementById('market-counter'),scroll=counter.scrollTop;
+     this.save();this.playSound('coin');this.render();this.renderQuests();this.renderMarketTab(stall);
+     counter.scrollTop=scroll;this.marketNotice('Продано '+result.quantity+' шт. · получено '+result.net+' монет');
+    };
+    sell.addEventListener('click',commit);
+    input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit();}});
+    actions.append(input,all,sell);actions.classList.add('quantity-actions');rows.append(row);refresh();
    }
   }else if(stall==='seeds'){
    for(const [id,c] of Object.entries(OASIS_CONFIG.crops)){
@@ -454,7 +474,7 @@ class MainScene extends Phaser.Scene {
  }
 
  bindBuildings(){for(const id of ['buildings','farm']){document.getElementById(id+'-close').addEventListener('click',()=>this.closePanel(id));document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)this.closePanel(id);});}}
- openBuildings(){const target=document.getElementById('building-items');target.replaceChildren();for(const [id,c] of Object.entries(OASIS_BUILDINGS)){const row=document.createElement('div');row.className='market-row';const label=document.createElement('span');label.textContent=c.title+' · '+c.cost+' 🪙 · '+c.feedAmount+' '+(OASIS_CONFIG.crops[c.feed]?.title||this.productName(c.feed))+' за цикл';const b=document.createElement('button');b.textContent=(c.unlock||1)>this.getLevel()?'Ур. '+c.unlock:'Выбрать';b.disabled=(c.unlock||1)>this.getLevel();b.addEventListener('click',()=>{this.s.tool='building';this.s.selectedBuilding=id;this.closePanel('buildings');this.notify('Нажми свободную клетку для постройки');this.render();});row.append(label,b);target.append(row);}document.getElementById('buildings').hidden=false;}
+ openBuildings(){const target=document.getElementById('building-items');target.replaceChildren();for(const [id,c] of Object.entries(OASIS_BUILDINGS)){const row=document.createElement('div');row.className='market-row';const label=document.createElement('span');label.textContent=c.title+(window.OasisMapLayout?' · '+OasisMapLayout.buildingSize(id).slice().reverse().join('×')+' клетки':'')+' · '+c.cost+' 🪙 · '+c.feedAmount+' '+(OASIS_CONFIG.crops[c.feed]?.title||this.productName(c.feed))+' за цикл';const b=document.createElement('button');b.textContent=(c.unlock||1)>this.getLevel()?'Ур. '+c.unlock:'Выбрать';b.disabled=(c.unlock||1)>this.getLevel();b.addEventListener('click',()=>{this.resetEditDraft?.();this.s.tool='building';this.s.selectedBuilding=id;this.closePanel('buildings');this.notify('Выбери свободный участок и подтверди постройку');this.render();});row.append(label,b);target.append(row);}document.getElementById('buildings').hidden=false;}
  openFarm(i){const t=this.s.tiles[i],cfg=OASIS_BUILDINGS[t.building];if(!cfg)return;const ready=t.productionAt&&Date.now()>=t.productionAt,working=t.productionAt&&Date.now()<t.productionAt;document.getElementById('farm-title').textContent=cfg.title;document.getElementById('farm-status').textContent=ready?'Продукция готова!':working?'До готовности '+Math.ceil((t.productionAt-Date.now())/1000)+' сек.':'Нужно для производства: '+cfg.feedAmount+' '+(OASIS_CONFIG.crops[cfg.feed]?.title||cfg.feed)+(cfg.water?' и '+cfg.water+' воды':'');const target=document.getElementById('farm-actions');target.replaceChildren();const b=document.createElement('button');b.style.cssText='background:#33805a;color:white;border:0;padding:13px;border-radius:10px;font-weight:bold';b.textContent=ready?'Собрать продукцию':working?'Производство идёт':(['sheep','camel'].includes(t.building)?'Накормить и запустить':'Загрузить сырьё и запустить');b.disabled=!!working;b.addEventListener('click',()=>{if(ready){this.s.inventory[cfg.product]=(this.s.inventory[cfg.product]||0)+cfg.amount+(cfg.product==='wool'?OasisProgression.woolBonus(this.s):cfg.product==='camelMilk'?OasisProgression.milkBonus(this.s):0);t.productionAt=0;this.notify('Продукция добавлена в амбар!');this.playSound('collect');}else if(!working){if((this.s.inventory[cfg.feed]||0)<cfg.feedAmount||this.s.water<cfg.water){this.notify('Не хватает корма или воды');return;}this.s.inventory[cfg.feed]-=cfg.feedAmount;this.s.water-=cfg.water;t.productionAt=Date.now()+cfg.duration*1000;this.notify('Производство началось');this.playSound('plant');}this.save();this.render();this.openFarm(i);});target.append(b);document.getElementById('farm').hidden=false;}
 
 
@@ -537,6 +557,13 @@ class MainScene extends Phaser.Scene {
   }
   if(t.productionAt){g.fillStyle(Date.now()>=t.productionAt?0xffd36c:0x4eb2c8);g.fillCircle(x+u*.27,y-tileH*.8,Math.max(3,u*.085));}
  }
+ mapGeometry(w,h){
+  const landscape=w>h&&h<=560;
+  const top=landscape?58:94,bottom=landscape?62:118;
+  const height=Math.max(70,h-top-bottom),n=OASIS_CONFIG.worldSize;
+  const tw=Math.max(4,Math.min((w-26)/(n+1),(height)/(n*.52+1.1)))*(this.mapZoom||1);
+  return {top,height,tw};
+ }
  renderGround(w,h){
   if(!this.add||typeof this.add.image!=='function'||!this.textures?.exists?.('art-ground'))return false;
   if(!this.groundSprite){this.groundSprite=this.add.image(0,0,'art-ground').setOrigin(.5).setDepth(-10);}
@@ -603,33 +630,25 @@ class MainScene extends Phaser.Scene {
  }
  render(){
   if(!this.s)return;
-  const g=this.g,ui=this.overlay||g,w=this.scale.width,h=this.scale.height,portrait=h>w,night=OasisTimeSystem.getPhase()==='night';
+  const g=this.g,ui=this.overlay||g,w=this.scale.width,h=this.scale.height,night=OasisTimeSystem.getPhase()==='night';
   g.clear();if(ui!==g)ui.clear();
-  if(!this.renderGround(w,h)){g.fillStyle(night?0x3c4a57:0xf0ce8b);g.fillRect(0,0,w,h);}
+  if(!this.renderGround(w,h)){g.fillStyle(night?0x625a48:0xebc88a);g.fillRect(0,0,w,h);}
   this.cells=[];this.visualHits=[];this.calculateWater();if(this.audio)this.audio.setPhase(OasisTimeSystem.getPhase());
-  const top=portrait?90:82,bottom=portrait?192:158,availH=Math.max(100,h-top-bottom),cols=OASIS_CONFIG.worldSize,rows=OASIS_CONFIG.worldSize;
-  const tw=Math.max(12,Math.min((w-20)/cols,availH/(rows*.52)))*(this.mapZoom||1),tileH=tw*.5;
+  const {top,height:availH,tw}=this.mapGeometry(w,h),cols=OASIS_CONFIG.worldSize,rows=cols,tileH=tw*.5;
   const ox=w/2+(this.panX||0),oy=top+(availH-rows*tileH)/2+(this.panY||0);
   this.well=null;
-  // Faint irregular irrigated soil patch, not a board of diamond-shaped tiles.
-  const greenPatches=[[8.3,8.9,9.8,6.8],[10,9.5,7.7,4.7]];
-  for(const [c,r,ww,hh] of greenPatches){
-   const x=ox+(c-r)*tw/2,y=oy+(c+r)*tileH/2;
-   g.fillStyle(0x789959,night?.05:.095);g.fillEllipse(x,y,tw*ww,tileH*hh);
-  }
-  // Road highlight removed in v1.5.0 to avoid visual artefacts on some devices.
   this.drawFence(g,ox,oy,tw,tileH,cols);
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
    const i=r*cols+c,t=this.s.tiles[i],x=ox+(c-r)*tw/2,y=oy+(c+r)*tileH/2;
    const points=[{x,y:y-tileH/2},{x:x+tw/2,y},{x,y:y+tileH/2},{x:x-tw/2,y}];
    const isWell=i===OASIS_CONFIG.wellIndex;
    // Transparent cells preserve the full 10x10 logical grid, but do not expose a checkerboard.
-   if(this.s.tool==='canal'||this.s.tool==='building'){
+   if(['canal','building','move'].includes(this.s.tool)){
     g.lineStyle(Math.max(.6,tw*.014),0x8b694b,.17);g.strokePoints(points,true);
    }
-   if(!t.crop&&!t.canal&&!t.building&&!isWell)this.drawSandDecoration(g,x,y,tw,tileH,i);
+   if(!t.crop&&!t.canal&&!t.building&&!isWell&&!window.OasisFamilyLand?.isHome(this.s,i)&&window.OasisMapLayout?.buildingAt(this.s,i)==null)this.drawSandDecoration(g,x,y,tw,tileH,i);
    if(t.crop)this.drawCultivatedSoil(g,x,y,tw,tileH);
-   if(this.irrigated(i)&&!t.crop&&!t.canal&&!t.building&&!isWell){
+   if(this.s.tool!=='plant'&&this.irrigated(i)&&!t.crop&&!t.canal&&!t.building&&!isWell&&window.OasisMapLayout?.buildingAt(this.s,i)==null&&!window.OasisFamilyLand?.isHome(this.s,i)){
     g.fillStyle(0x5e994e,.34);g.fillEllipse(x,y+tileH*.10,Math.max(2,tw*.09),Math.max(1,tileH*.13));
    }
    if(t.canal)this.drawCanal(g,r,c,i,x,y,tw,tileH);
@@ -637,7 +656,6 @@ class MainScene extends Phaser.Scene {
     if(t.building)this.drawBuilding(g,t,x,y,tw,tileH);
     if(t.crop)this.drawCrop(g,t,x,y,tw,tileH);
    }
-   if(t.building==='apiary'&&t.productionAt){for(let k=0;k<5;k++){const a=Date.now()/750+i+k*2;ui.fillStyle(0x4b372a,.65);ui.fillCircle(x+Math.cos(a+k)*tw*.2,y-tw*.25+Math.sin(a+k)*tw*.11,Math.max(1,tw*.012));}}
    if(t.crop){
     if(OasisTimeSystem.isReady(t)){
      // Mature crops are visually distinguishable by the full-color sprite; no bright yellow dots.
@@ -650,6 +668,7 @@ class MainScene extends Phaser.Scene {
    }
    if(this.selectedTile===i){ui.lineStyle(Math.max(2,tw*.035),0xfff0a4,.95);ui.strokePoints(points,true);}
    if(isWell){
+    if(window.OasisMapLayout&&this.neighbors(i).some(j=>this.s.tiles[j]?.canal))this.drawCanal(g,r,c,i,x,y,tw,tileH);
     if(!this.renderWellSprite(x,y,tw,tileH)){
      g.fillStyle(0x9c683b);g.fillEllipse(x,y+tileH*.08,tw*.5,tileH*.65);
      g.fillStyle(0x654326);g.fillCircle(x,y,tw*.22);g.fillStyle(0x4aa7ba);g.fillCircle(x,y,tw*.14);
