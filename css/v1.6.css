@@ -1,0 +1,31 @@
+/* OASIS v1.6 — family home, land expansion, compact HUD, modal navigation */
+#hud{gap:8px;pointer-events:none}
+#hud #family-hud{pointer-events:auto;min-width:0;flex:1;max-width:420px;text-align:center;background:rgba(255,242,212,.14);border:1px solid rgba(255,238,201,.3);color:#fff7e5;border-radius:11px;padding:9px 10px;font-size:clamp(11px,1.45vw,15px);font-weight:800;line-height:1.25;cursor:pointer;white-space:normal}
+#hud #resources{flex-shrink:0}#hud #phase{flex-shrink:0}
+#hud #player-name{display:none}
+#family-status{display:none!important}
+#stop-build[hidden]{display:none!important}
+#stop-build{position:fixed;bottom:calc(165px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:8;padding:11px 16px;background:#fff0d8;border:2px solid #ad7142;border-radius:13px;box-shadow:0 4px 12px #5e422d66;color:#76442b;font-size:13px;font-weight:800;white-space:nowrap;cursor:pointer}
+#home-panel[hidden]{display:none!important}
+#home-panel{position:fixed;inset:0;z-index:24;background:#322319bc;display:flex;justify-content:center;align-items:center;padding:12px;touch-action:manipulation}
+#home-panel .home-card{width:min(590px,100%);max-height:calc(100dvh - 24px);overflow:auto;touch-action:pan-y;padding:40px 18px 20px}
+#home-panel .home-card h2{font-size:clamp(22px,4.5vw,30px);margin:0 0 10px}
+.home-section{padding:13px 0;border-bottom:1px solid #e0bd88}
+.home-section h3{font-size:17px;margin:0 0 7px}
+.home-section p{font-size:13px;color:#7b5b3e;line-height:1.5;margin:7px 0}
+.home-stock{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}
+.home-stock>span{background:#f1d9ac;border:1px solid #d6b07f;border-radius:10px;padding:8px 10px;color:#5b4026;font-size:13px;font-weight:700}
+.home-action{border:0;border-radius:12px;background:linear-gradient(#379968,#287855);color:white;font-weight:800;padding:12px 16px;cursor:pointer;touch-action:manipulation;max-width:100%;margin:8px 8px 0 0}
+.home-action:disabled{background:#baa98f;color:#f3e5d6;cursor:default}
+.home-muted{font-size:13px;color:#8a6944}
+#reply-modal{z-index:70!important}
+#reply-modal[hidden]{display:none!important}
+#reply-modal .market-card{width:min(420px,100%);padding:38px 24px 26px;text-align:center}
+#reply-modal .market-card p{font-size:19px;line-height:1.55;padding:8px 0}
+#reply-modal-close{font-size:17px;cursor:pointer}
+#storage-items .storage-group{border:1px solid #dabc88;border-radius:15px;padding:12px 13px;margin:12px 0;background:#fef2d8}
+#storage-items .storage-group h3{font-size:16px;margin:0 0 9px}
+#storage-items .storage-line{display:flex;justify-content:space-between;border-top:1px solid #dfca9f;padding:7px 2px;gap:12px;font-size:14px}
+#market-screen .market-stalls{z-index:2}
+#market-screen .market-product{align-items:center}
+@media(max-width:650px){#hud{gap:5px;padding:0 5px}#hud #family-hud{font-size:11px;padding:8px 4px}#hud #resources{font-size:10px}#hud #phase{font-size:9px}#stop-build{bottom:calc(132px + env(safe-area-inset-bottom,0px))}}

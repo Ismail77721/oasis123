@@ -1,0 +1,1 @@
+const game=new Phaser.Game({type:Phaser.AUTO,parent:"game",backgroundColor:"#e6c681",scale:{mode:Phaser.Scale.RESIZE,autoCenter:Phaser.Scale.CENTER_BOTH,width:window.innerWidth,height:window.innerHeight},input:{activePointers:2},render:{antialias:true,pixelArt:false},scene:[BootScene,LoadingScene,MainScene]});window.oasisGame=game;

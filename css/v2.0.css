@@ -1,0 +1,21 @@
+/* Oasis art integration v2.0: all primary icons and market structures are image assets */
+#toolbar button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;min-width:0!important}
+#toolbar button .ui-sprite{width:clamp(28px,3.6vw,49px);height:clamp(28px,3.6vw,49px);object-fit:contain;filter:drop-shadow(0 2px 2px #4b2a1830);pointer-events:none}
+#toolbar button span{font-size:clamp(10px,1.3vw,14px)!important;line-height:1.15!important}
+#build-menu-actions button .ui-choice-sprite{display:block;width:clamp(56px,8vw,100px);height:clamp(56px,8vw,100px);object-fit:contain;margin:0 auto 5px;pointer-events:none}
+#build-menu-actions button{display:flex;flex-direction:column;align-items:center;justify-content:center}
+#help-toggle{display:flex;align-items:center;justify-content:center;padding:3px!important}
+#help-toggle .help-sprite{width:96%;height:96%;object-fit:contain;pointer-events:none}
+#market-screen .market-stall img{max-height:88%!important;object-fit:contain!important;object-position:center bottom!important}
+#market-screen .plaza-tree{background-image:url('../assets/sprites/crop-dates.png')!important}
+#market-screen .market-stall{filter:none!important;overflow:visible!important}
+#market-screen .market-stall[data-stall=produce]{width:35%!important;height:38%!important;top:41%!important}
+#market-screen .market-stall[data-stall=seeds]{left:19%!important;width:25%!important;top:33%!important}
+#market-screen .market-stall[data-stall=sadaka]{left:81%!important;width:25%!important;top:33%!important}
+#market-screen .market-stall[data-stall=orders]{left:23%!important;top:73%!important;width:25%!important}
+#market-screen .market-stall[data-stall=tools]{left:78%!important;top:73%!important;width:27%!important}
+#market-screen .plaza-hint{display:none!important}
+#market-square{background:#e2b580!important}
+#market-screen .plaza-scene{background-image:linear-gradient(180deg,#fde5b310,#8d522318),url('../assets/art/market-plaza-ground.jpg')!important}
+/* Capless level and no canal total in top HUD are enforced in SceneV200. */
+@media(max-width:600px){#market-screen .market-stall[data-stall=produce]{width:42%!important;height:35%!important;top:40%!important}#market-screen .market-stall[data-stall=seeds]{left:17%!important;top:30%!important;width:27%!important}#market-screen .market-stall[data-stall=sadaka]{left:83%!important;top:30%!important;width:27%!important}#market-screen .market-stall[data-stall=orders]{left:22%!important;top:70%!important;width:29%!important}#market-screen .market-stall[data-stall=tools]{left:79%!important;top:70%!important;width:31%!important}#market-screen .market-stall strong{font-size:11px!important}}

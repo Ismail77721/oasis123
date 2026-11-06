@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#81512d"><title>ОАЗИС — ферма в пустыне</title>
+<link rel="stylesheet" href="css/style.css?v=1.9.1"><link rel="stylesheet" href="css/v1.2.css?v=1.9.1"><link rel="stylesheet" href="css/v1.3.css?v=1.9.1"><link rel="stylesheet" href="css/v1.4.css?v=1.9.1"><link rel="stylesheet" href="css/v1.5.css?v=1.9.1"><link rel="stylesheet" href="css/v1.6.css?v=1.9.1"><link rel="stylesheet" href="css/v1.7.css?v=1.9.1"><link rel="stylesheet" href="css/v1.8.css?v=1.9.1"><link rel="stylesheet" href="css/v1.9.css?v=1.9.1">
+<link rel="stylesheet" href="css/v2.0.css?v=1.9.1"></head><body>
+<div id="game"></div>
+<div id="game-error" hidden role="alert">Не удалось запустить игровое поле. Проверь интернет и обнови страницу.</div>
+<header id="hud"><button id="open-menu" type="button" aria-label="Главное меню">☰</button><span id="resources">🪙 100 · 💧 10</span><button id="family-hud" type="button" aria-label="Дом и потребности семьи">🏡 Семья</button><span id="player-name" aria-live="polite"></span><small id="phase">☀️ День · v1.9.1</small></header>
+<div id="audio-bar" aria-label="Управление звуком">
+ <button id="sound-toggle" type="button" aria-label="Выключить звук" aria-pressed="true" title="Выключить звук">🔊</button>
+ <button id="sound-open-settings" type="button" aria-label="Настройки звука" title="Настройки звука">⚙️</button>
+</div>
+<section id="sound-settings" hidden aria-label="Настройки звука">
+ <button id="sound-settings-close" type="button" aria-label="Закрыть настройки звука">✕</button>
+ <h3>🔊 Звуки оазиса</h3><label for="sound-volume">Громкость <output id="sound-volume-value" for="sound-volume">65%</output></label>
+ <input id="sound-volume" type="range" min="0" max="100" step="5" value="65" aria-label="Громкость звуков">
+ <label class="sound-option"><input id="sound-ambience" type="checkbox" checked> Фон: ветер и вода</label>
+ <p>Без музыки и голосов. Звуки запускаются после первого касания.</p>
+</section>
+<button id="help-toggle" aria-label="Повторить обучение"><img class="help-sprite" src="assets/sprites/icon-help.png" alt=""></button>
+<aside id="help-panel" hidden><button id="help-close">✕</button><h3>🌴 Как растёт оазис</h3>
+ <p><b>Посадка:</b> коснись пустой клетки у колодца или канала, затем выбери семя.</p>
+ <p><b>Урожай:</b> коснись готового растения, чтобы собрать. Проводи пальцем по грядкам для быстрого сбора. Удерживай палец для информации.</p>
+ <p><b>Деревья:</b> инжир, гранат и пальма плодоносят повторно без новых саженцев.</p>
+ <p><b>Базар:</b> отдельная локация для продажи, семян, выгодных заказов, мастерской и садаки.</p>
+ <p><b>Строительство:</b> через «Строить» проводи каналы и возводи постройки. Пасека перерабатывает цветы в мёд; прессы делают масло тмина и оливок.</p>
+ <p><b>Камера:</b> двигай карту пальцем, увеличивай двумя пальцами или кнопками справа.</p></aside>
+<button id="quests-toggle" aria-label="Задания" hidden>📜</button>
+<section id="quests-panel" hidden><button id="quests-close" type="button" aria-label="Закрыть задания">✕</button><h3>📜 Путь к оазису</h3><div id="quests-list"></div></section>
+<div id="map-controls"><button data-map="in" aria-label="Приблизить">＋</button><button data-map="out" aria-label="Отдалить">−</button><button data-map="reset" aria-label="Вся карта">⌂</button></div>
+<button id="stop-build" type="button" hidden>✕ Завершить строительство</button>
+<div id="mode-chip">🌱 Коснись свободной грядки</div>
+<div id="feedback" role="status">Посади первые растения у колодца</div>
+<div id="inventory" hidden></div>
+
+<nav id="toolbar" aria-label="Главные действия">
+ <button data-action="build"><img class="ui-sprite" alt="" src="assets/sprites/icon-build.png"><span>Строить</span></button>
+ <button data-action="inventory"><img class="ui-sprite" alt="" src="assets/sprites/icon-barn.png"><span>Амбар</span></button>
+ <button data-action="quests"><img class="ui-sprite" alt="" src="assets/sprites/icon-orders.png"><span>Задания</span></button>
+ <button data-action="market"><img class="ui-sprite" alt="" src="assets/sprites/icon-trade.png"><span>Торговая поездка</span></button>
+</nav>
+<section id="build-menu" hidden class="ui-modal"><div class="market-card">
+ <button id="build-menu-close" class="modal-back" aria-label="Закрыть">✕</button><h2>Развитие оазиса</h2><p>Выбери, что ты хочешь построить или улучшить.</p>
+ <div id="build-menu-actions" class="choice-grid">
+  <button data-build="canal"><img class="ui-choice-sprite" src="assets/sprites/terrain-canal-straight.png" alt=""><b>Каналы</b><small>Провести воду · 4 🪙</small></button>
+  <button data-build="buildings"><img class="ui-choice-sprite" src="assets/sprites/icon-build.png" alt=""><b>Постройки</b><small>Шатёр и загон</small></button>
+  <button data-build="upgrades"><img class="ui-choice-sprite" src="assets/sprites/icon-upgrade.png" alt=""><b>Инструменты</b><small>Посмотреть уровни · покупка на базаре</small></button>
+    <button data-build="remove" type="button"><img class="ui-choice-sprite" src="assets/sprites/icon-remove.png" alt=""><b>Расчистка</b><small>Выкорчевать растение или разобрать канал</small></button>
+ </div>
+</div></section>
+<button id="tutorial-replay" hidden type="button">Повторить обучение</button>
+<section id="buildings" hidden class="ui-modal"><div class="market-card"><button id="buildings-back" class="modal-back" type="button">← Назад</button><button id="buildings-close" class="close-modal">✕</button><h2>🏠 Постройки</h2><p>Выбери постройку, затем коснись свободного участка.</p><div id="building-items"></div></div></section>
+<section id="farm" hidden class="ui-modal"><div class="market-card"><button id="farm-close" class="modal-back" type="button">← Назад</button><h2 id="farm-title">Хозяйство</h2><p id="farm-status"></p><div id="farm-actions"></div></div></section>
+<section id="picker" hidden class="ui-modal"><div class="market-card"><button id="picker-close" class="modal-back" type="button">← Назад</button><h2>🌱 Что посадить?</h2><p id="picker-help"></p><div id="picker-items"></div></div></section>
+<section id="upgrades" hidden class="ui-modal"><div class="market-card"><button id="upgrades-back" class="modal-back" type="button">← Назад</button><button id="upgrades-close" class="close-modal">✕</button><h2>🔧 Инструменты хозяйства</h2><p>Здесь показаны уровни инструментов. Покупка новых уровней — только в мастерской базара.</p><div id="upgrade-items"></div></div></section>
+<section id="storage-screen" hidden class="ui-modal"><div class="market-card"><button id="storage-close" class="modal-back" type="button">✕</button><h2>🎒 Амбар</h2><div id="storage-items"></div><button id="storage-go-market" class="primary-wide">🏺 Перейти на базар</button></div></section>
+<!-- A fixed, interactive plaza. Player cannot build or expand it. -->
+<section id="market-screen" hidden aria-label="Торговая площадь">
+ <header id="market-topbar"><button id="market-back" type="button">← Ферма</button><div><strong>ТОРГОВАЯ ПЛОЩАДЬ</strong><small>Остановки торговой поездки</small></div><span id="market-coins">🪙 100</span></header>
+ <div id="market-square">
+  <div class="plaza-scene" aria-label="Выбери здание на торговой площади">
+   <div class="plaza-tree tree-a">🌴</div><div class="plaza-tree tree-b">🌴</div>
+   <div class="market-stalls">
+    <button type="button" class="market-stall" data-stall="produce"><img src="assets/sprites/building-market.png" alt=""/><strong>Торговые лавки</strong></button>
+    <button type="button" class="market-stall" data-stall="seeds"><img src="assets/sprites/icon-seeds.png" alt=""/><strong>Семенная лавка</strong></button>
+    <button type="button" class="market-stall" data-stall="orders"><img src="assets/sprites/icon-orders.png" alt=""/><strong>Доска заказов</strong></button>
+    <button type="button" class="market-stall" data-stall="tools"><img src="assets/sprites/building-tools.png" alt=""/><strong>Мастерская</strong></button>
+    <button type="button" class="market-stall" data-stall="sadaka"><img src="assets/sprites/building-sadaka.png" alt=""/><strong>Дом помощи</strong></button>
+   </div>
+   <span class="plaza-hint">Выбери лавку или дом помощи</span>
+  </div>
+ </div>
+ <main id="market-counter" hidden>
+  <button type="button" id="market-counter-back">← На площадь</button>
+  <div id="market-headline"><div><h2 id="market-section-title">🏺 Торговая лавка</h2><p id="market-section-desc"></p></div><span id="market-location"></span></div>
+  <div id="market-items"></div><div id="market-message" role="status"></div>
+ </main>
+</section>
+
+<section id="home-panel" hidden class="ui-modal" aria-label="Дом семьи"><div class="market-card home-card">
+ <button id="home-close" class="close-modal" aria-label="Закрыть окно дома">✕</button>
+ <h2>🏡 Наш дом</h2><p id="home-intro"></p>
+ <div id="home-family"></div>
+ <div id="home-upgrades"></div>
+ <div id="home-land"></div><div id="home-workers"></div>
+</div></section>
+
+<section id="reply-modal" hidden class="ui-modal">
+  <div class="market-card small-modal">
+    <h2>🤲 Благодарность</h2>
+    <p id="reply-modal-text">Да воздаст тебе Аллах благом.</p>
+    <div class="picker-actions">
+      <button id="reply-modal-close" class="primary-wide" type="button">Амин</button>
+    </div>
+  </div>
+</section>
+
+
+<section id="crop-info" hidden aria-label="Сведения о растении" role="dialog">
+ <button id="crop-info-close" type="button" aria-label="Закрыть">×</button>
+ <div id="crop-info-title"></div><p id="crop-info-desc"></p><div id="crop-info-state"></div>
+ <div id="crop-info-actions"></div>
+</section>
+<section id="remove-confirm" hidden class="ui-modal" role="dialog" aria-label="Подтверждение удаления"><div class="market-card small-modal">
+ <h2>🪓 Расчистка участка</h2><p id="remove-confirm-text"></p>
+ <div class="remove-buttons"><button id="remove-cancel" type="button">Отмена</button><button id="remove-yes" type="button">Убрать объект</button></div>
+ </div></section>
+
+<!-- Main menu and first-launch onboarding are text-only: no human/animal images. -->
+<section id="start-menu" class="start-overlay" hidden aria-label="Главное меню">
+ <div class="start-bg" aria-hidden="true"></div>
+ <div class="start-card">
+  <div class="start-emblem">🌴</div>
+  <p class="eyebrow">СИМУЛЯТОР ПУСТЫННОЙ ФЕРМЫ</p>
+  <h1>ОАЗИС</h1>
+  <p id="menu-greeting">Вырастите свой оазис среди золотых песков</p>
+  <div class="start-actions">
+   <button id="menu-continue" type="button" class="menu-action gold">Продолжить игру</button>
+   <button id="menu-new" type="button" class="menu-action">Новая игра</button>
+  </div>
+  <div class="menu-extras"><button id="menu-sound" type="button">🔊 Звук: включён</button><button id="menu-about" type="button">ⓘ Об игре</button></div>
+  <p id="menu-about-text" hidden>Выращивай растения, строй каналы, развивай хозяйство и отправляйся в торговые поездки. Музыки, людей и изображений животных нет.</p>
+  <small>Посадка · каналы · хозяйство · базар</small>
+  <p class="menu-footnote">Весь прогресс сохраняется на этом устройстве</p>
+ </div>
+</section>
+<section id="profile-screen" class="start-overlay" hidden aria-label="Новый профиль">
+ <div class="start-bg" aria-hidden="true"></div>
+ <div class="profile-card">
+  <button type="button" id="profile-back" class="profile-back">← В меню</button>
+  <div class="profile-art" aria-hidden="true">🌿</div>
+  <p class="eyebrow">ТВОЯ ИСТОРИЯ</p>
+  <h2 id="profile-title">Новое путешествие</h2>
+  <label for="profile-name">Как к тебе обращаться?</label>
+  <input id="profile-name" type="text" maxlength="20" minlength="2" placeholder="Например, Амир" autocomplete="nickname" />
+  <fieldset><legend>Кто играет?</legend><label><input type="radio" name="player-gender" value="male" checked> Мужской</label><label><input type="radio" name="player-gender" value="female"> Женский</label></fieldset>
+  
+  <label id="confirm-wrap" class="confirm-new" hidden><input id="confirm-new" type="checkbox"> Я понимаю, что новая игра заменит нынешнее сохранение</label>
+  <p id="profile-error" role="alert"></p>
+  <button id="profile-start" class="menu-action gold" type="button">Начать путешествие →</button>
+ </div>
+</section>
+<div id="guide-ring" hidden aria-hidden="true"></div>
+<section id="live-guide" hidden aria-live="polite" aria-label="Обучение в игре">
+  <div id="guide-head"><b id="guide-mentor">Подсказка</b><span id="guide-progress">1/8</span></div>
+  <p id="guide-body">Нажми на выделенный участок.</p>
+  <div id="guide-actions"><button type="button" id="guide-skip">Пропустить</button><button type="button" id="guide-next">Далее →</button></div>
+</section>
+<section id="tutorial-screen" class="start-overlay" hidden aria-label="Обучение">
+ <div class="start-bg" aria-hidden="true"></div>
+ <div class="tutorial-card">
+  <div class="tutorial-decor" aria-hidden="true">🌴　💧　🌱</div>
+  <p id="tutorial-name" class="eyebrow">Советник Саид · 1/5</p>
+  <h2 id="tutorial-title">Добро пожаловать!</h2>
+  <p id="tutorial-body"></p>
+  <div class="tutorial-actions"><button id="tutorial-skip" type="button">Пропустить</button><button id="tutorial-next" class="menu-action gold" type="button">Далее →</button></div>
+ </div>
+</section>
+<button id="back-key" type="button" hidden aria-label="Назад">←</button>
+
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<script>if(!window.Phaser)document.write('<script src="https://unpkg.com/phaser@3.80.1/dist/phaser.min.js"><\/script>');</script>
+<script src="js/config.js?v=1.9.1"></script>
+<script src="js/core/GameState.js?v=1.9.1"></script>
+<script src="js/core/SaveSystem.js?v=1.9.1"></script>
+<script src="js/core/TimeSystem.js?v=1.9.1"></script>
+<script src="js/core/ProgressionSystem.js?v=1.9.1"></script>
+<script src="js/core/EconomySystem.js?v=1.9.1"></script>
+<script src="js/core/DailyQuestSystem.js?v=1.9.1"></script>
+<script src="js/core/SadakaSystem.js?v=1.9.1"></script>
+<script src="js/core/LandFamilySystem.js?v=1.9.1"></script>
+<script src="js/scenes/BootScene.js?v=1.9.1"></script>
+<script src="js/scenes/LoadingScene.js?v=1.9.1"></script>
+<script src="js/core/AudioSystem.js?v=1.9.1"></script>
+<script src="js/core/FarmSystems.js?v=1.9.1"></script>
+<script src="js/scenes/MainScene.js?v=1.9.1"></script>
+<script src="js/scenes/SceneV160.js?v=1.9.1"></script>
+<script src="js/scenes/SceneV170.js?v=1.9.1"></script>
+<script src="js/scenes/SceneV180.js?v=1.9.1"></script>
+<script src="js/scenes/SceneV190.js?v=1.9.1"></script>
+<script src="js/scenes/SceneV200.js?v=1.9.1"></script>
+<script src="js/main.js?v=1.9.1"></script>
+</body></html>

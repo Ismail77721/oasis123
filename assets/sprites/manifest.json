@@ -1,0 +1,320 @@
+{
+  "crop-clover": {
+    "file": "crop-clover.png",
+    "width": 328,
+    "height": 245,
+    "opaque_area": 48621
+  },
+  "crop-watermelon": {
+    "file": "crop-watermelon.png",
+    "width": 333,
+    "height": 252,
+    "opaque_area": 51805
+  },
+  "crop-wheat": {
+    "file": "crop-wheat.png",
+    "width": 338,
+    "height": 259,
+    "opaque_area": 51668
+  },
+  "crop-barley": {
+    "file": "crop-barley.png",
+    "width": 329,
+    "height": 268,
+    "opaque_area": 53628
+  },
+  "crop-cumin": {
+    "file": "crop-cumin.png",
+    "width": 328,
+    "height": 283,
+    "opaque_area": 48809
+  },
+  "crop-flowers": {
+    "file": "crop-flowers.png",
+    "width": 323,
+    "height": 279,
+    "opaque_area": 51185
+  },
+  "crop-melon": {
+    "file": "crop-melon.png",
+    "width": 329,
+    "height": 268,
+    "opaque_area": 52789
+  },
+  "crop-dates": {
+    "file": "crop-dates.png",
+    "width": 347,
+    "height": 318,
+    "opaque_area": 57993
+  },
+  "crop-fig": {
+    "file": "crop-fig.png",
+    "width": 348,
+    "height": 303,
+    "opaque_area": 64407
+  },
+  "crop-pomegranate": {
+    "file": "crop-pomegranate.png",
+    "width": 343,
+    "height": 303,
+    "opaque_area": 63985
+  },
+  "crop-olive": {
+    "file": "crop-olive.png",
+    "width": 351,
+    "height": 303,
+    "opaque_area": 65592
+  },
+  "crop-sidr": {
+    "file": "crop-sidr.png",
+    "width": 356,
+    "height": 303,
+    "opaque_area": 64511
+  },
+  "building-home1": {
+    "file": "building-home1.png",
+    "width": 348,
+    "height": 233,
+    "opaque_area": 51531
+  },
+  "building-home2": {
+    "file": "building-home2.png",
+    "width": 349,
+    "height": 262,
+    "opaque_area": 65819
+  },
+  "building-sheep": {
+    "file": "building-sheep.png",
+    "width": 355,
+    "height": 220,
+    "opaque_area": 44073
+  },
+  "building-camel": {
+    "file": "building-camel.png",
+    "width": 356,
+    "height": 233,
+    "opaque_area": 59703
+  },
+  "building-well": {
+    "file": "building-well.png",
+    "width": 294,
+    "height": 187,
+    "opaque_area": 25891
+  },
+  "building-well2": {
+    "file": "building-well2.png",
+    "width": 357,
+    "height": 261,
+    "opaque_area": 41325
+  },
+  "building-storage": {
+    "file": "building-storage.png",
+    "width": 357,
+    "height": 213,
+    "opaque_area": 54509
+  },
+  "building-mill": {
+    "file": "building-mill.png",
+    "width": 301,
+    "height": 257,
+    "opaque_area": 40982
+  },
+  "building-loom": {
+    "file": "building-loom.png",
+    "width": 289,
+    "height": 285,
+    "opaque_area": 48543
+  },
+  "building-tools": {
+    "file": "building-tools.png",
+    "width": 290,
+    "height": 285,
+    "opaque_area": 45344
+  },
+  "building-market": {
+    "file": "building-market.png",
+    "width": 289,
+    "height": 285,
+    "opaque_area": 47283
+  },
+  "building-sadaka": {
+    "file": "building-sadaka.png",
+    "width": 290,
+    "height": 285,
+    "opaque_area": 44280
+  },
+  "building-apiary": {
+    "file": "building-apiary.png",
+    "width": 287,
+    "height": 285,
+    "opaque_area": 43784
+  },
+  "terrain-sand": {
+    "file": "terrain-sand.png",
+    "width": 317,
+    "height": 187,
+    "opaque_area": 33330
+  },
+  "terrain-fertile": {
+    "file": "terrain-fertile.png",
+    "width": 324,
+    "height": 188,
+    "opaque_area": 32812
+  },
+  "terrain-plowed": {
+    "file": "terrain-plowed.png",
+    "width": 324,
+    "height": 188,
+    "opaque_area": 33168
+  },
+  "terrain-grass": {
+    "file": "terrain-grass.png",
+    "width": 290,
+    "height": 173,
+    "opaque_area": 26182
+  },
+  "terrain-rocks": {
+    "file": "terrain-rocks.png",
+    "width": 269,
+    "height": 166,
+    "opaque_area": 24200
+  },
+  "terrain-fence-straight": {
+    "file": "terrain-fence-straight.png",
+    "width": 261,
+    "height": 167,
+    "opaque_area": 20251
+  },
+  "terrain-fence-corner": {
+    "file": "terrain-fence-corner.png",
+    "width": 290,
+    "height": 167,
+    "opaque_area": 25925
+  },
+  "terrain-gate": {
+    "file": "terrain-gate.png",
+    "width": 301,
+    "height": 167,
+    "opaque_area": 37517
+  },
+  "terrain-canal-straight": {
+    "file": "terrain-canal-straight.png",
+    "width": 302,
+    "height": 183,
+    "opaque_area": 26840
+  },
+  "terrain-canal-corner": {
+    "file": "terrain-canal-corner.png",
+    "width": 295,
+    "height": 170,
+    "opaque_area": 27246
+  },
+  "terrain-canal-t": {
+    "file": "terrain-canal-t.png",
+    "width": 306,
+    "height": 180,
+    "opaque_area": 28860
+  },
+  "terrain-canal-cross": {
+    "file": "terrain-canal-cross.png",
+    "width": 299,
+    "height": 180,
+    "opaque_area": 36238
+  },
+  "terrain-canal-source": {
+    "file": "terrain-canal-source.png",
+    "width": 321,
+    "height": 181,
+    "opaque_area": 34504
+  },
+  "terrain-path": {
+    "file": "terrain-path.png",
+    "width": 337,
+    "height": 180,
+    "opaque_area": 34003
+  },
+  "icon-build": {
+    "file": "icon-build.png",
+    "width": 283,
+    "height": 233,
+    "opaque_area": 41065
+  },
+  "icon-orders": {
+    "file": "icon-orders.png",
+    "width": 263,
+    "height": 234,
+    "opaque_area": 40018
+  },
+  "icon-seeds": {
+    "file": "icon-seeds.png",
+    "width": 289,
+    "height": 223,
+    "opaque_area": 38512
+  },
+  "icon-barn": {
+    "file": "icon-barn.png",
+    "width": 290,
+    "height": 235,
+    "opaque_area": 47830
+  },
+  "icon-bazaar": {
+    "file": "icon-bazaar.png",
+    "width": 280,
+    "height": 252,
+    "opaque_area": 50418
+  },
+  "icon-home": {
+    "file": "icon-home.png",
+    "width": 284,
+    "height": 259,
+    "opaque_area": 56610
+  },
+  "icon-help": {
+    "file": "icon-help.png",
+    "width": 290,
+    "height": 231,
+    "opaque_area": 40809
+  },
+  "icon-charity": {
+    "file": "icon-charity.png",
+    "width": 275,
+    "height": 224,
+    "opaque_area": 37180
+  },
+  "icon-harvest": {
+    "file": "icon-harvest.png",
+    "width": 290,
+    "height": 243,
+    "opaque_area": 39529
+  },
+  "icon-plant": {
+    "file": "icon-plant.png",
+    "width": 287,
+    "height": 215,
+    "opaque_area": 34660
+  },
+  "icon-remove": {
+    "file": "icon-remove.png",
+    "width": 358,
+    "height": 246,
+    "opaque_area": 35225
+  },
+  "icon-upgrade": {
+    "file": "icon-upgrade.png",
+    "width": 362,
+    "height": 246,
+    "opaque_area": 52338
+  },
+  "icon-workshop": {
+    "file": "icon-workshop.png",
+    "width": 362,
+    "height": 246,
+    "opaque_area": 65704
+  },
+  "icon-trade": {
+    "file": "icon-trade.png",
+    "width": 361,
+    "height": 246,
+    "opaque_area": 65021
+  }
+}

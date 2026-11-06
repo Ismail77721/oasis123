@@ -1,0 +1,103 @@
+/* OASIS 1.9 — desert art direction and clean interactive market square. */
+:root{--oasis-ink:#55391f;--oasis-wood:#92613a;--oasis-leaf:#317c50;--oasis-gold:#deb77b}
+#market-screen{background:#e7b977!important}
+#market-screen #market-square{background:#e6bc7e!important;position:relative;overflow:hidden}
+#market-screen .plaza-scene{
+  width:min(100%,1060px);height:100%;max-height:none;
+  background-image:linear-gradient(180deg,#fff3d21a,#8c552b13),url('../assets/art/market-plaza-ground.jpg');
+  background-size:100% 100%;background-position:center center;background-repeat:no-repeat;
+  border-inline:1px solid #d6a36a15;overflow:hidden;
+}
+/* The original hovering diamond and roads were the source of the board appearance. */
+#market-screen .plaza-diamond,#market-screen .plaza-path,#market-screen .plaza-rock{display:none!important}
+#market-screen .plaza-tree{font-size:clamp(25px,3.5vw,44px);opacity:.86;filter:drop-shadow(1px 5px 3px #5b3a2566)}
+#market-screen .tree-a{top:27%;left:3%}#market-screen .tree-b{right:4%;bottom:14%}
+#market-screen .market-stall{
+  border:0!important;border-radius:20px!important;
+  isolation:isolate;overflow:visible!important;
+  transition:filter .2s ease,scale .2s ease!important;
+  -webkit-tap-highlight-color:transparent;
+}
+#market-screen .market-stall::before{
+  content:'';position:absolute;bottom:13%;left:11%;width:78%;height:15%;z-index:-1;pointer-events:none;
+  border-radius:50%;background:radial-gradient(ellipse,#6e432b66 0%,#a66c3740 55%,transparent 80%);
+  filter:blur(5px);
+}
+#market-screen .market-stall img{
+  max-width:100%;width:100%!important;height:78%!important;
+  object-fit:contain;object-position:center bottom;
+  filter:drop-shadow(0px 8px 4px #67432270)!important;
+  transition:filter .2s ease,transform .22s cubic-bezier(.2,.8,.25,1);
+}
+#market-screen .market-stall:hover img,#market-screen .market-stall:focus-visible img{transform:translateY(-5px);filter:drop-shadow(0 12px 5px #67432280) brightness(1.06)!important}
+#market-screen .market-stall:focus-visible{outline:3px solid #226948!important;outline-offset:8px}
+#market-screen .market-stall strong{
+  position:relative;z-index:3;max-width:175px;min-width:85px;
+  background:linear-gradient(180deg,#fff8e6f7,#f2d9a5f7)!important;
+  color:#674324!important;border:1.5px solid #bc8852!important;
+  border-radius:18px!important;box-shadow:0 4px 9px #5f3c2333, inset 0 1px #ffffffca;
+  padding:6px 11px!important;font-size:clamp(11px,1.5vw,15px)!important;
+  letter-spacing:-.02em;font-weight:900!important;
+}
+#market-screen .market-stall:active strong{background:#e3f5d2!important;border-color:#3c8557!important}
+/* Buildings have breathing space; the square is non-expandable. */
+#market-screen .market-stall[data-stall=produce]{left:50%!important;top:41%!important;width:33%!important;height:42%!important;z-index:6!important}
+#market-screen .market-stall[data-stall=seeds]{left:21%!important;top:32%!important;width:22%!important;height:29%!important;z-index:5!important}
+#market-screen .market-stall[data-stall=orders]{left:21%!important;top:74%!important;width:23%!important;height:29%!important;z-index:5!important}
+#market-screen .market-stall[data-stall=tools]{left:79%!important;top:73%!important;width:23%!important;height:32%!important;z-index:5!important}
+#market-screen .market-stall[data-stall=sadaka]{left:79%!important;top:32%!important;width:23%!important;height:29%!important;z-index:5!important}
+#market-screen .plaza-hint{
+  bottom:2.5%!important;font-size:clamp(10px,1.6vw,14px);max-width:90%;white-space:normal;text-align:center;
+  padding:9px 15px;border:1px solid #ffffffad;border-radius:24px;
+  background:linear-gradient(#fff3ddeb,#ebd4abf4);
+  color:#774b2c;box-shadow:0 3px 15px #59402130;
+}
+#market-topbar{
+  background:linear-gradient(115deg,#80502f,#a7713d,#80502f)!important;
+  border-bottom:2px solid #d7ad70!important;
+  box-shadow:0 4px 14px #5d321a35!important;
+}
+#market-topbar strong{letter-spacing:.045em}
+#market-counter{
+  background:linear-gradient(180deg,#fff7e7,#f5e3c6)!important;
+  border-top:4px solid #ad8052!important;
+  box-shadow:0 -12px 36px #57371944!important;
+}
+#market-counter-back{background:linear-gradient(#9e6d43,#785031)!important;box-shadow:0 4px 11px #5c362333}
+#market-counter .market-product{border-bottom:1px solid #ddbc8e!important}
+#market-counter .market-product .item-title{color:#543923}
+#market-counter .market-product .item-actions button:not(:disabled){background:linear-gradient(#38976c,#26754f)!important;border-radius:11px;box-shadow:0 3px 0 #1e5c3c}
+#market-counter .market-product .item-actions button:disabled{opacity:.62}
+/* Main farm HUD: more legible, less prototype-looking; overlays stay clear of the game world. */
+#hud{background:linear-gradient(100deg,#654125e8,#885631ee,#654125e8)!important;box-shadow:0 4px 17px #50301b36!important;border-bottom:2px solid #d9af76!important}
+#hud #family-hud{border-radius:13px!important;background:linear-gradient(#93623e99,#66462f88)!important;border-color:#c3936190!important}
+#toolbar{background:linear-gradient(180deg,#674326ed,#523820f5)!important;box-shadow:0 -4px 20px #4b321c42!important;backdrop-filter:blur(7px)}
+#toolbar button{border-color:#c79760!important;background:linear-gradient(180deg,#b4844e,#956638)!important;color:#fff5df!important;box-shadow:0 2px 4px #27190f33!important}
+#toolbar button:active,#toolbar button.active{background:linear-gradient(#f9d991,#e4b76e)!important;color:#5d3c22!important}
+#toolbar button span{font-size:clamp(10px,1.45vw,14px)}
+#mode-chip{background:#fff5dbed!important;color:#68452a!important;border:1px solid #ba8e5c!important;box-shadow:0 3px 13px #6344232c}
+#feedback.toast-open{box-shadow:0 8px 24px #6740264a!important;border:1px solid #d5af7b!important}
+#map-controls button,#help-toggle{background:linear-gradient(#a27549,#794e2e)!important;color:#fff8e7!important;border-color:#f9dea4!important;box-shadow:0 3px 9px #5c3e2e55!important}
+#crop-info,#home-panel .market-card,.ui-modal>.market-card{box-shadow:0 18px 50px #4e342454!important}
+/* Under reduced-motion, avoid accidental bobbing and long animation. */
+@media(prefers-reduced-motion:reduce){#market-screen .market-stall img,#market-screen .market-stall{transition:none!important}}
+@media(max-width:600px){
+ #market-screen .plaza-scene{background-size:cover;background-position:center}
+ #market-screen .market-stall strong{font-size:clamp(10px,3vw,12px)!important;max-width:105px!important;min-width:62px;padding:5px 7px!important}
+ #market-screen .market-stall[data-stall=produce]{left:50%!important;top:39%!important;width:36%!important;height:35%!important}
+ #market-screen .market-stall[data-stall=seeds]{left:18%!important;top:33%!important;width:25%!important;height:23%!important}
+ #market-screen .market-stall[data-stall=sadaka]{left:82%!important;top:33%!important;width:25%!important;height:23%!important}
+ #market-screen .market-stall[data-stall=orders]{left:21%!important;top:69%!important;width:27%!important;height:25%!important}
+ #market-screen .market-stall[data-stall=tools]{left:79%!important;top:69%!important;width:27%!important;height:25%!important}
+ #market-screen .plaza-hint{bottom:7%;font-size:11px}
+ #toolbar{padding-inline:7px!important;gap:6px!important}
+}
+/* Render genuine date-palm artwork instead of platform-dependent palm emoji. */
+#market-screen .plaza-tree{
+  font-size:0!important;width:min(11%,94px);height:min(27%,190px);
+  background:url('../assets/art/ref-dates.png') center bottom/contain no-repeat;
+  opacity:.80;pointer-events:none;filter:drop-shadow(2px 8px 4px #6b492b44);
+}
+#market-screen .tree-a{top:7%!important;left:3%!important}
+#market-screen .tree-b{right:2%!important;bottom:10%!important}
+@media(max-width:600px){#market-screen .plaza-tree{width:14%;height:19%;opacity:.7}#market-screen .tree-a{top:6%!important;left:1%!important}}

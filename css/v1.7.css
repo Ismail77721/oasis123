@@ -1,0 +1,22 @@
+/* v1.7: charity requests & contributions, mobile first */
+#market-counter .charity-heading{margin:13px 0 9px;padding:7px 0;border-bottom:2px solid #c9a270;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#68432a}
+#market-counter .charity-heading h3{font-size:clamp(17px,2.4vw,23px);margin:0}
+#market-counter .charity-heading small{color:#89664a;font-size:12px;line-height:1.4}
+#market-counter .charity-projects-heading{margin-top:27px}
+#market-counter .charity-project{max-width:940px;padding:15px;margin:12px 0;border:1px solid #d7ba85;border-radius:17px;background:linear-gradient(145deg,#fff7e5,#f3e2c0);box-shadow:0 3px 8px #71452018;color:#5a3c25}
+.charity-project-header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;font-size:15px}
+.charity-project-header strong{font-size:clamp(15px,2.4vw,19px)}
+.charity-project-header span{font-weight:800;color:#35724e;font-variant-numeric:tabular-nums}
+#market-counter .charity-project-desc{font-size:13px;line-height:1.45;margin:8px 0 12px;color:#785a42}
+.charity-progress{height:12px;background:#d9c5a1;border-radius:999px;overflow:hidden;box-shadow:inset 0 1px 4px #6d452638}
+.charity-progress-fill{height:100%;min-width:0;background:linear-gradient(90deg,#6ea56d,#2b8358);border-radius:999px;transition:width .25s ease}
+.charity-contribution{display:flex;gap:9px;align-items:center;margin:13px 0 8px}
+.charity-contribution .charity-amount{max-width:205px;min-width:0;width:45%;padding:12px;border:1px solid #b99565;background:#fffef7;border-radius:11px;font-size:16px;color:#57391e;font-weight:700}
+.charity-contribution .charity-submit{padding:12px 24px;border:none;border-radius:11px;background:#2c845b;color:white;font-size:15px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.charity-contribution .charity-submit:disabled,.charity-quick-btn:disabled{background:#b4a48e;color:#fbefdd;cursor:default}
+.charity-quick{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
+.charity-quick-btn{font-size:12px;padding:8px 12px;background:#f3d6a8;border:1px solid #c39960;border-radius:9px;color:#65482f;font-weight:800;cursor:pointer;touch-action:manipulation}
+.charity-remaining{color:#8a6b4e;font-size:12px}
+.charity-done{color:#267a54;font-size:14px;font-weight:800;margin-bottom:0}
+#reply-modal-close{min-height:46px}
+@media(max-width:650px){#market-counter .charity-project{padding:12px;margin:9px 0}#market-counter .charity-heading{margin-top:18px}#market-counter .charity-heading small{font-size:11px}.charity-contribution .charity-amount{width:50%}.charity-quick-btn{padding:8px 10px}}

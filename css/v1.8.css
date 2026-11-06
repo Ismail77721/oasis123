@@ -1,0 +1,54 @@
+/* OASIS 1.8: compact notifications, market as an actual fixed isometric plaza, contextual crop controls */
+#inventory{display:none!important}
+#feedback{position:fixed!important;top:calc(119px + env(safe-area-inset-top,0px))!important;left:12px!important;bottom:auto!important;right:auto!important;transform:none!important;width:auto!important;max-width:min(300px,calc(100vw - 35px))!important;padding:9px 12px!important;min-height:0!important;text-align:left!important;border-radius:13px!important;z-index:8!important;font-size:12px!important;opacity:0;pointer-events:none;transition:opacity .25s ease;white-space:normal}
+#feedback.toast-open{opacity:1}
+#mode-chip{top:calc(74px + env(safe-area-inset-top,0px))!important;left:50%;font-size:11px!important;padding:6px 10px;max-width:calc(100vw - 150px);overflow:hidden;text-overflow:ellipsis;box-shadow:0 2px 7px #64361433}
+#hud #resources{font-size:clamp(11px,1.5vw,16px)}
+#hud #phase{font-size:clamp(9px,1.2vw,12px)}
+#hud #family-hud{flex:1;max-width:360px;min-width:85px}
+#stop-build{z-index:8}
+#market-screen[hidden],#market-counter[hidden]{display:none!important}
+#market-screen{position:fixed!important;inset:0!important;z-index:20!important;display:flex!important;flex-direction:column!important;background:linear-gradient(#f1d69c,#c9985c);overflow:hidden!important}
+#market-topbar{flex:0 0 auto!important;min-height:64px!important;z-index:4}
+#market-square{flex:1 1 auto!important;min-height:0!important;max-height:none!important;width:100%!important;background:linear-gradient(#f9dfa5,#dbab67)!important;overflow:hidden!important;padding:0!important}
+.plaza-scene{position:relative;width:min(100%,820px);height:100%;max-height:700px;margin:0 auto;isolation:isolate}
+.plaza-diamond{position:absolute;left:50%;top:47%;width:min(80%,660px);aspect-ratio:1.35/1;transform:translate(-50%,-50%);background:linear-gradient(145deg,#f7dbab 0%,#dca966 61%,#bf884b 100%);clip-path:polygon(50% 0%,100% 50%,50% 100%,0 50%);filter:drop-shadow(0 12px 6px #80522a70);opacity:.95}
+.plaza-diamond::after{content:'';position:absolute;inset:8%;background:repeating-linear-gradient(30deg,transparent 0 46px,#ac7d5128 47px 48px),repeating-linear-gradient(-30deg,transparent 0 46px,#ac7d5128 47px 48px);clip-path:polygon(50% 0%,100% 50%,50% 100%,0 50%)}
+.plaza-path{position:absolute;left:50%;top:49%;width:50%;height:5px;background:#fff2cc88;transform-origin:left;pointer-events:none}.plaza-path.p1{transform:rotate(28deg)}.plaza-path.p2{transform:rotate(151deg)}
+.plaza-tree{position:absolute;font-size:clamp(25px,5vw,54px);filter:drop-shadow(2px 7px 3px #81522a55);pointer-events:none}.tree-a{left:8%;top:16%}.tree-b{right:8%;bottom:19%}
+.plaza-rock{position:absolute;width:35px;height:18px;background:#c29254;border-radius:50%;opacity:.6;pointer-events:none}.rock-a{top:19%;right:12%}.rock-b{bottom:20%;left:18%}
+#market-screen .market-stalls{display:contents!important}
+#market-screen .market-stall{position:absolute!important;inset:auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;align-items:center!important;gap:2px!important;border:0!important;box-shadow:none!important;background:transparent!important;min-height:0!important;max-width:none!important;padding:0!important;transform:translate(-50%,-50%)!important;touch-action:manipulation;z-index:2;cursor:pointer;transition:filter .16s ease}
+#market-screen .market-stall:hover,#market-screen .market-stall:focus-visible{filter:brightness(1.08) drop-shadow(0 0 6px #fff3c1)}
+#market-screen .market-stall img{display:block;width:100%;height:75%;object-fit:contain;filter:drop-shadow(1px 7px 3px #81552a99);pointer-events:none}
+#market-screen .market-stall strong{display:block!important;width:max-content;max-width:150px;background:#fff1cfef;color:#6b4224!important;border:2px solid #c29157;border-radius:12px;font-size:clamp(10px,1.8vw,14px)!important;line-height:1.15;padding:5px 8px!important;box-shadow:0 3px 8px #794b2744;white-space:normal;text-align:center;pointer-events:none}
+#market-screen .market-stall[data-stall=produce]{left:51%;top:35%;width:35%;height:41%;z-index:5}
+#market-screen .market-stall[data-stall=seeds]{left:26%;top:31%;width:23%;height:28%}
+#market-screen .market-stall[data-stall=orders]{left:28%;top:67%;width:23%;height:26%}
+#market-screen .market-stall[data-stall=tools]{left:75%;top:61%;width:26%;height:34%}
+#market-screen .market-stall[data-stall=sadaka]{left:73%;top:26%;width:23%;height:26%}
+.plaza-hint{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);border-radius:30px;padding:8px 15px;color:#6f462b;background:#fff0cacc;font-size:12px;font-weight:700;white-space:nowrap}
+#market-counter{position:absolute!important;inset:auto 0 0!important;height:min(72dvh,620px)!important;background:#fff2d8!important;border-top:4px solid #a87949;border-radius:24px 24px 0 0;box-shadow:0 -16px 45px #4328135e;overflow:auto!important;z-index:10!important;display:block!important;padding:16px clamp(15px,4vw,40px) 25px!important;touch-action:pan-y!important}
+#market-counter-back{background:#87572f;color:#fff4e1;border:0;border-radius:12px;font-weight:800;padding:12px 16px;min-height:44px;margin-bottom:12px;cursor:pointer}
+#market-counter .market-product{max-width:100%;padding:12px 0}
+#market-topbar small{display:block}
+#crop-info[hidden],#remove-confirm[hidden]{display:none!important}
+#crop-info{position:fixed;z-index:19;width:min(300px,calc(100vw - 24px));padding:14px;background:#fff3d9;border:2px solid #aa7542;border-radius:17px;box-shadow:0 12px 38px #34221770;pointer-events:auto;touch-action:manipulation;color:#55391e}
+#crop-info-title{font-weight:900;font-size:18px;padding-right:24px}#crop-info p{font-size:12px;line-height:1.45;color:#6a543b;margin:8px 0}#crop-info-state{font-size:12px;font-weight:700;color:#2d7e58}
+#crop-info-close{position:absolute;right:7px;top:7px;border:0;border-radius:9px;background:#ad7744;color:white;font-size:20px;padding:3px 9px}
+#crop-info-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+#crop-info-actions button{border:0;border-radius:10px;background:#35865c;color:white;padding:10px 11px;font-weight:800;font-size:12px;min-height:40px}#crop-info-actions .danger{background:#975634}
+#remove-confirm{z-index:65!important}
+.remove-buttons{display:flex;justify-content:space-between;gap:12px}.remove-buttons button{border:0;border-radius:10px;padding:13px 14px;font-weight:800;background:#e7caa0;color:#543a27;min-height:44px}.remove-buttons #remove-yes{background:#a45d3b;color:white}
+#home-workers{padding:14px 0}.worker-card{border:1px solid #d8b481;border-radius:14px;padding:13px;margin:10px 0;background:#fff0cf}.worker-card h4{margin:0 0 5px}.worker-card p{font-size:12px;color:#74563b;margin:6px 0}.worker-card button{margin-top:7px;background:#31865d;color:white;border:0;border-radius:10px;padding:11px;font-weight:800}.worker-card button:disabled{background:#aaa39a}
+@media(max-width:520px){#market-screen .market-stall strong{font-size:10px!important;max-width:98px;padding:5px!important}#market-square{flex:1 1 auto!important}#market-counter{height:min(74dvh,660px)!important}#feedback{top:calc(112px + env(safe-area-inset-top,0px))!important}#mode-chip{font-size:10px!important;top:calc(74px + env(safe-area-inset-top,0px))!important}}
+.worker-marker{position:fixed;z-index:7;pointer-events:none;font-size:23px;filter:drop-shadow(0 3px 3px #50392188);transform:translate(-50%,-50%);transition:left .9s linear,top .9s linear}
+.zakat-section{margin-bottom:18px!important}.zakat-section h3{font-size:17px;color:#61432b}.zakat-section button{padding:11px 15px;border:0;border-radius:11px;background:#347b59;color:white;font-weight:800}
+/* Resolve inherited absolute-positioning rules from previous versions. */
+#market-screen .market-stall[data-stall=produce]{left:51%!important;top:35%!important}
+#market-screen .market-stall[data-stall=seeds]{left:26%!important;top:31%!important}
+#market-screen .market-stall[data-stall=orders]{left:28%!important;top:67%!important}
+#market-screen .market-stall[data-stall=tools]{left:75%!important;top:61%!important}
+#market-screen .market-stall[data-stall=sadaka]{left:73%!important;top:26%!important}
+#market-topbar{background:#80512e!important;color:#fff4d4!important;opacity:1!important}
+body.market-active #hud,body.market-active #toolbar,body.market-active #map-controls,body.market-active #sound-settings,body.market-active #audio-bar,body.market-active #help-toggle,body.market-active #quests-toggle,body.market-active #feedback,body.market-active #mode-chip,body.market-active #stop-build{display:none!important}

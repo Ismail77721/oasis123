@@ -1,0 +1,19 @@
+#family-status{
+  margin:8px 14px 0;
+  padding:8px 12px;
+  background:rgba(248,238,214,.92);
+  border:1px solid #d3b07a;
+  border-radius:12px;
+  color:#6b4a2a;
+  font-size:13px;
+  font-weight:700;
+}
+#reply-modal .small-modal{max-width:520px}
+#reply-modal p{font-size:18px;line-height:1.5;margin:16px 0 20px}
+#market-screen{grid-template-rows:auto minmax(180px,33dvh) auto minmax(0,1fr) !important}
+#market-square{overflow:hidden}
+#market-counter{padding-bottom:18px}
+#build-menu-actions [data-build="cancel"]{display:none !important}
+@media (max-width:650px){
+  #family-status{font-size:12px;margin:6px 10px 0}
+}

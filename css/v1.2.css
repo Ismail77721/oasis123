@@ -1,0 +1,56 @@
+/* OASIS v1.2.0 — visual direction from user's original isometric desert art. */
+:root { --amber:#e8b875;--terracotta:#a36a3b;--deep:#634026;--oasis:#39845b; }
+html,body { background:#efca8d; }
+#hud { background:linear-gradient(98deg,#6a432c,#8d5633 43%,#764a2e);border-bottom:2px solid #d9a86d;min-height:62px;box-shadow:0 5px 20px rgba(86,51,25,.23); }
+#hud b { text-shadow:0 2px 4px #40271765;letter-spacing:.11em; }
+#resources { color:#ffe9b9; }
+#phase { color:#ffe7bd; }
+#mode-chip { color:#614021;background:rgba(255,245,214,.94);border:1px solid #f3cf91;box-shadow:0 5px 25px #8b572533;max-width:calc(100vw - 136px);overflow:hidden;text-overflow:ellipsis;text-align:center; }
+#map-controls { right:11px;top:38%; }
+#map-controls button { width:42px;height:42px;border:2px solid #fff1cb;border-radius:14px;background:linear-gradient(155deg,#a97443,#6f442e);box-shadow:0 5px 12px #69452544; }
+#feedback { left:50%;right:auto;width:min(620px,calc(100% - 24px));transform:translateX(-50%);bottom:calc(107px + env(safe-area-inset-bottom,0px))!important;border:1px solid #e2c38d;border-radius:14px;background:rgba(255,246,222,.93);padding:10px 14px;box-shadow:0 6px 22px #68472934; }
+#inventory {left:50%;right:auto;width:min(620px,calc(100% - 24px));transform:translateX(-50%);bottom:calc(160px + env(safe-area-inset-bottom,0px))!important;border:0;background:rgba(255,244,216,.67);padding:5px 10px; }
+/* A compact floating action dock. World interactions don't require selecting tools constantly. */
+#toolbar {width:min(620px,calc(100% - 20px));height:86px!important;left:50%;right:auto;transform:translateX(-50%);bottom:calc(7px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:1fr!important;gap:6px!important;padding:7px!important;background:linear-gradient(120deg,rgba(91,57,37,.95),rgba(111,71,43,.95));border:2px solid rgba(250,219,164,.74);border-radius:23px;box-shadow:0 12px 32px #53321e6b;backdrop-filter:blur(10px); }
+#toolbar button {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:3px;border:1px solid #c29460;border-radius:16px;background:linear-gradient(#bd8951,#956038);font-size:25px!important;line-height:1!important;text-shadow:none;box-shadow:inset 0 1px #e5b77a5e; }
+#toolbar button span {font-size:clamp(11px,2.8vw,14px);font-weight:750;color:#fff1d4;}
+#toolbar button.active {border-color:#fbe8bc;background:linear-gradient(#f8cf80,#d19e50);color:#533117;box-shadow:inset 0 0 0 1px #ffefb3;}
+#toolbar button.active span {color:#55351b}
+#toolbar button[data-action="market"] {background:linear-gradient(#459773,#286f54);border-color:#77b797;}
+#toolbar button:active {transform:translateY(2px) scale(.98)}
+#help-toggle,#quests-toggle,#audio-bar button {background:linear-gradient(#9b6840,#6b472e);border:2px solid #f5dfb4;box-shadow:0 5px 15px #66402544;}
+.market-card {background:linear-gradient(#fff9ed,#f4dfb8);border:3px solid #b6844e;border-radius:22px;}
+/* Market is a genuinely separate illustrated location, not a four-tab modal. */
+#market-screen {background:#edcc98;}
+#market-topbar {background:linear-gradient(100deg,#63412b,#965e33 50%,#63412b);border-bottom:2px solid #d5a466;box-shadow:0 4px 12px #6c452a44;}
+#market-square {flex:0 0 clamp(245px,45vh,475px);border-bottom:5px solid #bd8c5b;background-color:#efc991;background-image:url('../assets/art/market-panorama.jpg');background-size:auto 100%;background-repeat:no-repeat;background-position:center bottom;box-shadow:inset 0 -18px 38px #8d603533;}
+#market-square .market-sun,#market-square .market-wall,#market-square .market-ground {display:none;}
+.market-stalls {inset:auto 5% 10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:stretch;max-width:900px;margin:0 auto;}
+.market-stall {height:auto;min-height:50px;max-height:none;transform:none;padding:8px 5px;border:2px solid #dbb17b;border-bottom:3px solid #8e5931;border-radius:14px;background:rgba(255,242,215,.94);box-shadow:0 5px 14px #5a351f60;color:#553418;backdrop-filter:blur(5px);}
+.market-stall.selected {outline:2px solid #fff6c8;outline-offset:0;border-color:#408e66;background:rgba(235,255,227,.97);box-shadow:0 5px 15px #51392277,0 0 0 3px #398e5b88;}
+.market-stall .stall-awning {display:none;}
+.market-stall .stall-wares {min-height:0;line-height:1.1;letter-spacing:0;font-size:22px;text-shadow:none;}
+.market-stall strong {background:none;border:0;font-size:clamp(11px,2.4vw,15px);padding:2px 0;color:#6d492d;}
+#market-counter {background:linear-gradient(#fff1d5,#f6e1bf);}
+#market-items {padding-bottom:10px;}
+.market-product {padding:13px 5px;}
+.market-product button {background:linear-gradient(#3d976c,#287451);border-radius:11px;}
+@media(max-width:700px) {
+ #hud{padding:0 9px;}
+ #mode-chip{top:calc(108px + env(safe-area-inset-top,0px));font-size:11px;}
+ #toolbar {width:calc(100% - 12px);border-radius:18px;height:82px!important;bottom:calc(5px + env(safe-area-inset-bottom,0px));}
+ #toolbar button {border-radius:12px;font-size:22px!important;}
+ #toolbar button span {font-size:11px;}
+ #feedback {bottom:calc(101px + env(safe-area-inset-bottom,0px))!important;}
+ #inventory {bottom:calc(151px + env(safe-area-inset-bottom,0px))!important;font-size:11px;}
+ #market-square {flex-basis:clamp(245px,39vh,340px);background-size:auto 100%;}
+ .market-stalls {left:5px;right:5px;bottom:7px;gap:5px;}
+ .market-stall {min-height:48px;padding:5px 2px;border-radius:9px;}
+ .market-stall .stall-wares {font-size:16px;}
+ .market-stall strong {font-size:10px;}
+}
+@media(min-width:1200px){#market-square{flex-basis:clamp(320px,49vh,465px);} }
+@media(prefers-reduced-motion:no-preference) {
+ #market-screen:not([hidden]){animation:market-arrival .38s ease-out both;}
+ @keyframes market-arrival{from{opacity:.65;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+}
