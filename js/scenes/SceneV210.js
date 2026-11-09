@@ -122,7 +122,7 @@
    return;
   }
   if (this.s.tool === 'remove') {
-   if (occupant && ['crop', 'canal'].includes(occupant.kind)) this.confirmRemoval(index);
+   if (occupant && ['crop', 'canal'].includes(occupant.kind)) this.confirmRemoval(occupant.anchor);
    else this.notify('Выбери растение или канал');
    return;
   }
@@ -131,6 +131,7 @@
   if (object?.kind === 'well') { this.openWell(); return; }
   if (object?.kind === 'building') { this.playSound('click'); this.openFarm(object.anchor); return; }
   if (!cell) return;
+  if(occupant?.kind==='crop'&&occupant.anchor!==index){const a=this.cells.find(c=>c.i===occupant.anchor);if(a)return this.onMapTap({x:a.x,y:a.y});}
   const tile = this.s.tiles[index];
   this.selectedTile = index;
   if (tile.canal) { this.openCropCard(index); return; }
@@ -307,7 +308,7 @@
  const oldRender = M.render, oldCreate = M.create, oldBack = M.goBack;
  M.render = function () {
   if (!this.s) return;
-  if (!this.manualMapZoom) this.mapZoom = this.scale.width < 600 && this.scale.height > this.scale.width ? 1.42 : 1;
+  if (!this.manualMapZoom) this.mapZoom = this.scale.width < 600 && this.scale.height > this.scale.width ? 3.6 : 2.8;
   const profileChanged = this.questProfile !== this.s;
   if (profileChanged) { this.questProfile = this.s; this.completedQuests = null; }
   oldRender.call(this);
@@ -328,7 +329,7 @@
   if (news.length) {
    const banner = byId('quest-banner');
    banner.textContent = news.length === 1 ? 'Задание выполнено · ' + news[0][1] : 'Выполнено заданий · ' + news.length;
-   banner.hidden = false;
+   banner.hidden = false; this.notify(banner.textContent);
    clearTimeout(this.questBannerTimer);
    this.questBannerTimer = setTimeout(() => { banner.hidden = true; }, 4700);
    if (!byId('quests-panel').hidden) this.renderQuests();
@@ -377,7 +378,7 @@
    button.title = active ? 'Выйти из полного экрана' : 'Полноэкранный режим';
    button.setAttribute('aria-label', button.title);
    for (const side of ['top','right','bottom','left']) {
-    const inset = Math.max(Number(app?.safeAreaInset?.[side]) || 0, Number(app?.contentSafeAreaInset?.[side]) || 0);
+    const inset = (Number(app?.safeAreaInset?.[side]) || 0)+(Number(app?.contentSafeAreaInset?.[side]) || 0);
     root.style.setProperty('--telegram-' + side, inset + 'px');
    }
   };

@@ -18,7 +18,7 @@
   if (row + rows > n || col + cols > n) return null;
   return Array.from({length: rows * cols}, (_, i) => (row + Math.floor(i / cols)) * n + col + i % cols);
  }
- const buildingSize = (id, rotated) => ['sheep', 'camel'].includes(id) ? (rotated ? [2, 3] : [3, 2]) : [2, 2];
+ const buildingSize = (id, rotated) => id==='camel' ? (rotated ? [4,3] : [3,4]) : [3,3];
  function buildingArea(s, i, t = s.tiles[i]) {
   return t?.buildingArea === true ? rectangle(s, i, ...buildingSize(t.building,t.buildingRotated)) || [i] : [i];
  }
@@ -26,21 +26,22 @@
   if (!valid(s, i)) return null;
   if (s.tiles[i]?.building) return i;
   const n = size(s), row = Math.floor(i / n), col = i % n;
-  for (let r = Math.max(0, row - 2); r <= row; r++) {
-   for (let c = Math.max(0, col - 2); c <= col; c++) {
+  for (let r = Math.max(0, row - 3); r <= row; r++) {
+   for (let c = Math.max(0, col - 3); c <= col; c++) {
     const anchor = r * n + c, tile = s.tiles[anchor];
     if (tile?.building && tile.buildingArea === true && buildingArea(s, anchor, tile).includes(i)) return anchor;
    }
   }
   return null;
  }
+ function cropAt(s,i){if(!valid(s,i))return null;const n=size(s),r=Math.floor(i/n),c=i%n;for(let rr=Math.max(0,r-1);rr<=r;rr++)for(let cc=Math.max(0,c-1);cc<=c;cc++){const a=rr*n+cc,t=s.tiles[a];if(t?.crop&&(a===i||t.cropArea))return a;}return null;}
  function objectAt(s, i) {
   if (!valid(s, i)) return null;
   if ((s.wellArea?rectangle(s,C.wellIndex,2,2)||[C.wellIndex]:[C.wellIndex]).includes(i)) return {kind:'well',anchor:C.wellIndex};
   if (land().isHome(s, i)) return {kind: 'home', anchor: s.house.row * size(s) + s.house.col};
   const building = buildingAt(s, i);
   if (building !== null) return {kind: 'building', anchor: building};
-  if (s.tiles[i]?.crop) return {kind: 'crop', anchor: i};
+  const crop=cropAt(s,i);if(crop!==null)return {kind:'crop',anchor:crop};
   if (s.tiles[i]?.canal) return {kind: 'canal', anchor: i};
   return null;
  }
@@ -51,7 +52,7 @@
   }
   if (object.kind === 'well') return rectangle(s,target,2,2);
   if (object.kind === 'building') return rectangle(s, target, ...buildingSize(object.id || s.tiles[object.anchor]?.building, object.rotated ?? s.tiles[object.anchor]?.buildingRotated));
-  return rectangle(s, target, 1, 1);
+  return rectangle(s,target,object.kind==='crop'?2:1,object.kind==='crop'?2:1);
  }
  function check(s, target, object) {
   const area = areaFor(s, target, object);
@@ -78,7 +79,7 @@
    s.wellPosition = {row: Math.floor(target / n), col: target % n};
    C.wellIndex = target;
   } else {
-   s.tiles[target] = {...s.tiles[object.anchor]};
+   s.tiles[target] = {...s.tiles[object.anchor]};if(object.kind==='crop')s.tiles[target].cropArea=true;
    if (object.kind === 'building') {
     s.tiles[target].buildingArea = true;
     s.tiles[target].buildingRotated = object.rotated ?? priorRotation;
@@ -159,5 +160,5 @@
   });
   return connected.length ? connected : directions.filter(d => d.axis === (axis || s.tiles[i].canalAxis || 'col'));
  }
- window.OasisMapLayout = {buildingSize, buildingArea, buildingAt, objectAt, check, move, route, canalQuote, layCanal, arms};
+ window.OasisMapLayout = {cropAt,buildingSize, buildingArea, buildingAt, objectAt, check, move, route, canalQuote, layCanal, arms};
 })();

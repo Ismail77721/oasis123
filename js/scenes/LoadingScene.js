@@ -2,8 +2,8 @@ class LoadingScene extends Phaser.Scene {
  constructor(){super('LoadingScene');}
  preload(){
   const loadImage=this.load.image.bind(this.load);
-  this.load.image=(key,url)=>loadImage(key,url+(url.includes("?")?"&":"?")+"build=2.1.0");
-  this.load.json('approved-art-meta','assets/art/approved/manifest.json?build=2.1.0');
+  this.load.image=(key,url)=>loadImage(key,url+(url.includes("?")?"&":"?")+"build=2.2.0");
+  this.load.json('approved-art-meta','assets/art/approved/manifest.json?build=2.2.0');
   for(const id of ['sheep','camel','apiary','mill','loom','oilpress','olivepress'])for(let n=1;n<=3;n++)this.load.image('art-building-'+id+'-l'+n,'assets/art/approved/'+id+'-l'+n+'.webp');
   for(let n=1;n<=3;n++)this.load.image('art-well-l'+n,'assets/art/approved/well-l'+n+'.webp');
   const crops=['watermelon','clover','melon','fig','pomegranate','dates','olive','sidr','cumin','flowers','barley','wheat'];

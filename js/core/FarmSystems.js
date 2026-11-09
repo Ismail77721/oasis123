@@ -38,7 +38,7 @@
   if(!['both','plant','harvest'].includes(s.workerPlan.mode))s.workerPlan.mode='both';
   if(!C.crops[s.workerPlan.crop])s.workerPlan.crop='clover';
   if(Array.isArray(s.workerPlan.area))s.workerPlan.area=[...new Set(s.workerPlan.area.filter(i=>Number.isInteger(i)&&i>=0&&i<s.tiles.length))];
-  if(!s.zakat||typeof s.zakat!=='object')s.zakat={startAt:0,dueAt:0,dueAmount:0,paidAt:0};
+  delete s.zakat;
   return s;
  }
  function updateIrrigation(s,connected,now=Date.now()){
@@ -52,7 +52,7 @@
   });
   return changed;
  }
- function canUseTile(s,i,connected){const t=s.tiles[i];return !!t&&window.OasisMapLayout?.objectAt(s,i)?.kind!=='well'&&i!==C.wellIndex&&!window.OasisFamilyLand?.isHome?.(s,i)&&window.OasisMapLayout?.buildingAt(s,i)==null&&!t.building&&!t.canal&&!t.crop&&connected(i);}
+ function canUseTile(s,i,connected){const t=s.tiles[i];return !!t&&connected(i)&&window.OasisMapLayout?.objectAt(s,i)?.kind!=='well'&&i!==C.wellIndex&&!window.OasisFamilyLand?.isHome?.(s,i)&&window.OasisMapLayout?.buildingAt(s,i)==null&&!t.building&&!t.canal&&!t.crop&&(s.geometryVersion!==2||window.OasisMapLayout.check(s,i,{kind:'crop'}).ok)&&connected(i);}
  function uproot(s,i){
   const t=s.tiles[i];if(!t||!t.crop)return{ok:false,reason:'Здесь нет растения'};
   const id=t.crop; s.seedBank[id]=(s.seedBank[id]||0)+1;
@@ -121,20 +121,5 @@
   }
   return{changed,completed};
  }
- const ZAKAT_NISAB=12000;
- function zakatStatus(s,now=Date.now()){
-  ensure(s);const z=s.zakat,wealth=Math.floor(Math.max(0,s.coins||0));
-  if(wealth<ZAKAT_NISAB){if(!z.dueAt){z.startAt=0;z.dueAt=0;z.dueAmount=0;}return{due:!!z.dueAt,eligible:false,amount:z.dueAt?(z.dueAmount||0):0,threshold:ZAKAT_NISAB,daysLeft:0};}
-  if(!z.startAt)z.startAt=now;
-  const end=z.startAt+355*dayMS();
-  if(now>=end){if(!z.dueAt)z.dueAmount=Math.floor(wealth*.025);z.dueAt=end;}
-  return{due:!!z.dueAt,eligible:true,amount:z.dueAt?(z.dueAmount||Math.floor(wealth*.025)):Math.floor(wealth*.025),threshold:ZAKAT_NISAB,daysLeft:Math.max(0,Math.ceil((end-now)/dayMS()))};
- }
- function payZakat(s,now=Date.now()){
-  const st=zakatStatus(s,now);if(!st.due)return{ok:false,reason:'Пока нет обязанности по игровому расчёту'};
-  if(st.amount<1||s.coins<st.amount)return{ok:false,reason:'Недостаточно монет'};
-  s.coins=round(s.coins-st.amount);s.zakat.paidAt=now;s.zakat.startAt=s.coins>=ZAKAT_NISAB?now:0;s.zakat.dueAt=0;s.zakat.dueAmount=0;
-  return{ok:true,amount:st.amount};
- }
- window.OasisFarmSystems={ensure,updateIrrigation,uproot,dismantle,hire,setDayOff,tick,zakatStatus,payZakat,notes,jobs,nisab:ZAKAT_NISAB,dayMS};
+ window.OasisFarmSystems={ensure,updateIrrigation,uproot,dismantle,hire,setDayOff,tick,notes,jobs,dayMS};
 })();

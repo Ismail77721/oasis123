@@ -225,20 +225,5 @@
   const x=start.x+(cell.x-start.x)*fraction,y=start.y+(cell.y-start.y)*fraction-20;
   marker.style.display='block';marker.style.left=Math.round(x)+'px';marker.style.top=Math.round(y)+'px';marker.textContent=id==='collector'?'📦':'🧺';
  };
- M.appendZakat=function(){
-  const rows=get('market-items');if(!rows)return;const st=F.zakatStatus(this.s);
-  const area=node('section','charity-project zakat-section');area.append(node('h3',null,'🌙 Закят — отдельный раздел'));
-  area.append(node('p','charity-project-desc','Учебная игровая модель: условный нисаб '+F.nisab+' монет и 355 игровых дней сохранения имущества не ниже этого порога. Реальные правила и расчёт закята требуют отдельного уточнения.'));
-  if(st.due){area.append(node('p',null,'Наступил срок игрового закята: '+st.amount+' 🪙'));
-   const btn=node('button','charity-submit','Выплатить закят');btn.disabled=st.amount<1||this.s.coins<st.amount;
-   btn.addEventListener('click',()=>{const r=F.payZakat(this.s);if(!r.ok){this.marketNotice(r.reason);return;}this.save();this.render();this.renderMarketTab('sadaka');this.showBlessing({text:'Да воздаст тебе Аллах благом!',reply:'И вам того же'});});area.append(btn);
-  }else area.append(node('p','charity-project-desc',st.eligible?'Срок ещё не наступил. Осталось игровых дней: '+st.daysLeft:'Для начинающего хозяйства выплата сейчас не требуется.'));
-  rows.append(area);
- };
- M.updateZakatReminder=function(){
-  if(Date.now()-(this.lastZakatCheck||0)<20000)return;this.lastZakatCheck=Date.now();
-  const prior=!!this.s.zakat?.dueAt,started=!!this.s.zakat?.startAt,st=F.zakatStatus(this.s);
-  if(!started&&this.s.zakat?.startAt)this.save();
-  if(!prior&&st.due){this.save();this.notify('🌙 В разделе благотворительности появилось напоминание о закяте');if(this.marketOpen&&this.currentStall==='sadaka')this.renderMarketTab('sadaka');}
- };
+ M.appendZakat=function(){};M.updateZakatReminder=function(){};
 })();

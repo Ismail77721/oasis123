@@ -1,0 +1,86 @@
+[
+  {
+    "test": "art_assets.cjs",
+    "passed": true
+  },
+  {
+    "test": "audio.cjs",
+    "passed": true
+  },
+  {
+    "test": "audio_assets.cjs",
+    "passed": true
+  },
+  {
+    "test": "economy.cjs",
+    "passed": true
+  },
+  {
+    "test": "guide_flow.cjs",
+    "passed": true
+  },
+  {
+    "test": "map_layout.cjs",
+    "passed": true
+  },
+  {
+    "test": "menu_navigation.cjs",
+    "passed": true
+  },
+  {
+    "test": "progression_daily.cjs",
+    "passed": true
+  },
+  {
+    "test": "smoke.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_4_features.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_6_features.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_6_ui.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_7_charity.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_7_ui.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_8_features.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_9_1_sprite_integration.cjs",
+    "passed": true
+  },
+  {
+    "test": "v1_9_visual.cjs",
+    "passed": true
+  },
+  {
+    "test": "v2_1_balance.cjs",
+    "passed": true
+  },
+  {
+    "test": "v2_1_regression.cjs",
+    "passed": true
+  },
+  {
+    "test": "v2_2_geometry.cjs",
+    "passed": true
+  },
+  {
+    "test": "visual_assets.cjs",
+    "passed": true
+  }
+]

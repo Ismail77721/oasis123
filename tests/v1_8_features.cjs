@@ -29,11 +29,8 @@ assert.equal(s.tiles[i].crop,null);assert(s.inventory.clover>=2);
 s.workerPlan.crop='clover';s.workers.gardener.state='idle';const planted=F.tick(s,k=>k===48,now+5000);assert.equal(s.workers.gardener.state,'travel');
 const jobIndex=s.workers.gardener.target;const jobEnd=s.workers.gardener.endsAt;
 const resolved=F.tick(s,k=>k===48,jobEnd+1);assert(resolved.completed.some(x=>x.action==='plant'));assert(s.tiles[jobIndex].crop);
-// In-game educational zakat: 355 two-hour days above symbolic threshold.
-const a=G.createNew();a.coins=12000;let result=F.zakatStatus(a,1000000);assert(result.eligible&&!result.due);
-result=F.zakatStatus(a,1000000+354*F.dayMS());assert(!result.due);
-result=F.zakatStatus(a,1000000+355*F.dayMS()+1);assert(result.due);assert.equal(result.amount,300);
-const paid=F.payZakat(a,1000000+355*F.dayMS()+1);assert(paid.ok);assert.equal(a.coins,11700);assert(!F.zakatStatus(a,1000000+355*F.dayMS()+100).due);
+// Zakat is absent by product requirement; old state is removed without a charge.
+const a=G.createNew();a.coins=12000;a.zakat={dueAmount:300};F.ensure(a);assert(!a.zakat);assert.equal(a.coins,12000);assert.equal(F.payZakat,undefined);
 const r=G.normalize(JSON.parse(JSON.stringify(s)));F.ensure(r);assert.equal(r.workers.gardener.hired,true);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');const scene=fs.readFileSync(path.join(root,'js/scenes/SceneV180.js'),'utf8');
 assert.equal((html.match(/class="market-stall"/g)||[]).length,5,'Five clickable market buildings');
@@ -43,4 +40,4 @@ assert(!html.includes('id="tutorial-replay" type="button" class="replay-guide"')
 assert(scene.includes('longPressTimer')&&scene.includes('swipeActive')&&scene.includes('ОАЗИС v1.8'));
 assert(!html.includes('🤲 Баракат'));
 assert(fs.existsSync(path.join(root,'assets/audio/market_ambience.mp3')));
-console.log('PASS v1.8: exact prices, no water use, irrigation pause, removal, real worker tasks and path, educational zakat, plaza/card/gesture markup, migrated workers');
+console.log('PASS v1.8: exact prices, no water use, irrigation pause, removal, real worker tasks and path, zakat removal, plaza/card/gesture markup, migrated workers');

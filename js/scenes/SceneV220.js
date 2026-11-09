@@ -145,7 +145,6 @@ M.render=function(){
   const n=s.worldSize, result=expand(s);if(!result.ok)return result;
   const shift=(s.worldSize-n)/2,remap=i=>(Math.floor(i/n)+shift)*s.worldSize+i%n+shift;
   if(Array.isArray(s.workerPlan?.area))s.workerPlan.area=s.workerPlan.area.map(remap);
-  for(const w of Object.values(s.workers||{})){if(w.target>=0)w.target=remap(w.target);if(w.from>=0)w.from=remap(w.from);}
   return result;
  };
 })();

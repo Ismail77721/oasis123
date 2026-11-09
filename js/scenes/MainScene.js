@@ -265,12 +265,12 @@ class MainScene extends Phaser.Scene {
    if(!this.pinchStart)this.pinchStart={dist:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),zoom:this.mapZoom};
    this.manualMapZoom=true;
    this.mapZoom=Math.min(3.5,Math.max(1,this.pinchStart.zoom*Math.hypot(a.x-b.x,a.y-b.y)/Math.max(1,this.pinchStart.dist)));
-   this.wasGesture=true;this.dragPointer=null;this.clampPan();this.render();return;
+   this.wasGesture=true;this.dragPointer=null;this.clampPan();this.queueMapRender?this.queueMapRender():this.render();return;
   }
   const drag=this.dragPointer;
   if(!drag||drag.id!==p.id)return;
   if(Math.hypot(p.x-drag.x,p.y-drag.y)>9)drag.drag=true;
-  if(drag.drag){this.panX+=p.x-drag.lastX;this.panY+=p.y-drag.lastY;this.clampPan();this.render();}
+  if(drag.drag){this.panX+=p.x-drag.lastX;this.panY+=p.y-drag.lastY;this.clampPan();this.queueMapRender?this.queueMapRender():this.render();}
   drag.lastX=p.x;drag.lastY=p.y;
  }
  endMapPointer(p){
@@ -640,6 +640,7 @@ class MainScene extends Phaser.Scene {
   this.drawFence(g,ox,oy,tw,tileH,cols);
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
    const i=r*cols+c,t=this.s.tiles[i],x=ox+(c-r)*tw/2,y=oy+(c+r)*tileH/2;
+   if(x < -tw*5 || x > w+tw*5 || y < -tw*2 || y > h+tw*6){this.art?.[i]?.setVisible(false);continue;}
    const points=[{x,y:y-tileH/2},{x:x+tw/2,y},{x,y:y+tileH/2},{x:x-tw/2,y}];
    const isWell=i===OASIS_CONFIG.wellIndex;
    // Transparent cells preserve the full 10x10 logical grid, but do not expose a checkerboard.
@@ -647,7 +648,7 @@ class MainScene extends Phaser.Scene {
     g.lineStyle(Math.max(.6,tw*.014),0x8b694b,.17);g.strokePoints(points,true);
    }
    if(!t.crop&&!t.canal&&!t.building&&!isWell&&!window.OasisFamilyLand?.isHome(this.s,i)&&window.OasisMapLayout?.buildingAt(this.s,i)==null)this.drawSandDecoration(g,x,y,tw,tileH,i);
-   if(t.crop)this.drawCultivatedSoil(g,x,y,tw,tileH);
+   if(t.crop&&!t.perennialEstablished&&(Date.now()-t.plantedAt)<OASIS_CONFIG.crops[t.crop].growSeconds*120)this.drawCultivatedSoil(g,x,y,tw,tileH);
    if(this.s.tool!=='plant'&&this.irrigated(i)&&!t.crop&&!t.canal&&!t.building&&!isWell&&window.OasisMapLayout?.buildingAt(this.s,i)==null&&!window.OasisFamilyLand?.isHome(this.s,i)){
     g.fillStyle(0x5e994e,.34);g.fillEllipse(x,y+tileH*.10,Math.max(2,tw*.09),Math.max(1,tileH*.13));
    }

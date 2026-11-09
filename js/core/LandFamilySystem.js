@@ -2,7 +2,7 @@
 (function(){
  'use strict';
  const C=window.OASIS_CONFIG,B=window.OASIS_BUILDINGS,E=window.OasisEconomy,G=window.OasisGameState;
- const SIDES=[16,20,24], COSTS={16:600,20:1800},HOUSE_MAX=5;
+ const SIDES=[16,20,24,...Array.from({length:10},(_,i)=>64+i*16)], COSTS={16:600,20:1800,...Object.fromEntries(Array.from({length:9},(_,i)=>[64+i*16,Math.round(1200*Math.pow(1.85,i))]))},HOUSE_MAX=5;
  C.dayMinutes=60;C.nightMinutes=60;C.version='1.6.0';
  Object.assign(B,{
   mill:{title:'Мельница',unlock:6,cost:260,feed:'wheat',feedAmount:5,water:0,duration:1200,product:'flour',amount:3,price:58},
@@ -14,7 +14,7 @@
  const validSide=n=>SIDES.includes(n)?n:16;
  function setWorld(side){C.worldSize=validSide(side);const offset=(C.worldSize-16)/2;C.wellIndex=(7+offset)*C.worldSize+(7+offset);}
  const oldNew=G.createNew,oldNormalize=G.normalize;
- const houseSide=house=>house ? (house.size===2 ? 2 : 4) : 2;
+ const houseSide=house=>house ? ([2,4,8,16].includes(house.size)?house.size:4) : 2;
  function footprint(s,row=s.house?.row,col=s.house?.col){const n=s.worldSize||C.worldSize,ids=[],side=houseSide(s.house);for(let r=0;r<side;r++)for(let c=0;c<side;c++)ids.push((row+r)*n+col+c);return ids;}
  function occupied(s,row,col){const n=s.worldSize||C.worldSize;if(row<0||col<0||row+houseSide(s.house)>n||col+houseSide(s.house)>n)return true;return footprint(s,row,col).some(i=>i===C.wellIndex||s.tiles[i]?.crop||s.tiles[i]?.canal||s.tiles[i]?.building);}
  function placeHouse(s){
@@ -26,7 +26,7 @@
   if(where)s.house={size:houseSide(s.house),row:where[0],col:where[1],level:Math.min(HOUSE_MAX,Math.max(1,s.house?.level||s.houseLevel||1))};
   else s.house={size:houseSide(s.house),row:Math.max(0,11+offset),col:Math.max(0,1+offset),level:1};
  }
- function isHome(s,index){if(!s?.house)return false;return footprint(s).includes(index);}
+ function isHome(s,index){if(!s?.house)return false;const n=s.worldSize||C.worldSize,r=Math.floor(index/n),c=index%n,h=s.house,k=houseSide(h);return r>=h.row&&r<h.row+k&&c>=h.col&&c<h.col+k;}
  function foodNeeds(s){
   const lvl=window.OasisProgression.level(s),tier=Math.min(5,Math.max(1,s.house?.level||1));
   const pool=['watermelon'];
@@ -97,13 +97,13 @@
  function expansionPrice(s){return COSTS[s.worldSize]??null;}
  function expand(s){const price=expansionPrice(s);if(price===null)return{ok:false,reason:'Вся доступная территория открыта'};
   if(s.coins<price)return{ok:false,reason:'Недостаточно монет для расширения'};
-  const oldN=s.worldSize,newN=oldN+4;const cells=Array.from({length:newN*newN},G.tile);
-  for(let r=0;r<oldN;r++)for(let c=0;c<oldN;c++)cells[(r+2)*newN+c+2]=s.tiles[r*oldN+c];
+  const oldN=s.worldSize,newN=SIDES[SIDES.indexOf(oldN)+1],shift=(newN-oldN)/2;const cells=Array.from({length:newN*newN},G.tile);
+  for(let r=0;r<oldN;r++)for(let c=0;c<oldN;c++)cells[(r+shift)*newN+c+shift]=s.tiles[r*oldN+c];
   s.tiles=cells;s.worldSize=newN;s.coins=round(s.coins-price);
-  if(s.house){s.house.row+=2;s.house.col+=2;}
-  if(s.wellPosition){s.wellPosition.row+=2;s.wellPosition.col+=2;}
+  if(s.house){s.house.row+=shift;s.house.col+=shift;}
+  if(s.wellPosition){s.wellPosition.row+=shift;s.wellPosition.col+=shift;}
   for(const w of Object.values(s.workers||{})){
-   for(const key of ['target','from'])if(w[key]>=0)w[key]=(Math.floor(w[key]/oldN)+2)*newN+w[key]%oldN+2;
+   for(const key of ['target','from'])if(w[key]>=0)w[key]=(Math.floor(w[key]/oldN)+shift)*newN+w[key]%oldN+shift;
   }
   setWorld(newN);ensure(s);return{ok:true,price,newSize:newN};
  }
