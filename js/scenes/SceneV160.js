@@ -119,6 +119,7 @@ MP.drawHouseImage=function(){
  if(this.textures?.exists?.(key)&&this.add?.image){
   if(!this.homeSprite){this.homeSprite=this.add.image(centerX,centerY,key).setOrigin(.5,.91);}
   if(this.homeSprite.texture.key!==key)this.homeSprite.setTexture(key);
+  this.homeSprite.setOrigin(.5,this.cache.json.get('approved-art-meta')?.['home-l'+Math.min(level,3)]?.anchor?.[1]||.95);
   this.homeSprite.setFlipX?.(Boolean(this.s.house.flipped));
   this.homeSprite.setDisplaySize(w,h).setPosition(centerX,baseline).setDepth(110+Math.round(baseline));
   if(OasisTimeSystem.getPhase()==='night')this.homeSprite.setTint(0xb2b6c8);else this.homeSprite.clearTint();

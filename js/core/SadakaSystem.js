@@ -80,10 +80,17 @@
   const c=ensure(s,now);
   return PROJECTS.map(p=>({...p,raised:c.campaigns[p.id].raised,remaining:p.goal-c.campaigns[p.id].raised,completed:c.campaigns[p.id].raised>=p.goal}));
  }
- function grantHiddenBenefit(s,points){
-  s.barakatPoints=Math.max(0,(Number(s.barakatPoints)||0))+points;
-  s.barakatLevel=Math.min(20,Math.floor(s.barakatPoints/35));
+ function grantHiddenBenefit(s,points,now=Date.now()){
+  const day=Math.floor(now/86400000);
+  s.blessingGrowth ||= {points:0,day:day,today:0};
+  const b=s.blessingGrowth;
+  if(day>b.day){b.day=day;b.today=0;}
+  const granted=Math.min(Math.max(0,points)*.01,Math.max(0,1-b.today));
+  b.today+=granted;b.points=Math.min(180,b.points+granted);
+  // Legacy donation history stays intact; new harvest growth uses a bounded rate.
+  s.barakatPoints=Math.max(0,Number(s.barakatPoints)||0)+granted;
  }
+
  function donate(s,id,now=Date.now()){
   const c=ensure(s,now),r=c.requests.find(q=>q.id===id);
   if(!r)return {ok:false,reason:'Просьба больше не активна'};
@@ -94,7 +101,7 @@
   if(r.goods)s.inventory[r.goods]-=r.amount;
   r.done=true;
   s.totalDonated=round((Number(s.totalDonated)||0)+(r.coins||0));
-  grantHiddenBenefit(s,r.points||15);
+  grantHiddenBenefit(s,r.points||15,now);
   if(!Array.isArray(s.donationHistory))s.donationHistory=[];
   s.donationHistory.push(localDay(now)+':'+r.id);s.donationHistory=s.donationHistory.slice(-120);
   return {ok:true,blessing:blessing(r.id)};
@@ -110,7 +117,7 @@
   if((s.coins||0)<amount)return {ok:false,reason:'Недостаточно монет для пожертвования'};
   s.coins=round(s.coins-amount);progress.raised+=amount;
   s.totalDonated=round((Number(s.totalDonated)||0)+amount);
-  grantHiddenBenefit(s,Math.max(1,Math.floor(amount/8)));
+  grantHiddenBenefit(s,amount/8,now);
   return {ok:true,amount,raised:progress.raised,goal:project.goal,completed:progress.raised>=project.goal,blessing:blessing(id+':'+progress.raised)};
  }
  window.OasisSadaka={list,donate,projects,contribute,ensure,gameDay,localDay,blessing,BLESSINGS,PROJECTS};

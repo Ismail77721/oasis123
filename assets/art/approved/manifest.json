@@ -1,0 +1,245 @@
+{
+  "home-l1": {
+    "source": "exec-cc548605-3a85-4af8-9bd1-519d0a0fe568.png",
+    "width": 507,
+    "height": 512,
+    "anchor": [
+      0.5,
+      0.96875
+    ]
+  },
+  "well-l1": {
+    "source": "exec-e053b260-7fee-4c32-9261-c7a08e08b363.png",
+    "width": 512,
+    "height": 272,
+    "anchor": [
+      0.5,
+      0.9411764705882353
+    ]
+  },
+  "sheep-l1": {
+    "source": "exec-b1ca4cdc-b697-463c-a18c-3531a8667140.png",
+    "width": 512,
+    "height": 274,
+    "anchor": [
+      0.5,
+      0.9416058394160584
+    ]
+  },
+  "camel-l1": {
+    "source": "exec-3db3e7a9-4656-4aa1-8fe0-09540f44a0db.png",
+    "width": 512,
+    "height": 353,
+    "anchor": [
+      0.5,
+      0.9546742209631728
+    ]
+  },
+  "apiary-l1": {
+    "source": "exec-ca56727b-80fc-4abc-a9e7-612cdd19bf03.png",
+    "width": 512,
+    "height": 260,
+    "anchor": [
+      0.5,
+      0.9384615384615385
+    ]
+  },
+  "oilpress-l1": {
+    "source": "exec-eb8c0bd7-1881-452d-94b3-2682d32377d3.png",
+    "width": 512,
+    "height": 272,
+    "anchor": [
+      0.5,
+      0.9411764705882353
+    ]
+  },
+  "well-l2": {
+    "source": "exec-77d80693-ac9a-49bd-bbe0-18a50a422713.png",
+    "width": 512,
+    "height": 450,
+    "anchor": [
+      0.5,
+      0.9644444444444444
+    ]
+  },
+  "olivepress-l1": {
+    "source": "exec-e605196b-2cd6-4196-9095-a0e2fb7309f4.png",
+    "width": 512,
+    "height": 266,
+    "anchor": [
+      0.5,
+      0.9398496240601504
+    ]
+  },
+  "well-l3": {
+    "source": "exec-bd476fe2-670d-4cad-a1eb-42ed9e25ebdd.png",
+    "width": 512,
+    "height": 493,
+    "anchor": [
+      0.5,
+      0.9675456389452333
+    ]
+  },
+  "home-l2": {
+    "source": "exec-1d9e4edd-16be-4102-bf2f-9b1d85def981.png",
+    "width": 512,
+    "height": 469,
+    "anchor": [
+      0.5,
+      0.9658848614072495
+    ]
+  },
+  "mill-l1": {
+    "source": "exec-7492633e-6cab-45c9-a1c6-9ed030306289.png",
+    "width": 512,
+    "height": 348,
+    "anchor": [
+      0.5,
+      0.9540229885057471
+    ]
+  },
+  "sheep-l2": {
+    "source": "exec-68fea570-4650-4dab-abcd-2150d6600e23.png",
+    "width": 512,
+    "height": 353,
+    "anchor": [
+      0.5,
+      0.9546742209631728
+    ]
+  },
+  "home-l3": {
+    "source": "exec-7314e95f-cb10-4157-a5da-69d3f31571e1.png",
+    "width": 512,
+    "height": 471,
+    "anchor": [
+      0.5,
+      0.9660297239915074
+    ]
+  },
+  "sheep-l3": {
+    "source": "exec-42f6d4bd-b629-44f9-89af-43057c664fa0.png",
+    "width": 512,
+    "height": 348,
+    "anchor": [
+      0.5,
+      0.9540229885057471
+    ]
+  },
+  "camel-l2": {
+    "source": "exec-39ee3f7f-626c-4c76-a4c9-ac9a7ba6a315.png",
+    "width": 512,
+    "height": 351,
+    "anchor": [
+      0.5,
+      0.9544159544159544
+    ]
+  },
+  "loom-l1": {
+    "source": "exec-f2c2f321-4c78-4e93-957f-77404056a6ce.png",
+    "width": 512,
+    "height": 268,
+    "anchor": [
+      0.5,
+      0.9402985074626866
+    ]
+  },
+  "camel-l3": {
+    "source": "exec-06fa3de3-671e-409b-8e61-f943a6c0b114.png",
+    "width": 512,
+    "height": 349,
+    "anchor": [
+      0.5,
+      0.9541547277936963
+    ]
+  },
+  "apiary-l2": {
+    "source": "exec-8a861fdb-4106-4df5-b9d2-1c43d01b8d2b.png",
+    "width": 512,
+    "height": 270,
+    "anchor": [
+      0.5,
+      0.9407407407407408
+    ]
+  },
+  "apiary-l3": {
+    "source": "exec-f0568d85-9645-414c-8d96-180c3d65e60e.png",
+    "width": 512,
+    "height": 461,
+    "anchor": [
+      0.5,
+      0.96529284164859
+    ]
+  },
+  "oilpress-l2": {
+    "source": "exec-2e7b5766-dcea-4ca6-8680-9399a86f707d.png",
+    "width": 512,
+    "height": 266,
+    "anchor": [
+      0.5,
+      0.9398496240601504
+    ]
+  },
+  "oilpress-l3": {
+    "source": "exec-4da1ca70-df62-46f4-8b8c-da3dea7d676f.png",
+    "width": 512,
+    "height": 467,
+    "anchor": [
+      0.5,
+      0.9657387580299786
+    ]
+  },
+  "olivepress-l2": {
+    "source": "exec-9befe7da-839d-4500-8698-dae218e1d0b1.png",
+    "width": 512,
+    "height": 270,
+    "anchor": [
+      0.5,
+      0.9407407407407408
+    ]
+  },
+  "olivepress-l3": {
+    "source": "exec-6cdb0afc-d063-41c1-b6d8-8405c3370744.png",
+    "width": 512,
+    "height": 463,
+    "anchor": [
+      0.5,
+      0.9654427645788337
+    ]
+  },
+  "mill-l2": {
+    "source": "exec-f7c65177-8beb-49f6-8551-6664ac80671a.png",
+    "width": 512,
+    "height": 271,
+    "anchor": [
+      0.5,
+      0.940959409594096
+    ]
+  },
+  "mill-l3": {
+    "source": "exec-05ba7d0d-c6b9-4759-abc0-1d56bb2ac3a2.png",
+    "width": 512,
+    "height": 475,
+    "anchor": [
+      0.5,
+      0.9663157894736842
+    ]
+  },
+  "loom-l2": {
+    "source": "exec-918b3dca-dcfb-4cbb-b8b9-3a0dd4ec90a4.png",
+    "width": 512,
+    "height": 470,
+    "anchor": [
+      0.5,
+      0.9659574468085106
+    ]
+  },
+  "loom-l3": {
+    "source": "exec-7d9ca4ac-7d3e-4a35-a75f-0a59838a19a7.png",
+    "width": 512,
+    "height": 463,
+    "anchor": [
+      0.5,
+      0.9654427645788337
+    ]
+  }
+}

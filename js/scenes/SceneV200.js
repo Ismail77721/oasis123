@@ -15,15 +15,15 @@
   const tree=['dates','fig','pomegranate','olive','sidr'];
   let baseline=y+th*.16;
   if(t.building){
-   key='art-building-'+t.building;
+   key='art-building-'+t.building+'-l'+Math.min(3,Math.max(1,t.buildingLevel||1));
+   if(!available(this,key))key='art-building-'+t.building;
    const [rows,cols]=t.buildingArea&&window.OasisMapLayout?OasisMapLayout.buildingSize(t.building,t.buildingRotated):[1,1];
    x+=(cols-rows)*tw/4;
    baseline=y+(rows+cols-1)*th/2-th*.12;
    scale=(rows+cols)*.46;
-   if(t.building==='oilpress')scale*=1.45;
-   if(t.building==='olivepress')scale*=1.25;
+
   }
-  else if(t.crop){key='art-'+t.crop+'-'+(OasisTimeSystem.isReady(t)||t.perennialEstablished?'ripe':'grow');scale=tree.includes(t.crop)?1.66:1.05;}
+  else if(t.crop){key='art-'+t.crop+'-'+(OasisTimeSystem.isReady(t)||t.perennialEstablished?'ripe':'grow');scale=tree.includes(t.crop)?1.30:1.05;}
   let sprite=this.art?.[i];
   if(!key){sprite?.setVisible?.(false);return true;}
   if(!available(this,key)){sprite?.setVisible?.(false);return false;}
@@ -33,7 +33,8 @@
   const ratio=asset?.width?asset.height/asset.width:1;
   const sw=tw*scale;
   sprite.setDisplaySize(sw,sw*ratio);
-  const origin=t.building==='oilpress'?.95:t.building==='olivepress'?.94:.9;
+  const meta=t.building?this.cache.json.get('approved-art-meta')?.[t.building+'-l'+Math.min(3,Math.max(1,t.buildingLevel||1))]:null;
+  const origin=meta?.anchor?.[1]||.9;
   sprite.setOrigin(.5,origin);
   sprite.setFlipX?.(Boolean(t.building&&t.buildingRotated));
   sprite.setPosition(x,baseline);
@@ -43,11 +44,13 @@
  };
  // Well from the approved sheet is a real, isolated sprite; one well object can be upgraded later.
  M.renderWellSprite=function(x,y,tw,th){
-  const key='art-well';if(!available(this,key))return oldWell.call(this,x,y,tw,th);
+  const key='art-well-l'+Math.min(3,Math.max(1,this.s.wellLevel||1));if(!available(this,key))return oldWell.call(this,x,y,tw,th);
   if(!this.wellSprite)this.wellSprite=this.add.image(0,0,key).setOrigin(.5,.88);
   const asset=this.textures.get(key)?.getSourceImage?.();const ratio=asset?.width?asset.height/asset.width:1;
-  this.wellSprite.setTexture(key).setDisplaySize(tw*1.70,tw*1.70*ratio);
-  this.wellSprite.setPosition(x,y+th*.18).setDepth(115+Math.round(y));
+  const sw=tw*(this.s.wellArea?1.7:.8);
+  this.wellSprite.setOrigin(.5,this.cache.json.get('approved-art-meta')?.['well-l'+(this.s.wellLevel||1)]?.anchor?.[1]||.95);
+  this.wellSprite.setTexture(key).setDisplaySize(sw,sw*ratio);
+  this.wellSprite.setPosition(x,y+th*(this.s.wellArea?1.35:.18)).setDepth(115+Math.round(y));
   if(night())this.wellSprite.setTint(0xa6b5c8);else this.wellSprite.clearTint();return true;
  };
  // Dynamic, reusable Phaser display-objects (graphics.drawCanvas outlines are intentionally gone).

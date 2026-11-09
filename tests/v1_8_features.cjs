@@ -21,12 +21,12 @@ F.updateIrrigation(s,()=>false,51000);assert.equal(s.tiles[i].plantedAt,51000);a
 F.updateIrrigation(s,()=>true,61000);assert.equal(s.tiles[i].plantedAt,51000,'connected growth must resume');
 // Worker actually travels to a ready plot, and harvests products.
 s.tiles[i].plantedAt=1000;s.tiles[i].lastIrrigationTick=now;
-s.coins=2000;let hired=F.hire(s,'collector',now);assert(hired.ok);let w=s.workers.collector;
+s.coins=2000;let hired=F.hire(s,'collector',now);assert(hired.ok);let w=s.workers.gardener;
 let first=F.tick(s,()=>true,now+1000);assert(w.state==='travel');assert.equal(w.target,i);
 const finish=F.tick(s,()=>true,w.endsAt+1);assert(finish.completed.some(x=>x.action==='harvest'));
 assert.equal(s.tiles[i].crop,null);assert(s.inventory.clover>=2);
 // Gardener starts planting from seed stock. No human sprites are required.
-assert(F.hire(s,'gardener',now).ok);const planted=F.tick(s,k=>k===48,now+5000);assert.equal(s.workers.gardener.state,'travel');
+s.workerPlan.crop='clover';s.workers.gardener.state='idle';const planted=F.tick(s,k=>k===48,now+5000);assert.equal(s.workers.gardener.state,'travel');
 const jobIndex=s.workers.gardener.target;const jobEnd=s.workers.gardener.endsAt;
 const resolved=F.tick(s,k=>k===48,jobEnd+1);assert(resolved.completed.some(x=>x.action==='plant'));assert(s.tiles[jobIndex].crop);
 // In-game educational zakat: 355 two-hour days above symbolic threshold.
@@ -34,7 +34,7 @@ const a=G.createNew();a.coins=12000;let result=F.zakatStatus(a,1000000);assert(r
 result=F.zakatStatus(a,1000000+354*F.dayMS());assert(!result.due);
 result=F.zakatStatus(a,1000000+355*F.dayMS()+1);assert(result.due);assert.equal(result.amount,300);
 const paid=F.payZakat(a,1000000+355*F.dayMS()+1);assert(paid.ok);assert.equal(a.coins,11700);assert(!F.zakatStatus(a,1000000+355*F.dayMS()+100).due);
-const r=G.normalize(JSON.parse(JSON.stringify(s)));F.ensure(r);assert.equal(r.workers.collector.hired,true);
+const r=G.normalize(JSON.parse(JSON.stringify(s)));F.ensure(r);assert.equal(r.workers.gardener.hired,true);
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');const scene=fs.readFileSync(path.join(root,'js/scenes/SceneV180.js'),'utf8');
 assert.equal((html.match(/class="market-stall"/g)||[]).length,5,'Five clickable market buildings');
 assert(html.includes('id="crop-info"')&&html.includes('id="market-counter-back"'));

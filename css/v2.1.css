@@ -102,3 +102,24 @@ html,body {overscroll-behavior:none;}
 @media (orientation:landscape) and (max-height:560px) {
  #hud #fullscreen-toggle {height:39px;min-height:39px;padding:0;}
 }
+/* Editor owns one bottom panel; no independent floating exit to obscure. */
+body.farm-editing #toolbar {display:none !important;}
+body.farm-editing #edit-controls {bottom:calc(var(--safe-bottom) + 8px) !important;padding:8px !important;max-width:560px;}
+body.farm-editing #stop-build {position:static !important;transform:none !important;margin:4px auto !important;min-height:44px !important;display:block !important;}
+#edit-controls button {min-height:44px;padding:7px 12px;}
+#market-topbar {position:sticky !important;top:0;z-index:20;background:#f3dfbb;}
+.worker-setting {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0;}
+.worker-setting select {max-width:65%;min-height:44px;font:inherit;background:#fff5dc;color:#563d26;border:1px solid #b59260;border-radius:8px;}
+.working-soil {width:28px;height:14px;border:3px dashed #f8d48b;border-radius:50%;background:#996c3a66;animation:soil-work .8s ease-in-out infinite alternate;}
+@keyframes soil-work {to{transform:translate(-50%,-50%) scale(1.15);border-color:#5c9c65;}}
+@media(prefers-reduced-motion:reduce){.working-soil{animation:none;}}
+
+#market-counter-back {position:sticky !important;top:0;z-index:15;box-shadow:0 3px 10px #67401f33;}
+
+/* Keep the shop usable in portrait: no empty strip above its list. */
+#market-counter {height:calc(100dvh - 66px - var(--safe-top)) !important;}
+#market-counter #market-message:not(:empty) {position:relative;top:auto;}
+@media (orientation:landscape) and (max-height:600px) {#market-counter {height:calc(100dvh - 49px - var(--safe-top)) !important;}}
+
+#home-workers > button {min-height:44px;padding:10px 14px;margin:4px 5px 4px 0;border:1px solid #b99664;border-radius:10px;background:#f7e3b9;color:#573d27;font:600 14px system-ui;cursor:pointer;}
+#home-workers > button:active {transform:translateY(1px);background:#ecd19d;}

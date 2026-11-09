@@ -3,8 +3,8 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="assets/sprites/app-icon-192.png">
 <meta name="theme-color" content="#81512d"><title>ОАЗИС — ферма в пустыне</title>
-<link rel="stylesheet" href="css/style.css?v=2.0.0"><link rel="stylesheet" href="css/v1.2.css?v=2.0.0"><link rel="stylesheet" href="css/v1.3.css?v=2.0.0"><link rel="stylesheet" href="css/v1.4.css?v=2.0.0"><link rel="stylesheet" href="css/v1.5.css?v=2.0.0"><link rel="stylesheet" href="css/v1.6.css?v=2.0.0"><link rel="stylesheet" href="css/v1.7.css?v=2.0.0"><link rel="stylesheet" href="css/v1.8.css?v=2.0.0"><link rel="stylesheet" href="css/v1.9.css?v=2.0.0">
-<link rel="stylesheet" href="css/v2.0.css?v=2.0.0"><link rel="stylesheet" href="css/v2.1.css?v=2.0.0"></head><body>
+<link rel="stylesheet" href="css/style.css?v=2.1.0"><link rel="stylesheet" href="css/v1.2.css?v=2.1.0"><link rel="stylesheet" href="css/v1.3.css?v=2.1.0"><link rel="stylesheet" href="css/v1.4.css?v=2.1.0"><link rel="stylesheet" href="css/v1.5.css?v=2.1.0"><link rel="stylesheet" href="css/v1.6.css?v=2.1.0"><link rel="stylesheet" href="css/v1.7.css?v=2.1.0"><link rel="stylesheet" href="css/v1.8.css?v=2.1.0"><link rel="stylesheet" href="css/v1.9.css?v=2.1.0">
+<link rel="stylesheet" href="css/v2.0.css?v=2.1.0"><link rel="stylesheet" href="css/v2.1.css?v=2.1.0"></head><body>
 <div id="game"></div>
 <div id="game-error" hidden role="alert">Не удалось запустить игровое поле. Обнови страницу. Для локального запуска открой игру через HTTP-сервер.</div>
 <header id="hud"><button id="open-menu" type="button" aria-label="Главное меню">☰</button><span id="resources">🪙 100 · 💧 10</span><button id="family-hud" type="button" aria-label="Дом и потребности семьи">🏡 Семья</button><span id="player-name" aria-live="polite"></span><button id="fullscreen-toggle" type="button" aria-label="Полноэкранный режим" title="Полноэкранный режим" aria-pressed="false">⛶</button><small id="phase">☀️ День · v2.0.0</small></header>
@@ -63,7 +63,7 @@
 <section id="farm" hidden class="ui-modal"><div class="market-card"><button id="farm-close" class="modal-back" type="button">← Назад</button><h2 id="farm-title">Хозяйство</h2><p id="farm-status"></p><p id="farm-error" role="alert" hidden></p><div id="farm-actions"></div></div></section>
 <section id="picker" hidden class="ui-modal"><div class="market-card"><button id="picker-close" class="modal-back" type="button">← Назад</button><h2>🌱 Что посадить?</h2><p id="picker-help"></p><div id="picker-items"></div></div></section>
 <section id="upgrades" hidden class="ui-modal"><div class="market-card"><button id="upgrades-back" class="modal-back" type="button">← Назад</button><button id="upgrades-close" class="close-modal">✕</button><h2>🔧 Инструменты хозяйства</h2><p>Здесь показаны уровни инструментов. Покупка новых уровней — только в мастерской базара.</p><div id="upgrade-items"></div></div></section>
-<section id="storage-screen" hidden class="ui-modal"><div class="market-card"><button id="storage-close" class="modal-back" type="button">✕</button><h2>🎒 Амбар</h2><div id="storage-items"></div><button id="storage-go-market" class="primary-wide">🏺 Перейти на базар</button></div></section>
+<section id="storage-screen" hidden class="ui-modal"><div class="market-card"><button id="storage-close" class="modal-back" type="button">✕</button><h2><img src="assets/sprites/icon-barn.png?v=2.1.0" width="36" height="36" alt=""> Амбар</h2><div id="storage-items"></div><button id="storage-go-market" class="primary-wide">🏺 Перейти на базар</button></div></section>
 <!-- A fixed, interactive plaza. Player cannot build or expand it. -->
 <section id="market-screen" hidden aria-label="Торговая площадь">
  <header id="market-topbar"><button id="market-back" type="button">← Ферма</button><div><strong>ТОРГОВАЯ ПЛОЩАДЬ</strong><small>Остановки торговой поездки</small></div><span id="market-coins">🪙 100</span></header>
@@ -169,27 +169,28 @@
 <button id="back-key" type="button" hidden aria-label="Назад">←</button>
 
 <script src="vendor/phaser.min.js?v=3.80.1"></script>
-<script src="js/config.js?v=2.0.0"></script>
-<script src="js/core/GameState.js?v=2.0.0"></script>
-<script src="js/core/SaveSystem.js?v=2.0.0"></script>
-<script src="js/core/TimeSystem.js?v=2.0.0"></script>
-<script src="js/core/ProgressionSystem.js?v=2.0.0"></script>
-<script src="js/core/EconomySystem.js?v=2.0.0"></script>
-<script src="js/core/DailyQuestSystem.js?v=2.0.0"></script>
-<script src="js/core/SadakaSystem.js?v=2.0.0"></script>
-<script src="js/core/LandFamilySystem.js?v=2.0.0"></script>
-<script src="js/scenes/BootScene.js?v=2.0.0"></script>
-<script src="js/scenes/LoadingScene.js?v=2.0.0"></script>
-<script src="js/core/AudioSystem.js?v=2.0.0"></script>
-<script src="js/core/FarmSystems.js?v=2.0.0"></script>
-<script src="js/core/MapLayout.js?v=2.0.0"></script>
-<script src="js/scenes/MainScene.js?v=2.0.0"></script>
-<script src="js/scenes/SceneV160.js?v=2.0.0"></script>
-<script src="js/scenes/SceneV170.js?v=2.0.0"></script>
-<script src="js/scenes/SceneV180.js?v=2.0.0"></script>
-<script src="js/scenes/SceneV190.js?v=2.0.0"></script>
-<script src="js/scenes/SceneV200.js?v=2.0.0"></script>
+<script src="js/config.js?v=2.1.0"></script>
+<script src="js/core/GameState.js?v=2.1.0"></script>
+<script src="js/core/SaveSystem.js?v=2.1.0"></script>
+<script src="js/core/TimeSystem.js?v=2.1.0"></script>
+<script src="js/core/ProgressionSystem.js?v=2.1.0"></script>
+<script src="js/core/EconomySystem.js?v=2.1.0"></script>
+<script src="js/core/DailyQuestSystem.js?v=2.1.0"></script>
+<script src="js/core/SadakaSystem.js?v=2.1.0"></script>
+<script src="js/core/LandFamilySystem.js?v=2.1.0"></script>
+<script src="js/scenes/BootScene.js?v=2.1.0"></script>
+<script src="js/scenes/LoadingScene.js?v=2.1.0"></script>
+<script src="js/core/AudioSystem.js?v=2.1.0"></script>
+<script src="js/core/FarmSystems.js?v=2.1.0"></script>
+<script src="js/core/MapLayout.js?v=2.1.0"></script>
+<script src="js/scenes/MainScene.js?v=2.1.0"></script>
+<script src="js/scenes/SceneV160.js?v=2.1.0"></script>
+<script src="js/scenes/SceneV170.js?v=2.1.0"></script>
+<script src="js/scenes/SceneV180.js?v=2.1.0"></script>
+<script src="js/scenes/SceneV190.js?v=2.1.0"></script>
+<script src="js/scenes/SceneV200.js?v=2.1.0"></script>
 <script async src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="js/scenes/SceneV210.js?v=2.0.0"></script>
-<script src="js/main.js?v=2.0.0"></script>
+<script src="js/scenes/SceneV210.js?v=2.1.0"></script>
+<script src="js/scenes/SceneV220.js?v=2.1.0"></script>
+<script src="js/main.js?v=2.1.0"></script>
 </body></html>

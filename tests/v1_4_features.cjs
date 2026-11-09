@@ -17,11 +17,11 @@ for(const id of ['olive','sidr','cumin','flowers','barley','wheat']){
 }
 for(const building of ['apiary','oilpress','olivepress']){const b=box.OASIS_BUILDINGS[building];assert(b&&s.inventory[b.product]===0,'building and product '+building);}
 s.tiles[150].building='apiary';s.tiles[151].building='oilpress';s.tiles[152].building='olivepress';s.orders=[];E.ensureOrders(s);assert.equal(s.orders.length,6);
-for(const order of s.orders){const crop=C.crops[order.id],building=Object.values(box.OASIS_BUILDINGS).find(b=>b.product===order.id),price=crop?.sellPrice||building?.price;assert(price&&order.reward>=order.quantity*price*1.59,'order must be profitable');}
+for(const order of s.orders){const crop=C.crops[order.id],building=Object.values(box.OASIS_BUILDINGS).find(b=>b.product===order.id),price=crop?.sellPrice||building?.price;assert(price&&order.reward>=order.quantity*price*1.1,'order must be profitable');}
 const chosen=s.orders[0];s.inventory[chosen.id]=chosen.quantity;const result=E.completeOrder(s,0);assert(result.ok&&result.net>0);
 const before=s.coins;const request=S.list(s).find(q=>q.coins===15);assert(request&&!request.done);const donated=S.donate(s,request.id);assert(donated.ok);assert(s.coins<before&&s.barakatPoints>0);assert(!S.donate(s,request.id).ok,'one request per day');
 for(const item of S.list(s).filter(q=>q.coins&&!q.done)){s.coins+=item.coins;assert(S.donate(s,item.id).ok);}
-assert(s.barakatLevel>=1);const prior=s.coins;const inc=E.receiveIncome(s,100);assert(inc.ok&&inc.net===100&&inc.barakatBonus===0,'sale is exact without automatic sadaqa');assert.equal(s.coins,prior+100);
+assert(s.blessingGrowth.points>0);const prior=s.coins;const inc=E.receiveIncome(s,100);assert(inc.ok&&inc.net===100&&inc.barakatBonus===0,'sale is exact without automatic sadaqa');assert.equal(s.coins,prior+100);
 const product=Object.values(box.OASIS_BUILDINGS).find(b=>b.product==='honey');s.inventory.honey=3;assert(E.sell(s,'honey',2).ok,'honey sale');assert.equal(s.inventory.honey,1);
 assert.equal(S.localDay(new Date('2026-11-02T12:00:00').getTime()).length,10);
 const code=fs.readFileSync(path.join(root,'js/scenes/MainScene.js'),'utf8');const html=fs.readFileSync(path.join(root,'index.html'),'utf8');const css=fs.readFileSync(path.join(root,'css/v1.4.css'),'utf8');

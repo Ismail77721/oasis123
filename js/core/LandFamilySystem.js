@@ -111,7 +111,7 @@
  E.plant=function(s,index,id,now){if(isHome(s,index))return{ok:false,reason:'Участок занят домом семьи'};if(window.OasisMapLayout?.buildingAt(s,index)!=null)return{ok:false,reason:'Участок занят постройкой'};return oldPlant(s,index,id,now);};
  // Make orders with 1-4 different products; never duplicate slot contents and include seeds later.
  function available(s){const lv=window.OasisProgression.level(s),items=[];
-  for(const [id,c] of Object.entries(C.crops))if(c.unlock<=lv){items.push({id,category:'raw',price:c.sellPrice});if(lv>=4)items.push({id,category:'seed',price:c.seedCost});}
+  for(const [id,c] of Object.entries(C.crops))if(c.unlock<=lv){items.push({id,category:'raw',price:c.sellPrice});if(lv>=4)items.push({id,category:'seed',price:c.seedCost*.65});}
   for(const b of Object.values(B))if(s.tiles.some(t=>t.building&&B[t.building]?.product===b.product))items.push({id:b.product,category:'product',price:b.price});
   return items.length?items:[{id:'clover',category:'raw',price:2}];
  }
@@ -129,7 +129,7 @@
   if(!items.length)items.push({id:'clover',category:'raw',quantity:2});
   const gross=items.reduce((sum,x)=>sum+(x.quantity*(pool.find(p=>p.id===x.id&&p.category===x.category)?.price||2)),0);
   const multi=items.length>1;
-  const premium=multi?2.1+(items.length-2)*.22:1.65;
+  const premium=multi?1.3+(items.length-2)*.05:1.15;
   const reward=Math.ceil(gross*premium);
   return {id:items[0].id,quantity:items[0].quantity,items,reward,kind:multi?'Составной заказ':'Заказ',serial:(s.ordersCompleted||0)*11+slot};
  }

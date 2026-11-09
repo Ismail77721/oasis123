@@ -1,0 +1,22 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const c=vm.createContext({});c.window=c;
+for(const f of ['config','core/GameState','core/ProgressionSystem','core/EconomySystem','core/TimeSystem','core/LandFamilySystem','core/FarmSystems','core/MapLayout','core/SadakaSystem'])vm.runInContext(fs.readFileSync(__dirname+'/../js/'+f+'.js','utf8'),c);
+const G=c.OasisGameState,F=c.OasisFarmSystems,S=c.OasisSadaka,E=c.OasisEconomy;
+let s=G.createNew();s.coins=10000;s.workers={gardener:{hired:true,state:'idle'},collector:{hired:true,state:'travel',target:40}};
+F.ensure(s);assert.equal(s.coins,10260);assert(!s.workers.collector);F.ensure(s);assert.equal(s.coins,10260);
+s=G.normalize(JSON.parse(JSON.stringify(s)));F.ensure(s);assert.equal(s.coins,10260);
+s.workerPlan.paused=true;F.tick(s,()=>true,500000);assert.equal(s.workers.gardener.state,'idle');
+s.workerPlan.paused=false;s.tool='remove';F.tick(s,()=>true,500001);assert.equal(s.workers.gardener.state,'idle');
+s=G.createNew();s.coins=1e6;let now=2000000000;
+for(let i=0;i<100;i++)S.contribute(s,'mosque',1,now);
+assert(s.blessingGrowth.points<=1,'splitting donations cannot exceed daily cap');
+S.contribute(s,'mosque',1000,now);assert(s.blessingGrowth.points<=1);
+let prior=s.blessingGrowth.points;S.contribute(s,'school',1000,now+86400000);assert(s.blessingGrowth.points<=prior+1);
+s.blessingGrowth.points=30;s.tools.rake=1;s.blessingRemainders={};s.inventory.clover=0;
+for(let i=0;i<100;i++){s.tiles[0]={crop:'clover',plantedAt:1};E.harvest(s,0,1e9);}
+assert.equal(s.inventory.clover,212,'30 daily points add exactly 6 percent over enough harvests');
+assert.equal(c.OasisTimeSystem.getPhase(7200000),'day');
+const map=c.OasisMapLayout;s=G.createNew();s.coins=1000;
+assert(map.canalQuote(s,[100,102,101]).ok,'selection order need not be a path order');
+assert(!map.canalQuote(s,[100,102]).ok,'disconnected cells rejected');
+console.log('PASS v2.1 migration, worker pause, donation cap, fractional harvest, daylight, unordered canal selection');

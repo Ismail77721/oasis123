@@ -16,7 +16,7 @@
   class OasisAudioManager {
     constructor() {
       this.enabled = true;
-      this.ambience = true;
+      this.ambience = false;
       this.volume = .65;
       this.unlocked = false;
       this.phase = 'day';
@@ -32,7 +32,7 @@
         if (!raw) return;
         const state = JSON.parse(raw);
         if (typeof state.enabled === 'boolean') this.enabled = state.enabled;
-        if (typeof state.ambience === 'boolean') this.ambience = state.ambience;
+        this.ambience = false;
         if (Number.isFinite(state.volume)) this.volume = clamp(state.volume, 0, 1);
       } catch (_) { /* private mode / disabled localStorage */ }
     }
@@ -52,8 +52,8 @@
       if (this.bound) return;
       this.bound = true;
       if (this.supported) {
-        this.loops.wind = this.make('wind', true);
-        this.loops.water_ambience = this.make('water_ambience', true);
+        
+        
       }
       const toggle = document.getElementById('sound-toggle');
       const settings = document.getElementById('sound-settings');
@@ -134,7 +134,7 @@
       this.syncUI();
     }
     setAmbience(enabled) {
-      this.ambience = !!enabled;
+      this.ambience = false;
       this.saveSettings();
       if (this.ambience) this.startAmbience(); else this.pauseAmbience();
       this.applyVolumes();
@@ -168,7 +168,7 @@
       const ambience = document.getElementById('sound-ambience');
       if (volume) volume.value = String(Math.round(this.volume * 100));
       if (amount) amount.textContent = Math.round(this.volume*100) + '%';
-      if (ambience) ambience.checked = this.ambience;
+      if (ambience) { ambience.checked = false; ambience.disabled = true; const label=ambience.closest?.("label"); if(label)label.hidden=true; }
     }
   }
   window.OasisAudio = new OasisAudioManager();

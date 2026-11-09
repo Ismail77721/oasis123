@@ -36,7 +36,7 @@
  }
  function objectAt(s, i) {
   if (!valid(s, i)) return null;
-  if (i === C.wellIndex) return {kind: 'well', anchor: i};
+  if ((s.wellArea?rectangle(s,C.wellIndex,2,2)||[C.wellIndex]:[C.wellIndex]).includes(i)) return {kind:'well',anchor:C.wellIndex};
   if (land().isHome(s, i)) return {kind: 'home', anchor: s.house.row * size(s) + s.house.col};
   const building = buildingAt(s, i);
   if (building !== null) return {kind: 'building', anchor: building};
@@ -49,6 +49,7 @@
    const side = land().houseSide(s.house);
    return rectangle(s, target, side, side);
   }
+  if (object.kind === 'well') return rectangle(s,target,2,2);
   if (object.kind === 'building') return rectangle(s, target, ...buildingSize(object.id || s.tiles[object.anchor]?.building, object.rotated ?? s.tiles[object.anchor]?.buildingRotated));
   return rectangle(s, target, 1, 1);
  }
@@ -73,6 +74,7 @@
   const n = size(s);
   if (object.kind === 'home') Object.assign(s.house, {row: Math.floor(target / n), col: target % n, flipped: object.rotated ?? priorRotation});
   else if (object.kind === 'well') {
+   s.wellArea = true;
    s.wellPosition = {row: Math.floor(target / n), col: target % n};
    C.wellIndex = target;
   } else {
@@ -82,6 +84,7 @@
     s.tiles[target].buildingRotated = object.rotated ?? priorRotation;
    }
    if (object.anchor !== target) s.tiles[object.anchor] = OasisGameState.tile();
+   if(object.kind==='crop'&&Array.isArray(s.workerPlan?.area))s.workerPlan.area=s.workerPlan.area.map(i=>i===object.anchor?target:i);
    for (const worker of Object.values(s.workers || {})) {
     if (worker.target === object.anchor) worker.target = target;
     if (worker.from === object.anchor) worker.from = target;
@@ -116,7 +119,7 @@
   const n = size(s), empty = [];
   for (let index = 0; index < path.length; index++) {
    const i = path[index], prior = path[index - 1];
-   if (!valid(s, i) || (index && Math.abs(Math.floor(i/n)-Math.floor(prior/n)) + Math.abs(i%n-prior%n) !== 1)) {
+   if (!valid(s, i)) {
     return reject('Клетки канала должны соприкасаться сторонами');
    }
    const object = objectAt(s, i);
@@ -126,6 +129,13 @@
    else return reject('На пути канала есть занятый участок. Смени направление или конечную клетку');
   }
   if (!empty.length) return reject('На этом участке канал уже проложен');
+  const remaining = new Set(path), visit = [path[0]];
+  remaining.delete(path[0]);
+  while(visit.length) {
+   const current = visit.pop();
+   for (const next of remaining) if(Math.abs(Math.floor(current/n)-Math.floor(next/n))+Math.abs(current%n-next%n)===1) {remaining.delete(next);visit.push(next);}
+  }
+  if(remaining.size) return reject('Соедини выбранные клетки сторонами');
   const price = empty.length * OasisProgression.canalPrice(s);
   if (s.coins < price) return reject('Нужно ' + price + ' монет для этого маршрута');
   return {ok: true, empty, price};

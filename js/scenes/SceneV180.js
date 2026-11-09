@@ -18,7 +18,7 @@
   const marketMap=get('market-square');if(marketMap)marketMap.addEventListener('pointerdown',()=>{this.audio?.unlock?.();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)this.marketSound?.pause?.();else if(this.marketOpen)this.startMarketSound();});
   // Indistinct crowd-like rustling; no recognizable voices, music, or human figures.
-  if(typeof Audio!=='undefined'){
+  if(false){
    this.marketSound=new Audio('assets/audio/market_ambience.mp3');this.marketSound.loop=true;this.marketSound.preload='metadata';
   }
   this.workerMarker=node('div','worker-marker','');this.workerMarker.id='worker-marker';document.body.append(this.workerMarker);
@@ -38,7 +38,7 @@
   const paused=this.updateEditClock?.(now)||false;
   const changes=!paused&&F.updateIrrigation(this.s,connected,now);
   const jobs=paused?{changed:false,completed:[]}:F.tick(this.s,connected,now);
-  if(changes||jobs.changed){if(jobs.completed.length){this.lastWorkNotice=now;this.notify('🧺 Работа выполнена: '+jobs.completed.map(x=>x.action==='harvest'?'сбор урожая':'посадка').join(', '));}
+  if(changes||jobs.changed){if(jobs.completed.length){this.lastWorkNotice=now;this.notify('Работа выполнена: '+jobs.completed.map(x=>x.action==='harvest'?'сбор урожая':'посадка').join(', '));}
    if(now-(this.lastPeriodicSave||0)>12000){this.lastPeriodicSave=now;this.save();}}
   oldRender.call(this);
   const resources=get('resources');if(resources)resources.textContent='🪙 '+Math.floor(this.s.coins||0);
@@ -202,7 +202,7 @@
   for(const [id,cfg] of Object.entries(F.jobs)){
    const w=this.s.workers[id],box=node('div','worker-card');box.append(node('h4',null,cfg.icon+' '+cfg.name));
    box.append(node('p',null,'Найм '+cfg.cost+' 🪙 · оплата '+cfg.salary+' 🪙 за игровые сутки.'));
-   box.append(node('p',null,w.hired?(w.dayOffUntil>Date.now()?'Сегодня выходной':w.state==='paused'?'Нет денег на оплату':w.state==='idle'?'Ожидает работу':w.state==='travel'?'Идёт к участку':'Возвращается в хозяйство'):'Пока не нанят'));
+   box.append(node('p',null,w.hired?(this.s.workerPlan?.paused?'Работа приостановлена':w.dayOffUntil>Date.now()?'Сегодня выходной':w.state==='paused'?'Нет денег на оплату':w.state==='idle'?'Ожидает работу':w.state==='travel'?'Выполняет задание':'Готовится к следующему заданию'):'Пока не нанят'));
    if(!w.hired){const b=node('button',null,'Нанять · '+cfg.cost+' 🪙');b.disabled=this.s.coins<cfg.cost;b.addEventListener('click',()=>{const result=F.hire(this.s,id);this.notify(result.ok?cfg.name+' нанят!':result.reason);if(result.ok){this.save();this.render();}this.renderHome();});box.append(b);}
    if(w.hired){
     const off=w.dayOffUntil>Date.now();

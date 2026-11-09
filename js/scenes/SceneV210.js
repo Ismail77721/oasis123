@@ -3,21 +3,23 @@
  'use strict';
  const M = MainScene.prototype;
  const C = window.OASIS_CONFIG, L = OasisFamilyLand, layout = OasisMapLayout;
- C.version = '2.0.0';
+ C.version = '2.1.0';
  const byId = id => document.getElementById(id);
- const editing = scene => ['canal', 'building', 'move'].includes(scene.s.tool);
+ const editing = scene => ['canal', 'building', 'move', 'remove'].includes(scene.s.tool);
  const round = value => Math.round(value * 100) / 100;
 
  M.resetEditDraft = function () {
+  this.canalDraft = [];
   this.editObject = null;
   this.editStart = null;
   this.editTarget = null;
   this.editRotation = null;
  };
  M.updateEditClock = function (now) {
-  const last = this.editClockAt;
+  const last = this.editClockAt ?? this.s.editorPausedAt;
   const paused = editing(this);
   this.editClockAt = paused ? now : null;
+  this.s.editorPausedAt = this.editClockAt;
   if (last == null) return paused;
   const elapsed = Math.max(0, now - last);
   for (const tile of this.s.tiles) {
@@ -100,9 +102,10 @@
   const occupant = layout.objectAt(this.s, index);
   if (this.s.tool === 'canal') {
    if (!cell) return;
-   if (this.editStart === null || this.editStart === undefined || this.editTarget !== null) {
-    this.editStart = index; this.editTarget = null;
-   } else this.editTarget = index;
+   this.canalDraft ||= [];
+   const chosen = this.canalDraft.indexOf(index);
+   if (chosen >= 0) this.canalDraft.splice(chosen, 1);
+   else this.canalDraft.push(index);
    this.render();
    return;
   }
@@ -125,7 +128,7 @@
   }
   const object = this.visibleBuildingAt(p.x, p.y) || occupant;
   if (object?.kind === 'home') { this.openHome(); return; }
-  if (object?.kind === 'well') { this.notify('Колодец снабжает каналы водой'); return; }
+  if (object?.kind === 'well') { this.openWell(); return; }
   if (object?.kind === 'building') { this.playSound('click'); this.openFarm(object.anchor); return; }
   if (!cell) return;
   const tile = this.s.tiles[index];
@@ -144,8 +147,8 @@
  M.editPreview = function () {
   const mode = this.s.tool, target = this.editTarget;
   if (mode === 'canal') {
-   if (this.editStart == null) return {prompt: 'Коснись начала канала'};
-   const path = layout.route(this.s, this.editStart, target ?? this.editStart, this.editAxis);
+   const path = this.canalDraft || [];
+   if (!path.length) return {prompt: 'Коснись клеток канала. Повторное касание отменяет выбор'};
    return {...layout.canalQuote(this.s, path), area: path, path};
   }
   const object = mode === 'building' ? {kind: 'building', id: this.s.selectedBuilding, rotated: this.editRotation} :
@@ -196,7 +199,7 @@
   const axis = byId('edit-axis');
   const canalMode = this.s.tool === 'canal';
   const canRotate = this.s.tool === 'building' || ['home','building'].includes(this.editObject?.kind);
-  axis.hidden = !canalMode && !canRotate;
+  axis.hidden = canalMode || !canRotate;
   axis.textContent = canalMode ? (this.editAxis === 'row' ? 'Сначала по рядам' : 'Сначала по столбцам') : 'Развернуть вход';
   axis.setAttribute('aria-label', canalMode ? 'Сменить направление канала' : 'Развернуть вход');
   axis.setAttribute('aria-pressed', String(canalMode ? this.editAxis === 'row' : !!this.editRotation));
@@ -205,7 +208,7 @@
   byId('edit-status').textContent = preview.reason || preview.prompt ||
    (moving ? 'Место свободно' : 'Подтверди размещение');
   byId('mode-chip').textContent = moving ? 'Перестановка · рост и работа на паузе' :
-   this.s.tool === 'canal' ? 'Каналы · начало → конец → подтвердить' : 'Строительство · выбери участок';
+   this.s.tool === 'canal' ? 'Каналы · выбери клетки → подтверди' : 'Строительство · выбери участок';
   const picked = this.editObject;
   const selection = picked?.kind === 'home' ? L.footprint(this.s) :
    picked?.kind === 'building' ? layout.buildingArea(this.s, picked.anchor) : picked ? [picked.anchor] : [];
@@ -285,13 +288,13 @@
    if (tile.productionAt) {
     const bonus = cfg.product === 'wool' ? OasisProgression.woolBonus(this.s) :
      cfg.product === 'camelMilk' ? OasisProgression.milkBonus(this.s) : 0;
-    this.s.inventory[cfg.product] = (this.s.inventory[cfg.product] || 0) + cfg.amount + bonus;
+    this.s.inventory[cfg.product] = (this.s.inventory[cfg.product] || 0) + cfg.amount + bonus + Math.max(0,(tile.buildingLevel||1)-1);
     tile.productionAt = 0;
     this.notify('Продукция добавлена в амбар'); this.playSound('collect');
    } else {
     this.s.inventory[cfg.feed] -= cfg.feedAmount;
     this.s.water -= cfg.water;
-    tile.productionAt = Date.now() + cfg.duration * 1000;
+    tile.productionAt = Date.now() + cfg.duration * 1000 / (1 + .1 * Math.max(0,(tile.buildingLevel||1)-1));
     this.notify('Производство началось'); this.playSound('plant');
    }
    error.hidden = true;
@@ -385,6 +388,8 @@
    if (app && app !== boundTelegram) {
     boundTelegram = app;
     app.ready?.();
+    if(app.initData){app.expand?.();if(app.isVersionAtLeast?.("7.7"))app.disableVerticalSwipes?.();}
+    app.onEvent?.("viewportChanged",sync);
     app.onEvent?.('fullscreenChanged', sync);
     app.onEvent?.('safeAreaChanged', sync);
     app.onEvent?.('contentSafeAreaChanged', sync);

@@ -144,7 +144,7 @@ class MainScene extends Phaser.Scene {
   document.getElementById('build-menu-close').addEventListener('click',()=>this.closePanel('build-menu'));
   document.querySelectorAll('#build-menu-actions button').forEach(b=>b.addEventListener('click',()=>{
    this.closePanel('build-menu');this.resetEditDraft?.();const a=b.dataset.build;
-   if(a==='canal'){this.s.tool='canal';this.notify('Выбери начало и конец канала. Для одной клетки выбери начало и подтверди');this.guideEvent('canalMode');}
+   if(a==='canal'){this.s.tool='canal';this.notify('Выбери клетки канала. Повторное касание убирает клетку из выбора');this.guideEvent('canalMode');}
    else if(a==='move'){this.s.tool='move';this.notify('Выбери объект на карте, затем новое место');}
    else if(a==='remove'){this.s.tool='remove';this.notify('Выбери растение или канал для расчистки');}
    else if(a==='buildings')this.openBuildings();

@@ -21,7 +21,7 @@
  function plant(s,i,id,now=Date.now()){
   const crop=crops()[id],t=s.tiles[i];
   if(!crop||!t)return fail('Невозможно посадить');
-  if(i===OASIS_CONFIG.wellIndex||t.crop||t.building||t.canal)return fail('Клетка занята');
+  if(i===OASIS_CONFIG.wellIndex||t.crop||t.building||t.canal||window.OasisMapLayout?.objectAt(s,i))return fail('Клетка занята');
   if(crop.unlock>level(s))return fail('Культура ещё не открыта');
   if((s.seedBank[id]||0)<1)return fail('Нет семян. Посети семенную лавку на базаре');
   s.seedBank[id]--;t.crop=id;t.plantedAt=now;t.watered=false;t.perennialEstablished=false;
@@ -32,7 +32,12 @@
   const t=s.tiles[i],crop=t&&crops()[t.crop];
   if(!crop)return fail('На грядке нет урожая');
   if(now-t.plantedAt<crop.growSeconds*1000)return fail('Урожай ещё растёт');
-  const id=t.crop,amount=crop.yield+OasisProgression.cropBonus(s)+Math.floor(Math.max(0,s.barakatLevel||0)/7);
+  const id=t.crop,base=crop.yield+OasisProgression.cropBonus(s);
+  const rate=Math.min(.3,Math.max(0,s.blessingGrowth?.points||0)*.002);
+  s.blessingRemainders ||= {};
+  const accumulated=(s.blessingRemainders[id]||0)+base*rate;
+  const extra=Math.floor(accumulated+1e-9),amount=base+extra;
+  s.blessingRemainders[id]=accumulated-extra;
   s.inventory[id]=(s.inventory[id]||0)+amount;
   s.stats.harvested=(s.stats.harvested||0)+amount;
   if(isPerennial(id)){
@@ -68,7 +73,7 @@
   const pool=orderPool(s),seq=(s.ordersCompleted||0)+slot*7;
   const item=pool[seq%pool.length]||{id:'clover',price:2};
   const type=seq%4,quantity=type===0?2:type===1?4:type===2?6:9;
-  const premium=[1.6,1.8,2.1,2.45][type];
+  const premium=[1.1,1.15,1.2,1.3][type];
   const reward=Math.max(8,Math.ceil(quantity*item.price*premium));
   return {id:item.id,quantity,reward,kind:['Обычный','Срочный','Оптовый','Особый'][type]};
  }

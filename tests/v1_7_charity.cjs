@@ -38,7 +38,7 @@ assert.equal(S.projects(state)[0].raised,210,'partial project survives save relo
 const left=S.projects(state)[0].remaining;assert(S.contribute(state,'mosque',left).ok);
 assert.equal(S.projects(state)[0].completed,true);
 assert.equal(S.contribute(state,'mosque',1).ok,false,'completed projects stay closed');
-assert(state.barakatLevel>0,'secret barakat should still work in model');
+assert(state.blessingGrowth.points>0 && state.blessingGrowth.points<=180,'secret barakat should still work in model');
 assert.equal(S.BLESSINGS.length,4);
 for(const b of S.BLESSINGS){assert(b.text.includes('Аллах'));assert(['Амин','И вам того же'].includes(b.reply));}
 assert.equal(S.BLESSINGS.find(b=>b.text==='Да воздаст тебе Аллах благом!').reply,'И вам того же');

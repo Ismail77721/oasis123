@@ -23,7 +23,7 @@ for(const id of names.crop){
 }
 for(const id of ['sheep','camel','apiary','mill','loom'])assert(fs.statSync(path.join(root,'assets/art/building-'+id+'.png')).size>3000);
 const html=read('index.html'),load=read('js/scenes/LoadingScene.js'),scene=read('js/scenes/SceneV200.js');
-assert.match(html,/SceneV200\.js\?v=2\.0\.0/);
+assert.match(html,/SceneV200\.js\?v=2\.1\.0/);
 assert.match(load,/sprite-terrain-/);
 assert.match(load,/sprite-icon-/);
 for(const id of ['produce','seeds','orders','tools','sadaka'])assert.match(html,new RegExp('data-stall="'+id+'"[^>]*><img src="assets/sprites/'));
