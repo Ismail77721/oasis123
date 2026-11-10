@@ -14,7 +14,7 @@ function el(id){if(!elements.has(id))elements.set(id,make('div',id));return elem
 let selectors={'.market-stall':['produce','seeds','orders','tools','sadaka'].map(id=>{const n=el('stall-'+id);n.dataset.stall=id;return n;}),'#toolbar button':[]};
 const doc={getElementById:el,createElement(tag){return make(tag,tag+'-'+(++counter))},querySelectorAll(q){return selectors[q]||[]}};
 const C={window:{},console,Math,Date,Number,JSON,Array,Set,Map,Intl,document:doc,Phaser:{Scene:class{constructor(){}}}};
-vm.createContext(C);
+vm.createContext(C);require('./dom_currency_fixture.cjs')(C);
 for(const f of ['js/config.js','js/core/ProgressionSystem.js','js/core/GameState.js','js/core/TimeSystem.js','js/core/EconomySystem.js','js/core/DailyQuestSystem.js','js/core/SadakaSystem.js','js/core/LandFamilySystem.js','js/scenes/MainScene.js','js/scenes/SceneV160.js']){
  vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),C,{filename:f});Object.assign(C,C.window);
 }

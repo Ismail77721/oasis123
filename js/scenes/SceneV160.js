@@ -70,7 +70,7 @@ MP.renderMarketTab=function(stall='produce'){
  if(!['orders','sadaka'].includes(stall))return oldMarket.call(this,stall);
  this.currentStall=stall;
  document.querySelectorAll('.market-stall').forEach(b=>b.classList.toggle('selected',b.dataset.stall===stall));
- const rows=el('market-items');rows.replaceChildren();this.marketNotice('');text('market-coins','🪙 '+Math.floor(this.s.coins));
+ const rows=el('market-items');rows.replaceChildren();this.marketNotice('');OasisUI.currency(el('market-coins'),this.s.coins);
  if(stall==='orders'){
   this.guideEvent('orders');text('market-section-title','📜 Доска заказов');text('market-section-desc','Отгружай один или несколько видов товаров. Составные заказы оплачиваются выше обычной продажи.');text('market-location','Доска заказов');
   window.OasisEconomy.ensureOrders(this.s);

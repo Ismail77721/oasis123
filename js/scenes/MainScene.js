@@ -1,6 +1,6 @@
 class MainScene extends Phaser.Scene {
  constructor(){super('MainScene');this.cells=[];this.message='';this.lastMessage=0;this.mapZoom=1;this.panX=0;this.panY=0;this.art=[];this.wasGesture=false;this.dragPointer=null;this.pinchStart=null;}
- create(){this.s=OasisSaveSystem.load();OasisEconomy.ensureOrders(this.s);this.g=this.add.graphics();this.overlay=this.add.graphics().setDepth(10000);this.input.on('pointerdown',p=>this.beginMapPointer(p));this.input.on('pointermove',p=>this.moveMapPointer(p));this.input.on('pointerup',p=>this.endMapPointer(p));this.input.on('pointerupoutside',()=>{this.clearLongPress?.();this.dragPointer=null;this.pinchStart=null;this.swipeCandidate=null;if(this.swipeActive)this.save();this.swipeActive=false;});this.scale.on('resize',()=>this.render());this.audio=window.OasisAudio||null;if(this.audio)this.audio.attach();this.bindToolbar();this.bindMarket();this.bindExtra();this.bindBuildings();this.setupHelp();this.setupQuests();this.setupMapControls();this.setupMenu();this.setupLiveGuide();OasisDailyQuests.ensure(this.s);this.time.addEvent({delay:1000,loop:true,callback:()=>{if(!document.hidden)this.render();}});this.notify('Добро пожаловать в ОАЗИС');this.render();this.openMainMenu();}
+ create(){this.s=OasisSaveSystem.load();OasisEconomy.ensureOrders(this.s);this.g=this.add.graphics();this.overlay=this.add.graphics().setDepth(10000);this.input.on('pointerdown',p=>this.beginMapPointer(p));this.input.on('pointermove',p=>this.moveMapPointer(p));this.input.on('pointerup',p=>this.endMapPointer(p));this.input.on('pointerupoutside',()=>{this.clearLongPress?.();this.dragPointer=null;this.pinchStart=null;this.swipeCandidate=null;if(this.swipeActive)this.save();this.swipeActive=false;});this.scale.on('resize',()=>this.render());this.audio=window.OasisAudio||null;if(this.audio)this.audio.attach();this.bindToolbar();this.bindMarket();this.bindExtra();this.bindBuildings();this.setupHelp();this.setupQuests();this.setupMapControls();this.setupMenu();this.setupLiveGuide();OasisDailyQuests.ensure(this.s);this.time.addEvent({delay:1000,loop:true,callback:()=>{if(!document.hidden)this.render();}});this.render();this.openMainMenu();}
  setupMenu(){
   this.menuMode='continue';
   const menu=document.getElementById('start-menu'),profile=document.getElementById('profile-screen'),tutorial=document.getElementById('tutorial-screen');
@@ -62,7 +62,7 @@ class MainScene extends Phaser.Scene {
   this.hasPreviousGame=true;
   for(const id of ['start-menu','profile-screen'])document.getElementById(id).hidden=true;
   document.getElementById('player-name').textContent='🌿 '+this.s.profile.name;
-  this.render();if(!this.s.tutorialDone)this.openTutorial();else this.notify('С возвращением, '+this.s.profile.name+'!');
+  this.render();if(!this.s.tutorialDone)this.openTutorial();
  }
  openTutorial(){
   document.getElementById('tutorial-screen').hidden=true;
@@ -339,7 +339,7 @@ class MainScene extends Phaser.Scene {
   document.getElementById('market-section-title').textContent=cfg[0];
   document.getElementById('market-section-desc').textContent=cfg[1];
   document.getElementById('market-location').textContent=cfg[2];
-  document.getElementById('market-coins').textContent='🪙 '+Math.floor(this.s.coins);
+  OasisUI.currency(document.getElementById('market-coins'),this.s.coins);
   const rows=document.getElementById('market-items');rows.replaceChildren();this.marketNotice('');
   if(stall==='produce'){
    for(const [id,c] of [...Object.entries(OASIS_CONFIG.crops),...Object.entries(OASIS_BUILDINGS)]){
@@ -652,7 +652,7 @@ class MainScene extends Phaser.Scene {
    if(this.s.tool!=='plant'&&this.irrigated(i)&&!t.crop&&!t.canal&&!t.building&&!isWell&&window.OasisMapLayout?.buildingAt(this.s,i)==null&&!window.OasisFamilyLand?.isHome(this.s,i)){
     g.fillStyle(0x5e994e,.34);g.fillEllipse(x,y+tileH*.10,Math.max(2,tw*.09),Math.max(1,tileH*.13));
    }
-   if(t.canal)this.drawCanal(g,r,c,i,x,y,tw,tileH);
+   if(t.canal&&!window.OasisWell?.inside(this.s,i))this.drawCanal(g,r,c,i,x,y,tw,tileH);
    if(!this.renderArtwork(i,t,x,y,tw,tileH)){
     if(t.building)this.drawBuilding(g,t,x,y,tw,tileH);
     if(t.crop)this.drawCrop(g,t,x,y,tw,tileH);
@@ -669,7 +669,7 @@ class MainScene extends Phaser.Scene {
    }
    if(this.selectedTile===i){ui.lineStyle(Math.max(2,tw*.035),0xfff0a4,.95);ui.strokePoints(points,true);}
    if(isWell){
-    if(window.OasisMapLayout&&this.neighbors(i).some(j=>this.s.tiles[j]?.canal))this.drawCanal(g,r,c,i,x,y,tw,tileH);
+    if(window.OasisMapLayout)this.drawCanal(g,r,c,i,x,y,tw,tileH);
     if(!this.renderWellSprite(x,y,tw,tileH)){
      g.fillStyle(0x9c683b);g.fillEllipse(x,y+tileH*.08,tw*.5,tileH*.65);
      g.fillStyle(0x654326);g.fillCircle(x,y,tw*.22);g.fillStyle(0x4aa7ba);g.fillCircle(x,y,tw*.14);
@@ -684,7 +684,7 @@ class MainScene extends Phaser.Scene {
   }
   document.getElementById('phase').textContent=(night?'🌙 Ночь':'☀️ День')+' · v'+OASIS_CONFIG.version;
   document.getElementById('mode-chip').textContent=this.s.tool==='canal'?'💧 Прокладывай каналы · нажимай землю':this.s.tool==='building'?'🏠 Выбери место для постройки':'🌱 Коснись земли, чтобы посадить';
-  document.getElementById('resources').textContent='🪙 '+Math.floor(this.s.coins)+'   💧 '+this.s.water+'   ⚡ '+this.s.energy;
+  OasisUI.currency(document.getElementById('resources'),this.s.coins);
   document.getElementById('inventory').textContent='Уровень '+this.getLevel()+'/20'+' · Семена '+Object.values(this.s.seedBank).reduce((a,v)=>a+v,0)+' · Амбар '+Object.values(this.s.inventory).reduce((a,v)=>a+v,0)+' · Каналы '+this.s.tiles.filter(t=>t.canal).length;
   document.querySelectorAll('#toolbar button').forEach(b=>b.classList.toggle('active',b.dataset.action==='build'&&this.s.tool!=='plant'));if(this.guideActive)this.positionGuide();
  }

@@ -17,7 +17,7 @@ assert(main.includes('drawCultivatedSoil'),'no soil');
 assert(main.includes('drawCanal'),'no water channels');
 assert(main.includes("['canal','building','move'].includes(this.s.tool)"),'grid should be visible only in build mode');
 assert(main.includes('renderGround(w,h)'),'ground not rendered');
-assert(/css\/v1\.2\.css\?v=2\.2\.0/ .test(index)&&/css\/v1\.3\.css\?v=2\.2\.0/ .test(index),'missing visual CSS');
+assert(/css\/v1\.2\.css\?v=2\.3\.0/ .test(index)&&/css\/v1\.3\.css\?v=2\.3\.0/ .test(index),'missing visual CSS');
 assert(css.includes('market-panorama.jpg'),'market location without artwork');assert(index.includes('css/v1.4.css'),'v1.4 style missing');
 assert(loading.includes("'art-ground'"),'ground not preloaded');
 assert(index.includes('market-screen'),'market scene regression');

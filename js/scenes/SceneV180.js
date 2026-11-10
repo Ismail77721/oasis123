@@ -41,7 +41,7 @@
   if(changes||jobs.changed){if(jobs.completed.length){this.lastWorkNotice=now;this.notify('Работа выполнена: '+jobs.completed.map(x=>x.action==='harvest'?'сбор урожая':'посадка').join(', '));}
    if(now-(this.lastPeriodicSave||0)>12000){this.lastPeriodicSave=now;this.save();}}
   oldRender.call(this);
-  const resources=get('resources');if(resources)resources.textContent='🪙 '+Math.floor(this.s.coins||0);
+  const resources=get('resources');if(resources)OasisUI.currency(resources,this.s.coins);
   const phase=get('phase');if(phase)phase.textContent=(OasisTimeSystem.getPhase()==='day'?'☀️ День':'🌙 Ночь')+' · v1.8.0';
   const info=get('mode-chip');if(info&&this.s.tool==='remove')info.textContent='🪓 Выбери дерево или канал для демонтажа';
   this.drawWorkerIndicator();
@@ -52,7 +52,7 @@
  M.showMarketSquare=function(){const drawer=get('market-counter');if(drawer)drawer.hidden=true;this.currentStall='square';};
  M.openMarket=function(stall){
   this.closeAllPanels();this.closeCropInfo();get('quests-panel').hidden=true;get('help-panel').hidden=true;
-  get('market-coins').textContent='🪙 '+Math.floor(this.s.coins);
+  OasisUI.currency(get('market-coins'),this.s.coins);
   get('market-screen').hidden=false;this.marketOpen=true;document.body.classList.add('market-active');this.playSound?.('click');this.guideEvent('market');
   if(stall&&stall!=='produce'&&stall!=='square')this.renderMarketTab(stall);
   else this.showMarketSquare();

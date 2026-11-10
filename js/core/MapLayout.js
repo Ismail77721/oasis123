@@ -37,7 +37,7 @@
  function cropAt(s,i){if(!valid(s,i))return null;const n=size(s),r=Math.floor(i/n),c=i%n;for(let rr=Math.max(0,r-1);rr<=r;rr++)for(let cc=Math.max(0,c-1);cc<=c;cc++){const a=rr*n+cc,t=s.tiles[a];if(t?.crop&&(a===i||t.cropArea))return a;}return null;}
  function objectAt(s, i) {
   if (!valid(s, i)) return null;
-  if ((s.wellArea?rectangle(s,C.wellIndex,2,2)||[C.wellIndex]:[C.wellIndex]).includes(i)) return {kind:'well',anchor:C.wellIndex};
+  if ((s.wellArea?rectangle(s,C.wellIndex,s.wellSize||2,s.wellSize||2)||[C.wellIndex]:[C.wellIndex]).includes(i)) return {kind:'well',anchor:C.wellIndex};
   if (land().isHome(s, i)) return {kind: 'home', anchor: s.house.row * size(s) + s.house.col};
   const building = buildingAt(s, i);
   if (building !== null) return {kind: 'building', anchor: building};
@@ -50,7 +50,7 @@
    const side = land().houseSide(s.house);
    return rectangle(s, target, side, side);
   }
-  if (object.kind === 'well') return rectangle(s,target,2,2);
+  if (object.kind === 'well') return rectangle(s,target,s.wellSize||2,s.wellSize||2);
   if (object.kind === 'building') return rectangle(s, target, ...buildingSize(object.id || s.tiles[object.anchor]?.building, object.rotated ?? s.tiles[object.anchor]?.buildingRotated));
   return rectangle(s,target,object.kind==='crop'?2:1,object.kind==='crop'?2:1);
  }
@@ -126,7 +126,7 @@
    const object = objectAt(s, i);
    if (!object) empty.push(i);
    else if (object.kind === 'canal') continue;
-   else if (object.kind === 'well' && (index === 0 || index === path.length - 1)) continue;
+   else if (object.kind === 'well') continue;
    else return reject('На пути канала есть занятый участок. Смени направление или конечную клетку');
   }
   if (!empty.length) return reject('На этом участке канал уже проложен');
@@ -156,7 +156,7 @@
   const n = size(s), row = Math.floor(i / n), col = i % n;
   const connected = directions.filter(d => {
    const r = row + d.r, c = col + d.c, j = r * n + c;
-   return r >= 0 && c >= 0 && r < n && c < n && (j === C.wellIndex || s.tiles[j]?.canal || planned?.has(j));
+   return r >= 0 && c >= 0 && r < n && c < n && ((window.OasisWell?OasisWell.inside(s,j):j===C.wellIndex) || s.tiles[j]?.canal || planned?.has(j));
   });
   return connected.length ? connected : directions.filter(d => d.axis === (axis || s.tiles[i].canalAxis || 'col'));
  }

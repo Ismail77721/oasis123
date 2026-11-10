@@ -12,7 +12,7 @@ const get=id=>{if(!elements.has(id))elements.set(id,create('div',id));return ele
 const marketTabs=['produce','seeds','orders','tools','sadaka'].map(id=>{const n=get('tab-'+id);n.dataset.stall=id;return n;});
 const doc={getElementById:get,createElement:t=>create(t,'new-'+(++created)),querySelectorAll:s=>s==='.market-stall'?marketTabs:[]};
 const context={window:{},console,Math,Date,Number,JSON,Array,Set,Map,Intl,document:doc,Phaser:{Scene:class{constructor(){}}}};
-vm.createContext(context);
+vm.createContext(context);require('./dom_currency_fixture.cjs')(context);
 for(const f of ['js/config.js','js/core/ProgressionSystem.js','js/core/GameState.js','js/core/TimeSystem.js','js/core/EconomySystem.js','js/core/DailyQuestSystem.js','js/core/SadakaSystem.js','js/core/LandFamilySystem.js','js/scenes/MainScene.js','js/scenes/SceneV160.js','js/scenes/SceneV170.js']){
  vm.runInContext(fs.readFileSync(path.join(root,f),'utf8'),context,{filename:f});Object.assign(context,context.window);
 }

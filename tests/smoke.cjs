@@ -9,7 +9,7 @@ for(const [selector,ids] of Object.entries({
  '#map-controls button':['in','out','reset']
 }))groups[selector]=ids.map(id=>{const el=element('button-'+id);if(selector==='#toolbar button')el.dataset.action=id;else if(selector==='#build-menu-actions button')el.dataset.build=id;else if(selector==='.market-stall')el.dataset.stall=id;else el.dataset.map=id;return el;});
 const context={console,Date,Math,Set,Array,Object,JSON,Number,window:{},localStorage:{getItem:k=>store[k]||null,setItem:(k,v)=>store[k]=v},document:{getElementById:element,querySelectorAll:q=>groups[q]||[],createElement:tag=>element('new-'+tag+'-'+Math.random())},Phaser:{Scene:class{constructor(){}},Scale:{}}};
-vm.createContext(context);
+vm.createContext(context);require('./dom_currency_fixture.cjs')(context);
 for(const f of ['js/config.js','js/core/GameState.js','js/core/SaveSystem.js','js/core/TimeSystem.js','js/core/ProgressionSystem.js','js/core/EconomySystem.js','js/core/DailyQuestSystem.js','js/scenes/MainScene.js'])vm.runInContext(fs.readFileSync(path+f,'utf8'),context,{filename:f});
 Object.assign(context,context.window);
 let scene=new (vm.runInContext('MainScene',context))();

@@ -100,14 +100,14 @@ M.render=function(){
   const s=this.s,level=s.wellLevel||1;
   document.getElementById('farm-title').textContent='Колодец · уровень '+level+' из 3';
   document.getElementById('farm-error').hidden=true;
-  document.getElementById('farm-status').textContent='Питает арыки и поливает ближайшие '+level+' ряда клеток. Улучшенный колодец занимает 2 × 2 клетки.';
+  document.getElementById('farm-status').textContent='Питает арыки, примыкающие к краям площадки. Колодец занимает 3 × 3 клетки на любом уровне.';
   const actions=document.getElementById('farm-actions');actions.replaceChildren();
   if(level<3){
    const cost=level===1?1800:7200,b=document.createElement('button');
    b.textContent='Улучшить · '+cost+' монет';b.disabled=s.coins<cost;
    b.onclick=()=>{
     const room=OasisMapLayout.check(s,OASIS_CONFIG.wellIndex,{kind:'well',anchor:OASIS_CONFIG.wellIndex});
-    if(!room.ok){const e=document.getElementById('farm-error');e.textContent='Освободи участок 2 × 2 вокруг основания колодца или переставь его на свободное место';e.hidden=false;return;}
+    if(!room.ok){const e=document.getElementById('farm-error');e.textContent='Освободи участок 3 × 3 вокруг основания колодца или переставь его на свободное место';e.hidden=false;return;}
     if(s.coins<cost||(s.wellLevel||1)!==level)return;
     s.coins-=cost;s.wellLevel=level+1;s.wellArea=true;this.save();this.render();this.openWell();
    };actions.append(b);

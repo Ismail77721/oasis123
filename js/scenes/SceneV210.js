@@ -103,6 +103,7 @@
   if (this.s.tool === 'canal') {
    if (!cell) return;
    this.canalDraft ||= [];
+   if(occupant?.kind==='well'&&window.OasisWell){const cells=OasisWell.area(this.s),selected=cells.every(i=>this.canalDraft.includes(i));this.canalDraft=this.canalDraft.filter(i=>!cells.includes(i));if(!selected)this.canalDraft.push(...cells);this.render();return;}
    const chosen = this.canalDraft.indexOf(index);
    if (chosen >= 0) this.canalDraft.splice(chosen, 1);
    else this.canalDraft.push(index);
@@ -212,7 +213,7 @@
    this.s.tool === 'canal' ? 'Каналы · выбери клетки → подтверди' : 'Строительство · выбери участок';
   const picked = this.editObject;
   const selection = picked?.kind === 'home' ? L.footprint(this.s) :
-   picked?.kind === 'building' ? layout.buildingArea(this.s, picked.anchor) : picked ? [picked.anchor] : [];
+   picked?.kind === 'building' ? layout.buildingArea(this.s, picked.anchor) : picked?.kind === 'well' && window.OasisWell ? OasisWell.area(this.s) : picked ? [picked.anchor] : [];
   for (const [indices, color] of [[selection, 0xffd065], [preview.area || [], preview.ok ? 0x91e1a0 : 0xf19e75]]) {
    for (const i of indices) {
     const c = i === C.wellIndex ? this.wellCell : this.cells.find(cell => cell.i === i);
@@ -378,7 +379,7 @@
    button.title = active ? 'Выйти из полного экрана' : 'Полноэкранный режим';
    button.setAttribute('aria-label', button.title);
    for (const side of ['top','right','bottom','left']) {
-    const inset = (Number(app?.safeAreaInset?.[side]) || 0)+(Number(app?.contentSafeAreaInset?.[side]) || 0);
+    const inset = Math.max(Number(app?.safeAreaInset?.[side])||0,Number(app?.contentSafeAreaInset?.[side])||0);
     root.style.setProperty('--telegram-' + side, inset + 'px');
    }
   };

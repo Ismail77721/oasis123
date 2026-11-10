@@ -28,7 +28,7 @@
   get('market-section-title').textContent='🤲 Садака';
   get('market-section-desc').textContent='Помощь семьям и общественным проектам. Выбирай, кому и сколько помочь.';
   get('market-location').textContent='Помощь и добрые дела';
-  get('market-coins').textContent='🪙 '+coins(save.coins);
+  OasisUI.currency(get('market-coins'),save.coins);
   const rows=get('market-items');rows.replaceChildren();this.marketNotice('');
   const requestHeader=node('div','charity-heading');requestHeader.append(node('h3',null,'🤲 Просьбы о помощи'));
   const dayCountdown=Math.max(0,save.charity.nextRefreshDay-S.gameDay(save));

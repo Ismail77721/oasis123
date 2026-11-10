@@ -1,0 +1,115 @@
+{
+  "tests": [
+    {
+      "test": "art_assets.cjs",
+      "passed": true,
+      "output": "PASS 15 custom transparent PNG sprites and loader references"
+    },
+    {
+      "test": "audio.cjs",
+      "passed": true,
+      "output": "PASS audio: 13 local assets, no autoplay, unlock, game SFX, mute, volume, ambience, phase, tab visibility, persistence"
+    },
+    {
+      "test": "audio_assets.cjs",
+      "passed": true,
+      "output": "PASS assets: all 13 MP3 files exist, decode, are 24kHz mono, and have nonzero duration"
+    },
+    {
+      "test": "economy.cjs",
+      "passed": true,
+      "output": "PASS: starter seeds, free replanting, buy seeds, perennial repeat harvest, sale, orders, save migration, no duplication, recovery"
+    },
+    {
+      "test": "guide_flow.cjs",
+      "passed": true,
+      "output": "PASS guide: spotlight on actual map, contextual planting, event-driven steps, market and return, completion persisted, text-only mentor by player gender"
+    },
+    {
+      "test": "map_layout.cjs",
+      "passed": true,
+      "output": "PASS map placement, routes, migration, partial sale and worker roles"
+    },
+    {
+      "test": "menu_navigation.cjs",
+      "passed": true,
+      "output": "PASS: menu, profile choice, female text-only mentor, onboarding, continue, back navigation, tools read-only, separate workshop, new-game confirmation"
+    },
+    {
+      "test": "progression_daily.cjs",
+      "passed": true,
+      "output": "PASS: 20 levels, 10 tool ranks, prices, canal discounts, irrigation, water capacity, old saves, daily quest rotation, no duplicate claims"
+    },
+    {
+      "test": "smoke.cjs",
+      "passed": true,
+      "output": "PASS: context planting, free seeds, full-screen market, seed shop, building, animals behind doors, produce sale, perennial, orders, storage, quest, upgrade, camera, art, audio"
+    },
+    {
+      "test": "v1_4_features.cjs",
+      "passed": true,
+      "output": "PASS v1.4: 16x16 migration, six crops, repeat harvest, 3 new productions, 6 premium orders, sadaqa, barakat, honey sales, real-time guide markup, market art visibility, profile labels and quest close"
+    },
+    {
+      "test": "v1_6_features.cjs",
+      "passed": true,
+      "output": "PASS v1.6: house blocking/feeding/upgrades, 16→20→24 expansion with save roundtrip, home assets, composite orders, flour/cloth sale, sadaka id and hidden barakat"
+    },
+    {
+      "test": "v1_6_ui.cjs",
+      "passed": true,
+      "output": "PASS v1.6 UI: 4x4 home tap, home windows, land UI button, warehouse sections, top bar, composite orders, sadaka response modal"
+    },
+    {
+      "test": "v1_7_charity.cjs",
+      "passed": true,
+      "output": "PASS v1.7: alternate 3/4 game-day requests, offline rotation, 5 campaigns, partial donations, persistence, completion, secret effect, 4 matching replies"
+    },
+    {
+      "test": "v1_7_ui.cjs",
+      "passed": true,
+      "output": "PASS v1.7 UI: donation opens matching reply, campaign amount and quick donation, progress, hidden mechanic, script/style linkage"
+    },
+    {
+      "test": "v1_8_features.cjs",
+      "passed": true,
+      "output": "PASS v1.8: exact prices, no water use, irrigation pause, removal, real worker tasks and path, zakat removal, plaza/card/gesture markup, migrated workers"
+    },
+    {
+      "test": "v1_9_1_sprite_integration.cjs",
+      "passed": true,
+      "output": "PASS 53 transparent sprite files, crop/building replacement, market sprites, Phaser rendering hooks, dynamic fence/canal, uncapped levels"
+    },
+    {
+      "test": "v1_9_visual.cjs",
+      "passed": true,
+      "output": "PASS v1.9: interactive market without diamond, new art assets, layered farm decorations, preserved scene hooks"
+    },
+    {
+      "test": "v2_1_balance.cjs",
+      "passed": true,
+      "output": "PASS migration, well occupancy, 27 assets; theoretical income per continuously irrigated tile in 3h (no orders):\n┌─────────┬───────────┬─────┬────┬───┬────┬────┐\n│ (index) │ 0         │ 1   │ 2  │ 3 │ 4  │ 5  │\n├─────────┼───────────┼─────┼────┼───┼────┼────┤\n│ 0       │ 'Арбуз'   │ 12  │ 2  │ 3 │ 15 │ 90 │\n│ 1       │ 'Клевер'  │ 7   │ 1  │ 2 │ 25 │ 50 │\n│ 2       │ 'Дыня'    │ 25  │ 4  │ 3 │ 7  │ 84 │\n│ 3       │ 'Инжир'   │ 90  │ 6  │ 3 │ 2  │ 36 │\n│ 4       │ 'Гранат'  │ 120 │ 7  │ 4 │ 1  │ 28 │\n│ 5       │ 'Финики'  │ 180 │ 9  │ 5 │ 1  │ 45 │\n│ 6       │ 'Оливки'  │ 120 │ 8  │ 4 │ 1  │ 32 │\n│ 7       │ 'Сидр'    │ 240 │ 13 │ 4 │ 0  │ 0  │\n│ 8       │ 'Тмин'    │ 40  │ 5  │ 4 │ 4  │ 80 │\n│ 9       │ 'Цветы'   │ 35  │ 3  │ 5 │ 5  │ 75 │\n│ 10      │ 'Ячмень'  │ 45  │ 4  │ 5 │ 4  │ 80 │\n│ 11      │ 'Пшеница' │ 50  │ 5  │ 5 │ 3  │ 75 │\n└─────────┴───────────┴─────┴────┴───┴────┴────┘"
+    },
+    {
+      "test": "v2_1_regression.cjs",
+      "passed": true,
+      "output": "PASS v2.1 migration, worker pause, donation cap, fractional harvest, daylight, unordered canal selection"
+    },
+    {
+      "test": "v2_2_geometry.cjs",
+      "passed": true,
+      "output": "PASS migration, persistence, crop reservation, nine purchases / ten territory stages"
+    },
+    {
+      "test": "v2_3_regression.cjs",
+      "passed": true,
+      "output": "PASS v2.3: crowded well migration, 3×3 reservation, all perimeter inlets, world-anchored sand under zoom/pan, all three well sizes"
+    },
+    {
+      "test": "visual_assets.cjs",
+      "passed": true,
+      "output": "PASS visual assets, market panorama, invisible normal grid, build grid, sound and separate scene"
+    }
+  ],
+  "syntaxErrors": []
+}
