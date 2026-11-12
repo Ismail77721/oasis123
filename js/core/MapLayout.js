@@ -18,7 +18,7 @@
   if (row + rows > n || col + cols > n) return null;
   return Array.from({length: rows * cols}, (_, i) => (row + Math.floor(i / cols)) * n + col + i % cols);
  }
- const buildingSize = (id, rotated) => id==='camel' ? (rotated ? [4,3] : [3,4]) : [3,3];
+ const buildingSize = (id, rotated) => id==='camel' ? (rotated ? [8,6] : [6,8]) : [6,6];
  function buildingArea(s, i, t = s.tiles[i]) {
   return t?.buildingArea === true ? rectangle(s, i, ...buildingSize(t.building,t.buildingRotated)) || [i] : [i];
  }
@@ -26,8 +26,8 @@
   if (!valid(s, i)) return null;
   if (s.tiles[i]?.building) return i;
   const n = size(s), row = Math.floor(i / n), col = i % n;
-  for (let r = Math.max(0, row - 3); r <= row; r++) {
-   for (let c = Math.max(0, col - 3); c <= col; c++) {
+  for (let r = Math.max(0, row - 7); r <= row; r++) {
+   for (let c = Math.max(0, col - 7); c <= col; c++) {
     const anchor = r * n + c, tile = s.tiles[anchor];
     if (tile?.building && tile.buildingArea === true && buildingArea(s, anchor, tile).includes(i)) return anchor;
    }

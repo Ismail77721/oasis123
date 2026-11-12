@@ -1,3 +1,0 @@
-Node JavaScript syntax: 20 files — PASS
-Node test suites: 17 — PASS
-Full Phaser/phone test: NOT RUN (sandbox Chromium blocked)
