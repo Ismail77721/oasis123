@@ -1,0 +1,11 @@
+(function(){'use strict';const M=MainScene.prototype,$=id=>document.getElementById(id);
+M.irrigated=function(i){if(!Number.isInteger(i)||i<0||i>=this.s.tiles.length)return false;const area=OasisWorld.rect(this.s,i,2,2);return !!area&&area.some(j=>this.wetCells?.[j]);};
+const create=M.create;M.create=function(){create.call(this);const root=document.documentElement;
+ const sync=()=>{const app=window.Telegram?.WebApp,full=!!app?.isFullscreen,safe=app?.safeAreaInset||{},content=app?.contentSafeAreaInset||{};document.body.classList.toggle('telegram-full',full);
+ root.style.setProperty('--hud-top',Math.max(0,Number(safe.top)||0)+'px');root.style.setProperty('--screen-left',Math.max(8,Number(safe.left)||0)+'px');root.style.setProperty('--screen-right',Math.max(8,Number(safe.right)||0)+'px');root.style.setProperty('--modal-top',Math.max(Number(safe.top)||0,Number(content.top)||0)+'px');};
+ sync();window.addEventListener('resize',sync);for(const e of ['fullscreenChanged','safeAreaChanged','contentSafeAreaChanged','viewportChanged'])window.Telegram?.WebApp?.onEvent?.(e,sync);document.querySelector('script[src*="telegram-web-app"]')?.addEventListener('load',()=>{sync();for(const e of ['fullscreenChanged','safeAreaChanged','contentSafeAreaChanged'])window.Telegram?.WebApp?.onEvent?.(e,sync);});
+ $('open-menu').innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+ const p=document.createElement('p');p.className='irrigation-help';p.textContent='Орошение: лопата 1–3 — один ряд грядок вдоль канала; 4–6 — два; 7–10 — три. Грядка занимает 2 × 2 клетки.';$('build-menu').querySelector('.market-card').append(p);
+ this.render();window.OasisBootReady?.();};
+const home=M.renderHome;M.renderHome=function(...a){home.apply(this,a);if(this.s.houseEnlargementPending){const p=document.createElement('p');p.textContent='Для увеличения дома до 8 × 8 нужен свободный участок. После расширения территории дом увеличится автоматически.';$('home-intro').append(p);}};
+})();

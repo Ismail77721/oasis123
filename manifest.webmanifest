@@ -1,22 +1,23 @@
 {
- "name": "ОАЗИС — ферма в пустыне",
- "short_name": "ОАЗИС",
- "lang": "ru",
- "start_url": "./index.html",
- "scope": "./",
- "display": "standalone",
- "background_color": "#e6c681",
- "theme_color": "#81512d",
- "icons": [
-  {
-   "src": "assets/sprites/app-icon-192.png",
-   "sizes": "192x192",
-   "type": "image/png"
-  },
-  {
-   "src": "assets/sprites/app-icon-512.png",
-   "sizes": "512x512",
-   "type": "image/png"
-  }
- ]
+  "name": "ОАЗИС — ферма в пустыне",
+  "short_name": "ОАЗИС",
+  "lang": "ru",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e6c681",
+  "theme_color": "#81512d",
+  "icons": [
+    {
+      "src": "assets/sprites/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/sprites/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "landscape"
 }

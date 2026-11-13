@@ -1,6 +1,6 @@
 (function(){'use strict';
 const C=OASIS_CONFIG,G=OasisGameState,L=OasisMapLayout,F=OasisFamilyLand,E=OasisEconomy;
-C.version='3.0.0';
+C.version='3.1.0';
 // Build one occupancy index per model mutation. Large farms do not rescan nearby buildings per pixel.
 let cachedState,cachedVersion=-1,grid;
 function invalidate(s){s.mapRevision=(s.mapRevision||0)+1;cachedState=null;}

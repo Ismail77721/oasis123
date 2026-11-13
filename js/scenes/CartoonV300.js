@@ -3,14 +3,14 @@
 const edit=s=>['canal','building','move','remove'].includes(s.tool);
 const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
-LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.0.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
+LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.1.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
 M.preload=function(){};
-M.mapGeometry=function(w,h){const top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--telegram-top'))||0)+48;return{top,height:Math.max(120,h-top-20),tw:28*(this.mapZoom||1)};};
+M.mapGeometry=function(w,h){const top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud-top'))||0)+48;return{top,height:Math.max(120,h-top-20),tw:28*(this.mapZoom||1)};};
 M.drawCultivatedSoil=function(){};
 M.calculateWater=function(){const sig=this.s.worldSize+':'+C.wellIndex+':'+(this.s.mapRevision||0)+':'+(this.s.wellLevel||1)+':'+OasisProgression.irrigationRadius(this.s);if(this.waterSignature===sig)return;this.waterSignature=sig;
  const n=this.s.worldSize,q=OasisWell.area(this.s),seen=new Set(q);this.connected=new Set();
  for(let k=0;k<q.length;k++)for(const j of this.neighbors(q[k]))if(!seen.has(j)&&this.s.tiles[j]?.canal){seen.add(j);this.connected.add(j);q.push(j);}
- const wet=new Uint8Array(n*n),radius=OasisProgression.irrigationRadius(this.s)*4;
+ const wet=new Uint8Array(n*n),radius=OasisIrrigation.distance(this.s);
  for(const i of q){const r=Math.floor(i/n),c=i%n;for(let dr=-radius;dr<=radius;dr++)for(let dc=-(radius-Math.abs(dr));dc<=radius-Math.abs(dr);dc++){const rr=r+dr,cc=c+dc;if(rr>=0&&cc>=0&&rr<n&&cc<n)wet[rr*n+cc]=1;}}
  this.wetCells=wet;};
 M.renderGround=function(w,h){const g=this.g;g.fillStyle(0xf1c878);g.fillRect(0,0,w,h);const q=this.mapGeometry(w,h),step=q.tw*3,ox=w/2+(this.panX||0),oy=q.top+(q.height-C.worldSize*q.tw/2)/2+(this.panY||0);
@@ -51,7 +51,7 @@ M.render=function(){if(!this.s||!this.g)return;const now=Date.now(),s=this.s;Oas
  this.drawHouseImage();const well=this.cellPosition(C.wellIndex);this.wellCell=well;this.well=well;for(const i of OasisWell.area(s))for(const j of this.neighbors(i)){if(OasisWell.inside(s,j)||!s.tiles[j]?.canal)continue;const a=this.cellPosition(i),b=this.cellPosition(j),cx=well.x,cy=well.y+th;g.lineStyle(tw*.30,0x603817);g.lineBetween(cx,cy,(a.x+b.x)/2,(a.y+b.y)/2);g.lineStyle(tw*.18,0x46b5ce);g.lineBetween(cx,cy,(a.x+b.x)/2,(a.y+b.y)/2);}this.renderWellSprite(well.x,well.y,tw,th);
  this.drawEditPreview();this.drawPlantPreview?.();this.drawWorkerIndicator?.();
  document.body.classList.toggle('farm-editing',edit(s));$('stop-build').hidden=!edit(s);$('mode-chip').hidden=true;$('quest-banner').hidden=true;
- OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.0.0';
+ OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.1.0';
  if(!$('farm').hidden)this.updateFarmStatus?.();if(this.guideActive)this.positionGuide();
  const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);this.notify('Уровень '+level+(names.length?' · Открыто: '+names.join(', '):''));this.lastAnnouncedLevel=level;}
 };
