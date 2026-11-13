@@ -86,7 +86,7 @@ class MainScene extends Phaser.Scene {
   {event:'canalMode',target:'[data-build="canal"]',text:'Выбери «Каналы» в меню строительства. Затем нажми на свободную землю возле колодца.'},
   {event:'canalBuilt',target:'canal',text:'Проведи первый канал, нажав на подсвеченный участок. Соединённая сеть будет доставлять воду.'},
   {event:'market',target:'#toolbar button[data-action="market"]',text:'Ферма развивается! Теперь открой «Базар» — там покупают семена, продают урожай и выполняют заказы.'},
-  {event:'orders',target:'.market-stall[data-stall="orders"]',text:'На базаре выбери «Заказы». За них платят выгоднее, чем за обычную продажу.'},
+  {event:'orders',target:'.market-stall[data-stall="orders"]',text:'На торговой площади выбери «Заказы». За них платят выгоднее, чем за обычную продажу.'},
   {event:'marketBack',target:'#market-back',text:'Вернись на ферму. В любое время открой задания или повтори обучение через меню строительства.'}
  ];}
  showGuideStep(){
@@ -378,9 +378,7 @@ class MainScene extends Phaser.Scene {
     ]));
    }
    const available=Object.values(OASIS_CONFIG.crops).some(c=>c.type==='annual');
-   if(available)rows.append(this.marketRow('🎁 Запасной клевер','Если не осталось семян и растений, можно получить одно бесплатное семя раз в сутки.',[
-    {text:'Получить',onClick:()=>{const result=OasisEconomy.recoverySeed(this.s);if(result.ok){this.save();this.playSound('collect');this.render();this.renderMarketTab('seeds');}this.marketNotice(result.ok?'+1 семя клевера':result.reason);}}
-   ]));
+
   }else if(stall==='orders'){
    OasisEconomy.ensureOrders(this.s);
    this.s.orders.forEach((o,i)=>{
@@ -455,7 +453,7 @@ class MainScene extends Phaser.Scene {
    });
    row.append(label,b);target.append(row);
   }
-  const go=document.createElement('button');go.className='primary-wide';go.textContent='🏺 Купить семена на базаре';
+  const go=document.createElement('button');go.className='primary-wide';go.textContent='🏺 Купить семена на торговой площади';
   go.addEventListener('click',()=>{this.closePanel('picker');this.openMarket('seeds');});target.append(go);
   document.getElementById('picker').hidden=false;
  }
@@ -468,7 +466,7 @@ class MainScene extends Phaser.Scene {
    const hint=document.createElement('small');hint.textContent=t.description+(cost===null?' · максимальный уровень':' · следующее улучшение '+cost+' монет');info.append(hint);
    row.append(info);target.append(row);
   }
-  const go=document.createElement('button');go.className='primary-wide';go.textContent='🏺 Перейти в мастерскую базара';
+  const go=document.createElement('button');go.className='primary-wide';go.textContent='🏺 Перейти в мастерскую торговой площади';
   go.addEventListener('click',()=>{this.closePanel('upgrades');this.openMarket('tools');});target.append(go);
   document.getElementById('upgrades').hidden=false;
  }
@@ -492,7 +490,7 @@ class MainScene extends Phaser.Scene {
    {title:'Продай товаров на 50 монет',value:sales,goal:50,reward:25},
    {title:'Построй три канала',value:stats.canalsBuilt||0,goal:3,reward:30},
    {title:'Построй хозяйственное здание',value:stats.buildingsBuilt||0,goal:1,reward:45},
-   {title:'Заработай 250 монет на базаре',value:sales,goal:250,reward:70}
+   {title:'Заработай 250 монет на торговой площади',value:sales,goal:250,reward:70}
   ];
  }
  renderQuests(){

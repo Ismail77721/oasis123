@@ -30,11 +30,11 @@ M.drawSandDecoration=function(){}; // Tile-shaped decoration patches removed; co
 M.drawFence=function(g,ox,oy,tw,th,n){
  for(const s of Object.values(this.fenceArt||{}))s.setVisible(false);
  const v=[{x:ox,y:oy-th/2},{x:ox+n*tw/2,y:oy+(n-1)*th/2},{x:ox,y:oy+(n-.5)*th},{x:ox-n*tw/2,y:oy+(n-1)*th/2}];
- const drawPost=(x,y)=>{const h=tw*.45,w=Math.max(2,tw*.13);g.fillStyle(0x83502a);g.fillRect(x-w/2,y-h,w,h);g.fillStyle(0xd3a56b);g.fillRect(x-w/2,y-h,w*.35,h);g.fillStyle(0xe9c389);g.fillEllipse(x,y-h,w,w*.5);g.lineStyle(Math.max(.6,tw*.025),0x5d3d26,.7);g.lineBetween(x+w*.2,y-h*.9,x+w*.2,y-h*.15);};
+ const drawPost=(x,y)=>{const h=tw*.45,w=Math.max(.5,tw*.13);g.fillStyle(0x83502a);g.fillRect(x-w/2,y-h,w,h);g.fillStyle(0xd3a56b);g.fillRect(x-w/2,y-h,w*.35,h);g.fillStyle(0xe9c389);g.fillEllipse(x,y-h,w,w*.5);g.lineStyle(Math.max(.6,tw*.025),0x5d3d26,.7);g.lineBetween(x+w*.2,y-h*.9,x+w*.2,y-h*.15);};
  for(let side=0;side<4;side++){const a=v[side],b=v[(side+1)%4],steps=Math.ceil(n/2);for(let k=0;k<steps;k++){const t=k/steps,u=(k+1)/steps,x=a.x+(b.x-a.x)*t,y=a.y+(b.y-a.y)*t,X=a.x+(b.x-a.x)*u,Y=a.y+(b.y-a.y)*u;if(Math.max(x,X)<-50||Math.min(x,X)>this.scale.width+50||Math.max(y,Y)<-50||Math.min(y,Y)>this.scale.height+50)continue;
  const gate=side===1&&k===Math.floor(steps/2);
- if(gate){for(let j=0;j<8;j++){const f=(j+.5)/8,px=x+(X-x)*f,py=y+(Y-y)*f;g.lineStyle(Math.max(2,Math.hypot(X-x,Y-y)/9),j%2?0xae753c:0xbd884b,1);g.lineBetween(px,py-th*.03,px,py-tw*.42);}g.lineStyle(Math.max(1,tw*.045),0x6e4828);g.lineBetween(x,y-tw*.35,X,Y-tw*.12);}
- else for(const h of [.14,.32]){g.lineStyle(Math.max(2,tw*.09),0x80502d,1);g.lineBetween(x,y-tw*h,X,Y-tw*h);g.lineStyle(Math.max(1,tw*.035),0xd6ab73,1);g.lineBetween(x,y-tw*h-tw*.035,X,Y-tw*h-tw*.035);}
+ if(gate){for(let j=0;j<8;j++){const f=(j+.5)/8,px=x+(X-x)*f,py=y+(Y-y)*f;g.lineStyle(Math.max(.5,Math.hypot(X-x,Y-y)/9),j%2?0xae753c:0xbd884b,1);g.lineBetween(px,py-th*.03,px,py-tw*.42);}g.lineStyle(Math.max(1,tw*.045),0x6e4828);g.lineBetween(x,y-tw*.35,X,Y-tw*.12);}
+ else for(const h of [.14,.32]){g.lineStyle(Math.max(.5,tw*.09),0x80502d,1);g.lineBetween(x,y-tw*h,X,Y-tw*h);g.lineStyle(Math.max(.35,tw*.035),0xd6ab73,1);g.lineBetween(x,y-tw*h-tw*.035,X,Y-tw*h-tw*.035);}
  drawPost(x,y);if(k===steps-1)drawPost(X,Y);
  }}
 };
@@ -59,7 +59,7 @@ M.renderArtwork=function(i,t,x,y,tw,th){
  s.setOrigin(.5,origin).setDisplaySize(width,width*src.height/src.width).setPosition(x+(cols-rows)*tw/4,y+(rows+cols-1)*th/2-th*.22).setFlipX(Boolean(t.building&&t.buildingRotated)).setDepth(110+Math.round(y+(rows+cols)*th/2)).setVisible(true);
  return true;
 };
-M.drawCultivatedSoil=function(g,x,y,tw,th){const pts=[{x,y:y-th*.5},{x:x+tw,y:y+th*.5},{x,y:y+th*1.5},{x:x-tw,y:y+th*.5}];g.fillStyle(0xa27b46,.9);g.fillPoints(pts,true);g.lineStyle(Math.max(1,tw*.035),0xc59b61,1);for(let j=1;j<6;j++){const f=j/6;g.lineBetween(x-tw*f,y-th*.5+th*f,x+tw*(1-f),y+th*.5+th*f);}};
+M.drawCultivatedSoil=function(g,x,y,tw,th){const pts=[{x,y:y-th*.5},{x:x+tw,y:y+th*.5},{x,y:y+th*1.5},{x:x-tw,y:y+th*.5}];g.fillStyle(0xa27b46,.9);g.fillPoints(pts,true);g.lineStyle(Math.max(.35,tw*.035),0xc59b61,1);for(let j=1;j<6;j++){const f=j/6;g.lineBetween(x-tw*f,y-th*.5+th*f,x+tw*(1-f),y+th*.5+th*f);}};
 M.drawHouseImage=function(){const h=this.s.house,n=C.worldSize,geo=this.mapGeometry(this.scale.width,this.scale.height),tw=geo.tw,th=tw/2,side=OasisFamilyLand.houseSide(h),x=this.scale.width/2+(this.panX||0)+(h.col-h.row)*tw/2,y=geo.top+(geo.height-n*th)/2+(this.panY||0)+(h.col+h.row)*th/2;const key='art-home-'+h.level;const src=this.textures.get(key).getSourceImage();if(!this.homeSprite)this.homeSprite=this.add.image(0,0,key);const width=tw*side*.78;this.homeSprite.setTexture(key).setOrigin(.5,.96).setDisplaySize(width,width*src.height/src.width).setPosition(x,y+(side-.5)*th).setDepth(110+Math.round(y+side*th)).setFlipX(!!h.flipped);};
 const preload=M.preload;M.preload=function(){preload?.call(this);for(const [key,file] of Object.entries({'world-sand':'sand','stage-sprout':'sprout','stage-palm-young':'palm-young','stage-olive-young':'olive-young','stage-tree-young':'tree-young'}))this.load.image(key,'assets/art/v2.2/'+file+'.webp?v=2.2.0');};
 const closePanels=M.closeAllPanels;M.closeAllPanels=function(){closePanels.call(this);if($('activity-panel'))$('activity-panel').hidden=true;};const back=M.goBack;M.goBack=function(){if($('activity-panel')&&!$('activity-panel').hidden){$('activity-panel').hidden=true;return;}return back.call(this);};

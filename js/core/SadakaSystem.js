@@ -51,6 +51,9 @@
    s.charity={version:1,wave:0,nextRefreshDay:day+3,requests:initial,campaigns:{}};
   }
   const data=s.charity;
+  const today=localDay(now);if(data.seenDate!==today){data.seenDate=today;data.seenTitles=[];}
+  data.seenTitles=Array.isArray(data.seenTitles)?data.seenTitles:[];
+  for(const r of data.requests)if(!data.seenTitles.includes(r.title))data.seenTitles.push(r.title);
   if(!data.campaigns||typeof data.campaigns!=='object')data.campaigns={};
   for(const p of PROJECTS){
    const current=data.campaigns[p.id];
@@ -62,7 +65,7 @@
    data.wave++;const wave=data.wave;
    const pool=REQUESTS.slice(6);
    const arrivals=pool.slice(((wave-1)*3)%pool.length).concat(pool.slice(0,((wave-1)*3)%pool.length)).slice(0,3);
-   for(const [i,t] of arrivals.entries())data.requests.push(freshRequest({...t,id:t.id+'-w'+wave},data.nextRefreshDay,wave));
+   for(const t of arrivals){if(!data.requests.some(r=>r.title===t.title)&&!data.seenTitles.includes(t.title)){data.requests.push(freshRequest({...t,id:t.id+'-w'+wave},data.nextRefreshDay,wave));data.seenTitles.push(t.title);}}
    // Keep recent fulfilled requests for a short period, and at most 12 open requests.
    data.requests=data.requests.filter(r=>!r.done||wave-(r.wave||0)<1);
    const open=data.requests.filter(r=>!r.done);
@@ -71,6 +74,7 @@
    updates++;
   }
   if(updates===12&&day>=data.nextRefreshDay)data.nextRefreshDay=day+3;
+  const seen=new Set();data.requests=data.requests.filter(r=>{if(seen.has(r.title))return false;seen.add(r.title);return true;});
   return data;
  }
  function list(s,now=Date.now()){

@@ -23,7 +23,7 @@
   if(!crop||!t)return fail('Невозможно посадить');
   if(i===OASIS_CONFIG.wellIndex||t.crop||t.building||t.canal||window.OasisMapLayout?.objectAt(s,i))return fail('Клетка занята');
   if(crop.unlock>level(s))return fail('Культура ещё не открыта');
-  if((s.seedBank[id]||0)<1)return fail('Нет семян. Посети семенную лавку на базаре');
+  if((s.seedBank[id]||0)<1)return fail('Нет семян. Посети семенную лавку на торговой площади');
   s.seedBank[id]--;t.crop=id;t.plantedAt=now;t.watered=false;t.perennialEstablished=false;
   s.selectedCrop=id;s.stats.planted=(s.stats.planted||0)+1;
   return ok({id});

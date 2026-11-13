@@ -3,7 +3,7 @@
 const edit=s=>['canal','building','move','remove'].includes(s.tool);
 const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
-LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.1.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
+LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.2.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
 M.preload=function(){};
 M.mapGeometry=function(w,h){const top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud-top'))||0)+48;return{top,height:Math.max(120,h-top-20),tw:28*(this.mapZoom||1)};};
 M.drawCultivatedSoil=function(){};
@@ -22,7 +22,7 @@ M.placeCartoon=function(sprite,key,x,y,tw,th,rows,cols){const a=A[key],h=a.heigh
  // A rectangle inside the footprint diamond: even tall palms cannot cover another plot.
  const width=Math.min(rows*tw/(2*a.rm),cols*tw/(2*a.cm))*.92;const height=width*h;
  const cx=x+(cols-rows)*tw/4,cy=y+(rows+cols-2)*th/4;
- sprite.setTexture('cartoon-'+key).setOrigin(.5).setPosition(cx,cy).setDisplaySize(width,height).setDepth(100+Math.round(cy)).setVisible(true).setAlpha(edit(this.s)?.3:1);return sprite;
+ sprite.setTexture('cartoon-'+key).setOrigin(.5).setPosition(cx,cy).setDisplaySize(width,height).setDepth(100+cy).setVisible(true).setAlpha(edit(this.s)?.3:1);return sprite;
 };
 M.renderArtwork=function(i,t,x,y,tw,th){let spr=this.art[i];if(!t.crop&&!t.building){spr?.setVisible(false);return true;}let key,rows,cols;
  if(t.building){[rows,cols]=L.buildingSize(t.building,t.buildingRotated);key=t.building+'-'+(Math.min(3,t.buildingLevel||1)-1);}else{rows=cols=2;const pct=(Date.now()-t.plantedAt)/(C.crops[t.crop].growSeconds*1000);let stage=pct>=1?4:t.perennialEstablished?5:pct<.08?0:pct<.3?1:pct<.65?2:3;key=t.crop+'-'+stage;}
@@ -39,19 +39,19 @@ M.render=function(){if(!this.s||!this.g)return;const now=Date.now(),s=this.s;Oas
  const g=this.g,ui=this.overlay,w=this.scale.width,h=this.scale.height;g.clear();ui.clear();this.renderGround(w,h);
  for(const spr of Object.values(this.art))spr?.setVisible(false);
  this.cells=[];const n=s.worldSize,geo=this.mapGeometry(w,h),tw=geo.tw,th=tw/2,ox=w/2+(this.panX||0),oy=geo.top+(geo.height-n*th)/2+(this.panY||0);
- this.drawFence(g,ox,oy,tw,th,n);
+ this.drawFence(g,ox,oy,tw,th,n);this.drawCanalNetwork?.();
  const rs=[],cs=[];for(const X of [-tw*10,w+tw*10])for(const Y of [-tw*10,h+tw*10]){rs.push((Y-oy)/th-(X-ox)/tw);cs.push((Y-oy)/th+(X-ox)/tw);}
  const r0=Math.max(0,Math.floor(Math.min(...rs))),r1=Math.min(n-1,Math.ceil(Math.max(...rs))),c0=Math.max(0,Math.floor(Math.min(...cs))),c1=Math.min(n-1,Math.ceil(Math.max(...cs)));
  for(let r=r0;r<=r1;r++)for(let c=c0;c<=c1;c++){const i=r*n+c,t=s.tiles[i],cell=this.cellPosition(i),{x,y}=cell;if(x< -tw*8||x>w+tw*8||y< -tw*8||y>h+tw*8)continue;this.cells.push(cell);
   if(edit(s)||this.plantMode){g.lineStyle(.7,0x946037,.25);g.strokePoints([{x,y:y-th/2},{x:x+tw/2,y},{x,y:y+th/2},{x:x-tw/2,y}],true);}
-  if(t.canal&&!OasisWell.inside(s,i))this.drawCanal(g,r,c,i,x,y,tw,th);
+  
   this.renderArtwork(i,t,x,y,tw,th);
   if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,py=spr.y-spr.displayHeight/2-5;ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
  }
- this.drawHouseImage();const well=this.cellPosition(C.wellIndex);this.wellCell=well;this.well=well;for(const i of OasisWell.area(s))for(const j of this.neighbors(i)){if(OasisWell.inside(s,j)||!s.tiles[j]?.canal)continue;const a=this.cellPosition(i),b=this.cellPosition(j),cx=well.x,cy=well.y+th;g.lineStyle(tw*.30,0x603817);g.lineBetween(cx,cy,(a.x+b.x)/2,(a.y+b.y)/2);g.lineStyle(tw*.18,0x46b5ce);g.lineBetween(cx,cy,(a.x+b.x)/2,(a.y+b.y)/2);}this.renderWellSprite(well.x,well.y,tw,th);
+ this.drawHouseImage();const well=this.cellPosition(C.wellIndex);this.wellCell=well;this.well=well;this.renderWellSprite(well.x,well.y,tw,th);
  this.drawEditPreview();this.drawPlantPreview?.();this.drawWorkerIndicator?.();
  document.body.classList.toggle('farm-editing',edit(s));$('stop-build').hidden=!edit(s);$('mode-chip').hidden=true;$('quest-banner').hidden=true;
- OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.1.0';
+ OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.2.0';
  if(!$('farm').hidden)this.updateFarmStatus?.();if(this.guideActive)this.positionGuide();
  const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);this.notify('Уровень '+level+(names.length?' · Открыто: '+names.join(', '):''));this.lastAnnouncedLevel=level;}
 };
