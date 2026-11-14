@@ -7,5 +7,5 @@ const queue=OasisWell.area(s),seen=new Set(queue);for(let k=0;k<queue.length;k++
 const price=empty.length*OasisProgression.canalPrice(s);return{ok:s.coins>=price,empty,price,reason:s.coins<price?'Нужно '+price+' монет, сейчас '+s.coins:undefined};}
 L.canalQuote=quote;L.layCanal=(s,path,axis)=>{const q=quote(s,path);if(!q.ok)return q;for(const i of q.empty)Object.assign(s.tiles[i],{canal:true,canalAxis:axis||'row'});s.coins-=q.price;s.stats.canalsBuilt=(s.stats.canalsBuilt||0)+q.empty.length;W.invalidate(s);return q;};
 const priorMove=L.move;L.move=(s,o,i)=>{const q=L.check(s,i,o);if(!q.ok)return q;return priorMove(s,o,i);};
-C.version='3.2.0';window.OasisCanal32={neighbors,quote};
+C.version='3.3.0';window.OasisCanal32={neighbors,quote};
 })();

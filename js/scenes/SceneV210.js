@@ -292,7 +292,7 @@
      cfg.product === 'camelMilk' ? OasisProgression.milkBonus(this.s) : 0;
     this.s.inventory[cfg.product] = (this.s.inventory[cfg.product] || 0) + cfg.amount + bonus + Math.max(0,(tile.buildingLevel||1)-1);
     tile.productionAt = 0;
-    this.notify('Продукция добавлена в амбар'); this.playSound('collect');
+    this.notify('Продукция добавлена в амбар'); this.playSound(cfg.product==='cloth'?'cloth':'collect');
    } else {
     this.s.inventory[cfg.feed] -= cfg.feedAmount;
     this.s.water -= cfg.water;

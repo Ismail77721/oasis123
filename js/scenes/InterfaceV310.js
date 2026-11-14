@@ -6,5 +6,5 @@ const create=M.create;M.create=function(){create.call(this);const root=document.
  sync();window.addEventListener('resize',sync);for(const e of ['fullscreenChanged','safeAreaChanged','contentSafeAreaChanged','viewportChanged'])window.Telegram?.WebApp?.onEvent?.(e,sync);document.querySelector('script[src*="telegram-web-app"]')?.addEventListener('load',()=>{sync();for(const e of ['fullscreenChanged','safeAreaChanged','contentSafeAreaChanged'])window.Telegram?.WebApp?.onEvent?.(e,sync);});
  $('open-menu').innerHTML='<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
  this.render();window.OasisBootReady?.();};
-const home=M.renderHome;M.renderHome=function(...a){home.apply(this,a);if(this.s.houseEnlargementPending){const p=document.createElement('p');p.textContent='Для увеличения дома до 8 × 8 нужен свободный участок. После расширения территории дом увеличится автоматически.';$('home-intro').append(p);}};
+const home=M.renderHome;M.renderHome=function(...a){home.apply(this,a);if(this.s.houseEnlargementPending){const p=document.createElement('p');p.textContent='Для увеличения дома нужен свободный участок. После расширения территории дом увеличится автоматически.';$('home-intro').append(p);}};
 })();

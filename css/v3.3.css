@@ -1,0 +1,26 @@
+:root{--visible-height:100dvh;--visible-top:0px}
+body #v3-extra,body #journal-toggle{display:none!important}
+body #hud #resources{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--controls-top) + 8px)}
+body.market-active #hud,body.market-active #toolbar,body.market-active #map-controls,body.market-active #edit-controls,body.market-active #plant-controls{display:none!important}
+body #toolbar{width:150px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;padding:6px!important}
+body #toolbar button{width:100%!important;height:62px!important;min-height:62px!important}
+body #market-screen{position:fixed!important;top:var(--visible-top)!important;left:0!important;right:0!important;bottom:auto!important;height:var(--visible-height)!important;overflow:hidden!important;background:#edc475!important}
+body #market-topbar,body.telegram-full #market-topbar{position:absolute!important;padding:4px max(40px,var(--controls-right))!important;display:grid!important;grid-template-columns:auto 1fr auto!important;gap:12px!important}
+#market-topbar>div{min-width:0;text-align:center}#market-topbar small{display:none!important}#market-coins{white-space:nowrap!important;position:static!important;flex:none!important}
+body #market-screen #market-square,body #market-counter{position:absolute!important;bottom:0!important;height:auto!important;max-height:none!important;overflow:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch}
+body #market-counter{background:#fff0cf!important;z-index:5!important}body #market-square[hidden],body #market-counter[hidden]{display:none!important}
+#market-items .market-row{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:space-between!important;gap:10px 16px!important}
+#market-items .market-row>div:first-child{min-width:180px!important;flex:1 1 240px!important;overflow-wrap:anywhere}
+#market-items .market-row>div:last-child:not(:first-child){display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important}
+.quantity-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important}.quantity-actions input{max-width:130px!important;min-width:70px!important;font-size:16px!important}
+body .ui-modal{top:calc(var(--visible-top) + var(--controls-top))!important;bottom:auto!important;height:calc(var(--visible-height) - var(--controls-top))!important}
+body .ui-modal .market-card{max-height:100%!important;padding-top:0!important;scroll-padding-top:54px}
+.dialog-header33{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px;min-height:46px;padding:6px 0;background:#fff0cf;border-bottom:1px solid #dfbf80;margin-bottom:10px;box-sizing:border-box}
+body .ui-modal .dialog-header33 .modal-back,body .ui-modal .dialog-header33 .close-modal{position:static!important;float:none!important;flex:0 0 auto!important}
+body .ui-modal .dialog-header33 h2{flex:1!important;margin:0!important;font-size:18px!important}
+#worker-panel fieldset{margin:14px 0!important;padding:12px!important;border-radius:12px}#worker-panel fieldset>button{margin:4px 10px 12px 0!important;min-height:38px!important}#worker-panel .task-grid{gap:10px!important}#worker-panel .task-grid label{padding:8px!important;gap:8px!important;min-width:0!important}#worker-panel .task-grid img{object-fit:contain!important;width:40px!important;height:40px!important}
+#build-menu img{width:48px!important;height:48px!important;object-fit:contain!important}#feedback{pointer-events:none!important}
+@media(max-height:340px){body #toolbar button{height:52px!important;min-height:52px!important}body #toolbar img{max-height:25px!important}body #market-topbar strong{font-size:12px!important}}
+body #market-topbar,body.telegram-full #market-topbar{left:0!important;right:0!important;width:100%!important;max-width:none!important}
+body #market-screen:has(#market-counter:not([hidden])) #market-square{visibility:hidden!important;pointer-events:none!important}
+body :is(#home-panel,#build-menu,#buildings,#storage-screen,#picker,#farm).ui-modal{top:calc(var(--visible-top) + var(--controls-top))!important;bottom:auto!important;height:calc(var(--visible-height) - var(--controls-top))!important}

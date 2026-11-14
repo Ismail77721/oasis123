@@ -3,7 +3,7 @@
 const edit=s=>['canal','building','move','remove'].includes(s.tool);
 const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
-LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.2.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
+LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.3.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
 M.preload=function(){};
 M.mapGeometry=function(w,h){const top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud-top'))||0)+48;return{top,height:Math.max(120,h-top-20),tw:28*(this.mapZoom||1)};};
 M.drawCultivatedSoil=function(){};
@@ -46,12 +46,12 @@ M.render=function(){if(!this.s||!this.g)return;const now=Date.now(),s=this.s;Oas
   if(edit(s)||this.plantMode){g.lineStyle(.7,0x946037,.25);g.strokePoints([{x,y:y-th/2},{x:x+tw/2,y},{x,y:y+th/2},{x:x-tw/2,y}],true);}
   
   this.renderArtwork(i,t,x,y,tw,th);
-  if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,py=spr.y-spr.displayHeight/2-5;ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
+  if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,py=spr.y-spr.displayHeight-5;ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
  }
  this.drawHouseImage();const well=this.cellPosition(C.wellIndex);this.wellCell=well;this.well=well;this.renderWellSprite(well.x,well.y,tw,th);
  this.drawEditPreview();this.drawPlantPreview?.();this.drawWorkerIndicator?.();
  document.body.classList.toggle('farm-editing',edit(s));$('stop-build').hidden=!edit(s);$('mode-chip').hidden=true;$('quest-banner').hidden=true;
- OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.2.0';
+ OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.3.0';
  if(!$('farm').hidden)this.updateFarmStatus?.();if(this.guideActive)this.positionGuide();
  const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);this.notify('Уровень '+level+(names.length?' · Открыто: '+names.join(', '):''));this.lastAnnouncedLevel=level;}
 };
@@ -59,7 +59,7 @@ M.installUnifiedIcons=function(){
  const products={wool:0,camelMilk:1,honey:2,cuminOil:3,oliveOil:4,flour:5,cloth:6};
  const map={'🪙':'products-7','🧺':'products-8','📦':'home-5','🌴':'dates-4','🌱':'watermelon-1','🌳':'sidr-4','🍉':'watermelon-4','🍈':'melon-4','☘':'clover-4','🍀':'clover-4','🌾':'wheat-4','🌼':'flowers-4','🌸':'flowers-4','🫒':'olive-4','🧶':'products-0','🥛':'products-1','🍯':'products-2','🧵':'products-6','🏺':'products-3','🏠':'home-0','🏡':'home-0','🛠':'products-8','🔊':'sound','🔇':'sound','⚙':'settings'};
  let queued=false;const run=()=>{queued=false;observer.disconnect();const walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),nodes=[];while(walk.nextNode())nodes.push(walk.currentNode);
- for(const node of nodes){const parent=node.parentElement;if(!parent||['SCRIPT','STYLE','TEXTAREA','INPUT'].includes(parent.tagName))continue;const value=node.nodeValue;if(!/\p{Extended_Pictographic}/u.test(value))continue;const rx=/\p{Extended_Pictographic}[\uFE0F\u200D\p{Extended_Pictographic}]*/gu;if(parent.closest('option')){node.nodeValue=value.replace(rx,'');continue;}const frag=document.createDocumentFragment();let pos=0;for(const m of value.matchAll(rx)){frag.append(value.slice(pos,m.index));const tail=value.slice(m.index+m[0].length),crop=Object.entries(C.crops).find(([id,c])=>tail.trimStart().startsWith(c.title)),prod=Object.entries(products).find(([id])=>tail.includes(OasisFamilyLand.labels(id))),key=crop?crop[0]+'-4':prod?'products-'+prod[1]:map[m[0].replace(/[\uFE0F\u200D]/g,'')];if(key){const img=document.createElement('img');img.className='oasis-ui-icon';img.alt='';img.src=['sound','settings'].includes(key)?'assets/art/v2.2/'+key+'.svg':file(key);frag.append(img);}pos=m.index+m[0].length;}frag.append(value.slice(pos));node.replaceWith(frag);}
+ for(const node of nodes){const parent=node.parentElement;if(!parent||['SCRIPT','STYLE','TEXTAREA','INPUT'].includes(parent.tagName))continue;const value=node.nodeValue;if(!/\p{Extended_Pictographic}/u.test(value))continue;const rx=/\p{Extended_Pictographic}[\uFE0F\u200D\p{Extended_Pictographic}]*/gu;if(parent.closest('option')){node.nodeValue=value.replace(rx,'');continue;}const frag=document.createDocumentFragment();let pos=0;for(const m of value.matchAll(rx)){frag.append(value.slice(pos,m.index));const tail=value.slice(m.index+m[0].length),crop=Object.entries(C.crops).find(([id,c])=>tail.trimStart().startsWith(c.title)),prod=Object.entries(products).find(([id])=>tail.includes(OasisFamilyLand.labels(id))),key=m[0].includes('🪙')?'products-7':crop?crop[0]+'-4':prod?'products-'+prod[1]:map[m[0].replace(/[\uFE0F\u200D]/g,'')];if(key){const img=document.createElement('img');img.className='oasis-ui-icon';img.alt='';img.src=['sound','settings'].includes(key)?'assets/art/v2.2/'+key+'.svg':file(key);frag.append(img);}pos=m.index+m[0].length;}frag.append(value.slice(pos));node.replaceWith(frag);}
  observer.observe(document.body,{childList:true,subtree:true,characterData:true});};const observer=new MutationObserver(()=>{if(!queued){queued=true;queueMicrotask(run);}});run();
 };
 })();

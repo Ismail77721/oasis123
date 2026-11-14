@@ -32,7 +32,6 @@
   const rows=get('market-items');rows.replaceChildren();this.marketNotice('');
   const requestHeader=node('div','charity-heading');requestHeader.append(node('h3',null,'🤲 Просьбы о помощи'));
   const dayCountdown=Math.max(0,save.charity.nextRefreshDay-S.gameDay(save));
-  requestHeader.append(node('small',null,'Новые обращения через '+dayCountdown+' '+(dayCountdown===1?'игровой день':'игровых дня')+' · сутки = 2 часа'));
   rows.append(requestHeader);
   for(const req of requests){
    const enough=req.coins?save.coins>=req.coins:(save.inventory?.[req.goods]||0)>=req.amount;

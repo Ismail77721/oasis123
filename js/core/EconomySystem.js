@@ -41,9 +41,8 @@
   s.inventory[id]=(s.inventory[id]||0)+amount;
   s.stats.harvested=(s.stats.harvested||0)+amount;
   if(isPerennial(id)){
-   s.seedBank[id]=(s.seedBank[id]||0)+1; // seed / cutting recovered from the fruiting plant
    t.plantedAt=now;t.watered=false;t.perennialEstablished=true;
-   return ok({id,amount,seedReturned:1,perennial:true});
+   return ok({id,amount,seedReturned:0,perennial:true});
   }
   s.seedBank[id]=(s.seedBank[id]||0)+1;
   t.crop=null;t.plantedAt=0;t.watered=false;t.perennialEstablished=false;

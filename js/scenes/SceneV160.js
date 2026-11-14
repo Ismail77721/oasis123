@@ -32,7 +32,7 @@ MP.productName=function(id){if(L.labels(id)!==id)return L.icons(id)+' '+L.labels
 MP.openHome=function(){if(!this.s)return;this.closeAllPanels();this.renderHome();el('home-panel').hidden=false;this.playSound?.('click');};
 MP.renderHome=function(){L.ensure(this.s);
  const s=this.s,f=s.family,level=s.house.level,side=L.houseSide(s.house);
- text('home-intro','Семейный дом · уровень '+level+'/5 · дворик '+side+'×'+side+' клетки');
+ text('home-intro','Семейный дом · уровень '+level+'/5');
  const panel=el('home-family');panel.replaceChildren();
  const section=node('section','home-section');section.append(node('h3',null,'🍲 Потребности семьи'));
  if(f.met){section.append(node('p',null,'✅ Семья обеспечена. Следующая потребность через '+formatTime((f.nextDueAt-Date.now())/1000)+'.'));}
@@ -76,7 +76,7 @@ MP.renderMarketTab=function(stall='produce'){
   window.OasisEconomy.ensureOrders(this.s);
   this.s.orders.forEach((order,index)=>{
    const items=order.items||[{id:order.id,quantity:order.quantity,category:'raw'}];
-   const title=order.kind+' · '+items.map(x=>L.icons(x.id)+' '+L.labels(x.id)+' ×'+x.quantity).join(' + ');
+   const names=['Припасы для каравана','Заказ торговца из Египта','Товары для соседнего селения','Запасы для дальней дороги','Заказ торговца из Сирии','Провизия для путников']; const title=names[index%names.length];
    const detail=items.map(x=>itemLabel(x)+' '+Math.min(currentStock(this.s,x),x.quantity)+'/'+x.quantity).join(' · ')+' · награда '+order.reward+' 🪙';
    rows.append(marketRow(this,title,detail,[{text:'Отгрузить',disabled:items.some(x=>currentStock(this.s,x)<x.quantity),onClick:()=>{
     const result=window.OasisEconomy.completeOrder(this.s,index);if(!result.ok){this.marketNotice(result.reason);return;}

@@ -217,7 +217,7 @@ class MainScene extends Phaser.Scene {
   }
   if(OasisTimeSystem.isReady(t,now)){
    const result=OasisEconomy.harvest(this.s,i,now);
-   if(result.ok){this.notify(result.perennial?'Собрано +'+result.amount+'! Дерево осталось, +1 саженец в запас.':'Собрано +'+result.amount+'! Одно семя вернулось в запас.');this.playSound('harvest');}
+   if(result.ok){this.notify(result.perennial?'Собрано +'+result.amount+'! Дерево продолжает расти.':'Собрано +'+result.amount+'! Одно семя вернулось в запас.');this.playSound('harvest');}
    else this.notify(result.reason);
   }else if(!t.watered){
    const crop=OASIS_CONFIG.crops[t.crop];
@@ -361,7 +361,7 @@ class MainScene extends Phaser.Scene {
      const result=OasisEconomy.sell(this.s,productId,input.valueAsNumber);
      if(!result.ok){this.marketNotice(result.reason);return;}
      const counter=document.getElementById('market-counter'),scroll=counter.scrollTop;
-     this.save();this.playSound('coin');this.render();this.renderQuests();this.renderMarketTab(stall);
+     this.save();this.playSound('sale');this.render();this.renderQuests();this.renderMarketTab(stall);
      counter.scrollTop=scroll;this.marketNotice('Продано '+result.quantity+' шт. · получено '+result.net+' монет');
     };
     sell.addEventListener('click',commit);
@@ -472,7 +472,7 @@ class MainScene extends Phaser.Scene {
  }
 
  bindBuildings(){for(const id of ['buildings','farm']){document.getElementById(id+'-close').addEventListener('click',()=>this.closePanel(id));document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)this.closePanel(id);});}}
- openBuildings(){const target=document.getElementById('building-items');target.replaceChildren();for(const [id,c] of Object.entries(OASIS_BUILDINGS)){const row=document.createElement('div');row.className='market-row';const label=document.createElement('span');label.textContent=c.title+(window.OasisMapLayout?' · '+OasisMapLayout.buildingSize(id).slice().reverse().join('×')+' клетки':'')+' · '+c.cost+' 🪙 · '+c.feedAmount+' '+(OASIS_CONFIG.crops[c.feed]?.title||this.productName(c.feed))+' за цикл';const b=document.createElement('button');b.textContent=(c.unlock||1)>this.getLevel()?'Ур. '+c.unlock:'Выбрать';b.disabled=(c.unlock||1)>this.getLevel();b.addEventListener('click',()=>{this.resetEditDraft?.();this.s.tool='building';this.s.selectedBuilding=id;this.closePanel('buildings');this.notify('Выбери свободный участок и подтверди постройку');this.render();});row.append(label,b);target.append(row);}document.getElementById('buildings').hidden=false;}
+ openBuildings(){const target=document.getElementById('building-items');target.replaceChildren();for(const [id,c] of Object.entries(OASIS_BUILDINGS)){const row=document.createElement('div');row.className='market-row';const label=document.createElement('span');label.textContent=c.title+(window.OasisMapLayout?' · '+OasisMapLayout.buildingSize(id).slice().reverse().join('×')+' клетки':'')+' · '+c.cost+' 🪙 · '+c.feedAmount+' '+(OASIS_CONFIG.crops[c.feed]?.title||OasisFamilyLand.labels(c.feed))+' за цикл';const b=document.createElement('button');b.textContent=(c.unlock||1)>this.getLevel()?'Ур. '+c.unlock:'Выбрать';b.disabled=(c.unlock||1)>this.getLevel();b.addEventListener('click',()=>{this.resetEditDraft?.();this.s.tool='building';this.s.selectedBuilding=id;this.closePanel('buildings');this.notify('Выбери свободный участок и подтверди постройку');this.render();});row.append(label,b);target.append(row);}document.getElementById('buildings').hidden=false;}
  openFarm(i){const t=this.s.tiles[i],cfg=OASIS_BUILDINGS[t.building];if(!cfg)return;const ready=t.productionAt&&Date.now()>=t.productionAt,working=t.productionAt&&Date.now()<t.productionAt;document.getElementById('farm-title').textContent=cfg.title;document.getElementById('farm-status').textContent=ready?'Продукция готова!':working?'До готовности '+Math.ceil((t.productionAt-Date.now())/1000)+' сек.':'Нужно для производства: '+cfg.feedAmount+' '+(OASIS_CONFIG.crops[cfg.feed]?.title||cfg.feed)+(cfg.water?' и '+cfg.water+' воды':'');const target=document.getElementById('farm-actions');target.replaceChildren();const b=document.createElement('button');b.style.cssText='background:#33805a;color:white;border:0;padding:13px;border-radius:10px;font-weight:bold';b.textContent=ready?'Собрать продукцию':working?'Производство идёт':(['sheep','camel'].includes(t.building)?'Накормить и запустить':'Загрузить сырьё и запустить');b.disabled=!!working;b.addEventListener('click',()=>{if(ready){this.s.inventory[cfg.product]=(this.s.inventory[cfg.product]||0)+cfg.amount+(cfg.product==='wool'?OasisProgression.woolBonus(this.s):cfg.product==='camelMilk'?OasisProgression.milkBonus(this.s):0);t.productionAt=0;this.notify('Продукция добавлена в амбар!');this.playSound('collect');}else if(!working){if((this.s.inventory[cfg.feed]||0)<cfg.feedAmount||this.s.water<cfg.water){this.notify('Не хватает корма или воды');return;}this.s.inventory[cfg.feed]-=cfg.feedAmount;this.s.water-=cfg.water;t.productionAt=Date.now()+cfg.duration*1000;this.notify('Производство началось');this.playSound('plant');}this.save();this.render();this.openFarm(i);});target.append(b);document.getElementById('farm').hidden=false;}
 
 

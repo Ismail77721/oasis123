@@ -94,7 +94,7 @@
   const t=this.s.tiles[i];if(!t?.crop||!OasisTimeSystem.isReady(t))return false;
   const result=OasisEconomy.harvest(this.s,i,Date.now());
   if(!result.ok)return false;
-  this.playSound?.('harvest');if(!quiet)this.notify('🧺 Собрано: '+OASIS_CONFIG.crops[result.id].title+' ×'+result.amount);
+  this.playSound?.(['clover','barley','wheat','flowers'].includes(result.id)?'grass':'harvest');if(!quiet)this.notify('🧺 Собрано: '+OASIS_CONFIG.crops[result.id].title+' ×'+result.amount);
   return true;
  };
  M.onMapTap=function(pointer){

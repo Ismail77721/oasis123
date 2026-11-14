@@ -18,3 +18,6 @@ for(const side of ['top','bottom','left','right']){
 }
 {const q=G.createNew();q.coins=0;const a=c.OasisWell.area(q),i=Math.max(...a)+1;const quote=L.canalQuote(q,[i,i+1]);assert(!quote.ok);assert(quote.price>0);assert(!L.canalQuote(q,[-1,0]).ok);assert(!L.canalQuote(q,[0,1]).ok);}
 console.log('PASS v3.2: canals connected from all four well sides, width limit, duplicate/bounds/disconnection/price checks');
+// v3.3: a perennial never creates a sapling on repeated harvests; annual seeds return.
+for(const id of ['fig','dates','olive','pomegranate','sidr','clover']){const state=G.createNew(),i=0,now=Date.now();state.seedBank[id]=7;for(let k=0;k<3;k++){Object.assign(state.tiles[i],{crop:id,plantedAt:now-c.OASIS_CONFIG.crops[id].growSeconds*1000-1000});const result=c.OasisEconomy.harvest(state,i,now);assert(result.ok);assert.equal(result.seedReturned,id==='clover'?1:0);}assert.equal(state.seedBank[id],id==='clover'?10:7);}
+console.log('PASS v3.3: repeated perennial harvests create no saplings; annual harvests return seeds');
