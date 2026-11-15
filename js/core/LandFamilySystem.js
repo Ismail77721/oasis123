@@ -14,7 +14,7 @@
  const validSide=n=>SIDES.includes(n)?n:16;
  function setWorld(side){C.worldSize=validSide(side);const offset=(C.worldSize-16)/2;C.wellIndex=(7+offset)*C.worldSize+(7+offset);}
  const oldNew=G.createNew,oldNormalize=G.normalize;
- const houseSide=house=>house ? ([2,4,8,16].includes(house.size)?house.size:4) : 2;
+ const houseSide=house=>house ? ([2,4,7,8,16].includes(house.size)?house.size:4) : 2;
  function footprint(s,row=s.house?.row,col=s.house?.col){const n=s.worldSize||C.worldSize,ids=[],side=houseSide(s.house);for(let r=0;r<side;r++)for(let c=0;c<side;c++)ids.push((row+r)*n+col+c);return ids;}
  function occupied(s,row,col){const n=s.worldSize||C.worldSize;if(row<0||col<0||row+houseSide(s.house)>n||col+houseSide(s.house)>n)return true;return footprint(s,row,col).some(i=>i===C.wellIndex||s.tiles[i]?.crop||s.tiles[i]?.canal||s.tiles[i]?.building);}
  function placeHouse(s){

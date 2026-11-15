@@ -1,0 +1,18 @@
+body #hud #resources{left:auto!important;right:calc(var(--controls-right,8px) + 12px)!important;top:calc(var(--controls-top) + 8px)!important;transform:none!important}
+body #toolbar{width:88px!important;grid-template-columns:1fr!important;gap:5px!important;max-height:calc(var(--visible-height) - var(--controls-top) - 70px)!important;overflow-y:auto!important}
+body #toolbar button{height:52px!important;min-height:52px!important;padding:3px!important;font-size:10px!important}
+body #toolbar button img{width:28px!important;height:28px!important;object-fit:contain!important}
+body #open-menu{top:calc(var(--controls-top) + 8px)!important}
+body #toolbar{top:calc(var(--controls-top) + 62px)!important}
+body #market-topbar{padding-left:max(24px,var(--controls-left))!important;padding-right:max(24px,var(--controls-right))!important}
+body #buildings-close{display:none!important}
+body #live-guide{position:fixed!important;left:var(--guide-x,110px)!important;top:var(--guide-y,80px)!important;right:auto!important;bottom:auto!important;transform:none!important;width:300px;max-width:calc(100vw - 24px)!important;max-height:calc(var(--visible-height) - var(--controls-top) - 12px)!important;overflow:auto!important;padding:10px!important;box-sizing:border-box!important;z-index:13010!important;box-shadow:0 3px 10px #60351244!important;pointer-events:auto!important}
+body #guide-ring{z-index:13009!important;pointer-events:none!important;box-shadow:0 0 0 3px #fff6a888!important;border:2px solid #267c62!important;animation:none!important}
+body #live-guide #guide-body{font-size:13px!important;line-height:1.4!important;margin:8px 0!important}
+body #live-guide #guide-mentor{font-size:12px!important;padding-right:25px}
+body #live-guide button{font-size:12px!important;min-height:32px!important;padding:5px 9px!important}
+body #live-guide .guide-close34{position:absolute;top:4px;right:4px;min-width:28px}
+body #live-guide [hidden]{display:none!important}
+body #guide-progress{font-size:11px!important;margin-right:24px}
+.chapter-grid34{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:12px}.chapter-grid34 button{min-height:48px}
+@media(max-height:380px){body #toolbar button{height:43px!important;min-height:43px!important}body #toolbar button img{height:22px!important;width:22px!important}body #live-guide #guide-body{font-size:12px!important}body #live-guide{padding:8px!important}}

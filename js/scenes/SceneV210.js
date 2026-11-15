@@ -156,7 +156,7 @@
   const object = mode === 'building' ? {kind: 'building', id: this.s.selectedBuilding, rotated: this.editRotation} :
    this.editObject ? {...this.editObject, rotated: this.editRotation} : null;
   if (!object || target == null) return {prompt: object ? 'Коснись нового места' : 'Коснись объекта для переноса'};
-  const prior = object.kind === 'home' ? !!this.s.house.flipped : !!this.s.tiles[object.anchor]?.buildingRotated;
+  const prior = object.kind === 'home' ? !!this.s.house.flipped : object.kind === 'well' ? !!this.s.wellFlipped : !!this.s.tiles[object.anchor]?.buildingRotated;
   if (object.anchor === target && (object.rotated == null || object.rotated === prior)) return {reason: 'Выбери новое место'};
 
   const result = layout.check(this.s, target, object);
@@ -200,7 +200,7 @@
   const preview = this.editPreview(), moving = this.s.tool === 'move';
   const axis = byId('edit-axis');
   const canalMode = this.s.tool === 'canal';
-  const canRotate = this.s.tool === 'building' || ['home','building'].includes(this.editObject?.kind);
+  const canRotate = this.s.tool === 'building' || ['home','well','building'].includes(this.editObject?.kind);
   axis.hidden = canalMode || !canRotate;
   axis.textContent = canalMode ? (this.editAxis === 'row' ? 'Сначала по рядам' : 'Сначала по столбцам') : 'Развернуть вход';
   axis.setAttribute('aria-label', canalMode ? 'Сменить направление канала' : 'Развернуть вход');
@@ -292,12 +292,12 @@
      cfg.product === 'camelMilk' ? OasisProgression.milkBonus(this.s) : 0;
     this.s.inventory[cfg.product] = (this.s.inventory[cfg.product] || 0) + cfg.amount + bonus + Math.max(0,(tile.buildingLevel||1)-1);
     tile.productionAt = 0;
-    this.notify('Продукция добавлена в амбар'); this.playSound(cfg.product==='cloth'?'cloth':'collect');
+    this.notify('Продукция добавлена в амбар'); this.playSound(cfg.product==='cloth'?'cloth':cfg.product==='camelMilk'?'milk':cfg.product==='wool'?'shears':'collect');
    } else {
     this.s.inventory[cfg.feed] -= cfg.feedAmount;
     this.s.water -= cfg.water;
     tile.productionAt = Date.now() + cfg.duration * 1000 / (1 + .1 * Math.max(0,(tile.buildingLevel||1)-1));
-    this.notify('Производство началось'); this.playSound('plant');
+    this.notify('Производство началось'); this.playSound(livestock?'feed':'tool_upgrade');
    }
    error.hidden = true;
    this.save(); this.render();
@@ -357,7 +357,7 @@
    if (this.s.tool === 'canal') this.editAxis = this.editAxis === 'row' ? 'col' : 'row';
    else {
     const object = this.editObject;
-    const prior = object?.kind === 'home' ? !!this.s.house.flipped : !!this.s.tiles[object?.anchor]?.buildingRotated;
+    const prior = object?.kind === 'home' ? !!this.s.house.flipped : object?.kind === 'well' ? !!this.s.wellFlipped : !!this.s.tiles[object?.anchor]?.buildingRotated;
     this.editRotation = !(this.editRotation ?? prior);
     if (object && this.editTarget == null) this.editTarget = object.anchor;
    }

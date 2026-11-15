@@ -3,7 +3,7 @@
 const edit=s=>['canal','building','move','remove'].includes(s.tool);
 const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
-LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.3.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
+LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.4.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
 M.preload=function(){};
 M.mapGeometry=function(w,h){const top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud-top'))||0)+48;return{top,height:Math.max(120,h-top-20),tw:28*(this.mapZoom||1)};};
 M.drawCultivatedSoil=function(){};
@@ -46,12 +46,12 @@ M.render=function(){if(!this.s||!this.g)return;const now=Date.now(),s=this.s;Oas
   if(edit(s)||this.plantMode){g.lineStyle(.7,0x946037,.25);g.strokePoints([{x,y:y-th/2},{x:x+tw/2,y},{x,y:y+th/2},{x:x-tw/2,y}],true);}
   
   this.renderArtwork(i,t,x,y,tw,th);
-  if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,py=spr.y-spr.displayHeight-5;ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
+  if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,meta=window.OasisPlacement34?.[t.building+"-"+(Math.min(3,t.buildingLevel||1)-1)],py=meta?spr.y-spr.displayHeight/2+meta.box[1]*spr.displayHeight/meta.height-5:spr.y-spr.displayHeight-5;ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
  }
  this.drawHouseImage();const well=this.cellPosition(C.wellIndex);this.wellCell=well;this.well=well;this.renderWellSprite(well.x,well.y,tw,th);
  this.drawEditPreview();this.drawPlantPreview?.();this.drawWorkerIndicator?.();
  document.body.classList.toggle('farm-editing',edit(s));$('stop-build').hidden=!edit(s);$('mode-chip').hidden=true;$('quest-banner').hidden=true;
- OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.3.0';
+ OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.4.0';
  if(!$('farm').hidden)this.updateFarmStatus?.();if(this.guideActive)this.positionGuide();
  const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);this.notify('Уровень '+level+(names.length?' · Открыто: '+names.join(', '):''));this.lastAnnouncedLevel=level;}
 };

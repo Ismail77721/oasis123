@@ -18,7 +18,7 @@
   if (row + rows > n || col + cols > n) return null;
   return Array.from({length: rows * cols}, (_, i) => (row + Math.floor(i / cols)) * n + col + i % cols);
  }
- const buildingSize = (id, rotated) => id==='camel' ? (rotated ? [8,6] : [6,8]) : [6,6];
+ const buildingSize = (id, rotated) => id==='camel' ? (rotated ? [5,7] : [7,5]) : [5,5];
  function buildingArea(s, i, t = s.tiles[i]) {
   return t?.buildingArea === true ? rectangle(s, i, ...buildingSize(t.building,t.buildingRotated)) || [i] : [i];
  }
@@ -67,14 +67,15 @@
  }
  function move(s, object, target) {
   if (objectAt(s, object.anchor)?.kind !== object.kind) return reject('Объект уже изменился. Выбери его снова');
-  const priorRotation = object.kind === 'home' ? !!s.house.flipped : !!s.tiles[object.anchor]?.buildingRotated;
-  const rotating = ['home','building'].includes(object.kind) && object.rotated != null && object.rotated !== priorRotation;
+  const priorRotation = object.kind === 'home' ? !!s.house.flipped : object.kind === 'well' ? !!s.wellFlipped : !!s.tiles[object.anchor]?.buildingRotated;
+  const rotating = ['home','well','building'].includes(object.kind) && object.rotated != null && object.rotated !== priorRotation;
   if (object.anchor === target && !rotating) return reject('Выбери новое место');
   const result = check(s, target, object);
   if (!result.ok) return result;
   const n = size(s);
   if (object.kind === 'home') Object.assign(s.house, {row: Math.floor(target / n), col: target % n, flipped: object.rotated ?? priorRotation});
   else if (object.kind === 'well') {
+   s.wellFlipped = object.rotated ?? priorRotation;
    s.wellArea = true;
    s.wellPosition = {row: Math.floor(target / n), col: target % n};
    C.wellIndex = target;

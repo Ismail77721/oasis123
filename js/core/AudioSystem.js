@@ -9,7 +9,7 @@
   const FX = Object.freeze({
     click: 0.27, plant: 0.46, plant2:0.46, water: 0.53, harvest: 0.50, grass:.5, cloth:.5, sale:.5, sheep:.35, ui_open:.4, ui_close:.35,
     canal: 0.47, build: 0.48, coin: 0.57, upgrade: 0.49,
-    collect: 0.48, error: 0.26, quest: 0.51
+    collect: 0.48, error: 0.26, quest: 0.51, camel:.35, feed:.45, time_limit:.5, tool_upgrade:.45, milk:.45, shears:.45, worker:.4, remove:.4
   });
   const clamp = (n, low, high) => Math.min(high, Math.max(low, n));
 
@@ -151,7 +151,7 @@
     play(name) {
       if (!Object.prototype.hasOwnProperty.call(FX, name)) return;
       if (!this.unlocked || !this.supported || !this.enabled || document.hidden || !this.volume) return;
-      const now=Date.now(); if(now-(this.lastFX[name]||0)<(name==='sheep'?5000:75))return; this.lastFX[name]=now;
+      const now=Date.now(); if(now-(this.lastFX[name]||0)<(['sheep','camel'].includes(name)?5000:75))return; this.lastFX[name]=now;
       if(Object.values(this.activeFX).flat().filter(a=>!a.paused&&!a.ended).length>=6)return;
       const clips = this.activeFX[name] || (this.activeFX[name] = []);
       let clip = clips.find(a => a.paused || a.ended);

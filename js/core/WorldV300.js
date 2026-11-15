@@ -1,6 +1,6 @@
 (function(){'use strict';
 const C=OASIS_CONFIG,G=OasisGameState,L=OasisMapLayout,F=OasisFamilyLand,E=OasisEconomy;
-C.version='3.3.0';
+C.version='3.4.0';
 // Build one occupancy index per model mutation. Large farms do not rescan nearby buildings per pixel.
 let cachedState,cachedVersion=-1,grid;
 function invalidate(s){s.mapRevision=(s.mapRevision||0)+1;cachedState=null;}
@@ -16,7 +16,7 @@ for(const name of ['move','layCanal']){const old=L[name];L[name]=function(s,...a
 for(const name of ['uproot','dismantle']){const old=OasisFarmSystems[name];OasisFarmSystems[name]=function(s,...args){const r=old(s,...args);if(r.ok)invalidate(s);return r;};}
 const expand=F.expand;F.expand=function(s){const r=expand(s);if(r.ok)invalidate(s);return r;};
 function migrate(s){
- if(s.cartoonGeometry===1){s.editorPausedAt=null;s.tool='plant';invalidate(s);return s;}
+ if(s.cartoonGeometry===2){s.editorPausedAt=null;s.tool='plant';invalidate(s);return s;}
  // Preserve crops, canals, goods and production timestamps. Relocate only enlarged buildings.
  const buildings=s.tiles.flatMap((t,i)=>t.building?[{i,t:{...t}}]:[]);
  for(const b of buildings)s.tiles[b.i]=G.tile();invalidate(s);
@@ -26,7 +26,7 @@ function migrate(s){
   if(chosen===undefined){s.packedBuildings||=[];s.packedBuildings.push(b.t);}else s.tiles[chosen]=b.t;
   invalidate(s);
  }
- s.cartoonGeometry=1;s.editorPausedAt=null;s.tool='plant';
+ s.cartoonGeometry=2;s.editorPausedAt=null;s.tool='plant';
  for(const w of Object.values(s.workers||{})){w.state='idle';w.target=-1;}
  if(buildings.length){s.activityLog||=[];s.activityLog.push({at:Date.now(),text:'Постройки получили просторные участки. Если места не хватило, здание сохранено в разделе «Постройки → Сохранённые».'});}
  return s;

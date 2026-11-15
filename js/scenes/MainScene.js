@@ -398,7 +398,7 @@ class MainScene extends Phaser.Scene {
      {text:cost===null?'МАКС':'Улучшить · '+cost+' 🪙',disabled:cost===null||this.s.coins<cost,onClick:()=>{
       const result=OasisProgression.upgrade(this.s,id);
       if(!result.ok){this.marketNotice(result.reason);return;}
-      this.save();this.playSound('upgrade');this.notify(t.title+' · уровень '+result.level);this.render();this.renderMarketTab('tools');this.marketNotice('Улучшение куплено за '+result.price+' монет');
+      this.save();this.notify(t.title+' · уровень '+result.level);this.render();this.renderMarketTab('tools');this.marketNotice('Улучшение куплено за '+result.price+' монет');
      }}
     ]));
    }

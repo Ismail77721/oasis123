@@ -191,8 +191,8 @@
  M.closeRemoval=function(){get('remove-confirm').hidden=true;this.pendingRemoval=null;};
  M.commitRemoval=function(){
   const i=this.pendingRemoval,t=this.s.tiles[i];if(!t){this.closeRemoval();return;}
-  const result=t.crop?F.uproot(this.s,i):F.dismantle(this.s,i);
-  const wasCrop=!!t.crop;this.closeRemoval();if(result.ok){this.save();this.render();this.playSound?.('build');this.notify(wasCrop?'🌱 Семя или саженец возвращён':'🪓 Канал разобран');}
+  const wasCrop=!!t.crop;const result=wasCrop?F.uproot(this.s,i):F.dismantle(this.s,i);
+  this.closeRemoval();if(result.ok){this.save();this.render();this.playSound?.('remove');this.notify(wasCrop?'🌱 Семя или саженец возвращён':'🪓 Канал разобран');}
  };
  M.openUpgrades=function(){oldOpenUpgrades.call(this);const list=get('upgrade-items');for(const item of list.children){if(item.textContent.includes('Ведро для воды'))item.remove();}};
  M.renderHome=function(){
