@@ -76,4 +76,9 @@ vm.runInNewContext(fs.readFileSync(path.join(root,'js/core/AudioSystem.js'),'utf
 assert.strictEqual(restore.window.OasisAudio.volume,.45);
 assert.strictEqual(restore.window.OasisAudio.ambience,false);
 au.setAmbience(true);au.setContext('farm');assert(!au.loops.water_loop.paused);au.setContext('market');assert(au.loops.water_loop.paused);assert(!au.loops.market_loop.paused);au.setContext('menu');assert(au.loops.market_loop.paused);
-console.log('PASS audio: approved local assets, no autoplay, unlock, game SFX, mute, volume, ambience, phase, tab visibility, persistence');
+console.log('PASS audio: approved local assets, no autoplay, unlock, game SFX, mute, volume, ambience, phase, tab visibility, persistence');// UI taps and missing building-specific effects must never substitute unrelated clips.
+au.setEnabled(true);au.setVolume(.65);doc.hidden=false;au.unlock();const silentCount=playCount;
+for(const id of ['click','ui_open','ui_close','worker','collect'])au.play(id);
+assert.equal(playCount,silentCount);assert.equal(events.click,undefined,'no global finger-snap click listener');
+au.pauseAll();au.play('camel');assert(au.activeFX.camel?.length);au.pauseAll();au.play('sheep');assert(au.activeFX.sheep?.length);
+console.log('PASS 3.5 audio: no global tap sound, missing effects silent, separate sheep/camel entry clips');

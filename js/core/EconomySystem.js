@@ -25,7 +25,7 @@
   if(crop.unlock>level(s))return fail('Культура ещё не открыта');
   if((s.seedBank[id]||0)<1)return fail('Нет семян. Посети семенную лавку на торговой площади');
   s.seedBank[id]--;t.crop=id;t.plantedAt=now;t.watered=false;t.perennialEstablished=false;
-  s.selectedCrop=id;s.stats.planted=(s.stats.planted||0)+1;
+  s.stats.planted=(s.stats.planted||0)+1;
   return ok({id});
  }
  function harvest(s,i,now=Date.now()){

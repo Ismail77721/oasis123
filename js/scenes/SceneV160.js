@@ -91,7 +91,7 @@ MP.renderMarketTab=function(stall='produce'){
   rows.append(marketRow(this,'🤲 '+req.title,detail,[{text:req.done?'Помощь оказана':'Помочь',disabled:req.done||!enough,onClick:()=>{
    const result=OasisSadaka.donate(this.s,req.id); // IMPORTANT: id, not undefined key.
    if(!result.ok){this.marketNotice(result.reason);return;}
-   this.save();this.render();this.renderMarketTab('sadaka');this.playSound?.('quest');
+   this.save();this.render();this.renderMarketTab('sadaka');
    const quotes=['Да воздаст тебе Аллах благом!','Пусть Аллах примет твою помощь!','Пусть Аллах дарует тебе благо!'];
    this.showBlessing(quotes[Math.abs([...req.id].reduce((a,c)=>a+c.charCodeAt(0),0))%quotes.length]);
   }}]));

@@ -187,7 +187,7 @@
   } else {
    const result = layout.move(this.s, {...this.editObject, rotated: this.editRotation}, this.editTarget);
    if (!result.ok) { this.notify(result.reason); return; }
-   this.playSound('build'); this.notify('Перестановка сохранена');
+   this.notify('Перестановка сохранена');
   }
   this.selectedTile = null;
   this.resetEditDraft();
@@ -297,7 +297,7 @@
     this.s.inventory[cfg.feed] -= cfg.feedAmount;
     this.s.water -= cfg.water;
     tile.productionAt = Date.now() + cfg.duration * 1000 / (1 + .1 * Math.max(0,(tile.buildingLevel||1)-1));
-    this.notify('Производство началось'); this.playSound(livestock?'feed':'tool_upgrade');
+    this.notify('Производство началось'); if(livestock)this.playSound('feed');
    }
    error.hidden = true;
    this.save(); this.render();

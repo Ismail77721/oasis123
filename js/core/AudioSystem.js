@@ -64,12 +64,6 @@
       // Capture ensures the first game touch can start audio under mobile policies.
       document.addEventListener('pointerdown', unlock, {capture:true,passive:true});
       document.addEventListener('keydown', unlock, {capture:true});
-      document.addEventListener('click', event => {
-        const target = event.target;
-        if (target && typeof target.closest === 'function' && target.closest('button') && !target.closest('#sound-toggle')) {
-          this.play(target.closest('[data-dismiss],.modal-back,.close-modal,#sound-settings-close')?'ui_close':'click');
-        }
-      }, true);
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) this.pauseAll();
         else this.startAmbience();
@@ -149,6 +143,7 @@
       if (this.phase !== phase) {this.phase = phase; this.applyVolumes();}
     }
     play(name) {
+      if (this.silent35 || ['click','ui_open','ui_close','worker','collect'].includes(name)) return;
       if (!Object.prototype.hasOwnProperty.call(FX, name)) return;
       if (!this.unlocked || !this.supported || !this.enabled || document.hidden || !this.volume) return;
       const now=Date.now(); if(now-(this.lastFX[name]||0)<(['sheep','camel'].includes(name)?5000:75))return; this.lastFX[name]=now;

@@ -40,7 +40,7 @@
     text:req.done?'Помощь оказана':'Помочь',disabled:req.done||!enough,onClick:()=>{
      const result=S.donate(save,req.id);
      if(!result.ok){this.marketNotice(result.reason);return;}
-     this.save();this.render();this.renderMarketTab('sadaka');this.playSound?.('quest');
+     this.save();this.render();this.renderMarketTab('sadaka');
      this.showBlessing(result.blessing);
     }
    }]));
@@ -64,7 +64,7 @@
    const donateAmount=amount=>{
     const result=S.contribute(save,p.id,amount);
     if(!result.ok){this.marketNotice(result.reason);return;}
-    this.save();this.render();this.renderMarketTab('sadaka');this.playSound?.('quest');this.showBlessing(result.blessing);
+    this.save();this.render();this.renderMarketTab('sadaka');this.showBlessing(result.blessing);
    };
    give.addEventListener('click',()=>donateAmount(field.value));row.append(field,give);section.append(row);
    const quick=node('div','charity-quick');

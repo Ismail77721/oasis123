@@ -53,10 +53,10 @@
  M.openMarket=function(stall){
   this.closeAllPanels();this.closeCropInfo();get('quests-panel').hidden=true;get('help-panel').hidden=true;
   OasisUI.currency(get('market-coins'),this.s.coins);
-  get('market-screen').hidden=false;this.marketOpen=true;document.body.classList.add('market-active');this.playSound?.('click');this.guideEvent('market');
+  get('market-screen').hidden=false;this.marketOpen=true;document.body.classList.add('market-active');this.playSound?.('click');
   if(stall&&stall!=='produce'&&stall!=='square')this.renderMarketTab(stall);
   else this.showMarketSquare();
-  this.audio?.pauseAmbience?.();this.startMarketSound();
+  this.audio?.pauseAmbience?.();this.startMarketSound();this.guideEvent('market');
  };
  M.renderMarketTab=function(stall='produce'){
   if(stall==='square'){this.showMarketSquare();return;}
@@ -192,7 +192,7 @@
  M.commitRemoval=function(){
   const i=this.pendingRemoval,t=this.s.tiles[i];if(!t){this.closeRemoval();return;}
   const wasCrop=!!t.crop;const result=wasCrop?F.uproot(this.s,i):F.dismantle(this.s,i);
-  this.closeRemoval();if(result.ok){this.save();this.render();this.playSound?.('remove');this.notify(wasCrop?'🌱 Семя или саженец возвращён':'🪓 Канал разобран');}
+  this.closeRemoval();if(result.ok){this.save();this.render();if(wasCrop)this.playSound?.('remove');this.notify(wasCrop?'🌱 Семя или саженец возвращён':'🪓 Канал разобран');}
  };
  M.openUpgrades=function(){oldOpenUpgrades.call(this);const list=get('upgrade-items');for(const item of list.children){if(item.textContent.includes('Ведро для воды'))item.remove();}};
  M.renderHome=function(){
