@@ -18,13 +18,13 @@
   if(!s.tools){x.tools.rake=Math.max(1,Math.min(10,(Number(s.upgrades?.harvest)||1)*2-1));x.tools.spade=Math.max(1,Math.min(10,(Number(s.upgrades?.irrigation)||1)*2-1));}
   for(const id of Object.keys(f.tools))x.tools[id]=Number.isInteger(x.tools[id])?Math.max(1,Math.min(10,x.tools[id])):1;
   x.water=Math.min(x.water,OasisProgression.maxWater(x));
-  x.dailyQuests=s.dailyQuests&&typeof s.dailyQuests==='object'?s.dailyQuests:null;
+  x.orderDay36=s.orderDay36;x.savedReward36=Number(s.savedReward36)||0;x.dailyQuests=s.dailyQuests&&typeof s.dailyQuests==='object'?s.dailyQuests:null;
   x.upgrades=Object.assign({},f.upgrades,s.upgrades||{});
   x.stats=Object.assign({},f.stats,s.stats||{});for(const key of Object.keys(f.stats))x.stats[key]=Number.isFinite(x.stats[key])?Math.max(0,Math.floor(x.stats[key])):0;
   x.seedBank=Object.assign({},f.seedBank,s.seedBank||{});
   if(s.seedEconomyVersion!==1){x.seedBank.watermelon=Math.max(x.seedBank.watermelon,2);x.seedBank.clover=Math.max(x.seedBank.clover,3);}
   for(const id of Object.keys(OASIS_CONFIG.crops))x.seedBank[id]=Number.isInteger(x.seedBank[id])?Math.max(0,x.seedBank[id]):0;
-  x.seedEconomyVersion=1;x.orders=Array.isArray(s.orders)?s.orders.slice(0,6):[];x.ordersCompleted=Number.isInteger(s.ordersCompleted)?Math.max(0,s.ordersCompleted):0;
+  x.seedEconomyVersion=1;x.orders=Array.isArray(s.orders)?s.orders.slice(0,15):[];x.ordersCompleted=Number.isInteger(s.ordersCompleted)?Math.max(0,s.ordersCompleted):0;
   x.lastRecoveryAt=Number.isFinite(s.lastRecoveryAt)?Math.max(0,s.lastRecoveryAt):0;
   x.claimedQuests=Array.isArray(s.claimedQuests)?[...new Set(s.claimedQuests.filter(v=>Number.isInteger(v)&&v>=0&&v<6))]:[];
   x.donationHistory=Array.isArray(s.donationHistory)?s.donationHistory.filter(v=>typeof v==='string').slice(-90):[];

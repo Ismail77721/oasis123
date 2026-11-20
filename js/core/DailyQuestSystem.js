@@ -13,6 +13,11 @@
  function ensure(s,at=Date.now()){
   const day=key(at);
   if(s.dailyQuests?.date!==day||!Array.isArray(s.dailyQuests.items)||s.dailyQuests.items.length!==3||!s.dailyQuests.baseline||s.dailyQuests.items.some(q=>!q||!tasks.some(t=>t.id===q.id)||!Number.isFinite(q.goal)||q.goal<1)){
+   const old=s.dailyQuests;
+   if(old?.date!==day&&Array.isArray(old?.items)&&old.baseline){
+    const totals=metrics(s);
+    for(const q of old.items)if(q&&!q.claimed&&totals[q.id]-old.baseline[q.id]>=q.goal)s.savedReward36=(s.savedReward36||0)+q.reward;
+   }
    const dayNo=Math.floor(new Date(day+'T12:00:00').getTime()/86400000);
    const indices=[dayNo%4,(dayNo+1)%4,4+(dayNo%2)];
    const rank=Math.min(3,Math.floor((OasisProgression.level(s)-1)/6));

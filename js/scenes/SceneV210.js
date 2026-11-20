@@ -187,7 +187,7 @@
   } else {
    const result = layout.move(this.s, {...this.editObject, rotated: this.editRotation}, this.editTarget);
    if (!result.ok) { this.notify(result.reason); return; }
-   this.notify('Перестановка сохранена');
+   this.playSound('fx_basket');this.notify('Перестановка сохранена');
   }
   this.selectedTile = null;
   this.resetEditDraft();
@@ -292,12 +292,12 @@
      cfg.product === 'camelMilk' ? OasisProgression.milkBonus(this.s) : 0;
     this.s.inventory[cfg.product] = (this.s.inventory[cfg.product] || 0) + cfg.amount + bonus + Math.max(0,(tile.buildingLevel||1)-1);
     tile.productionAt = 0;
-    this.notify('Продукция добавлена в амбар'); this.playSound(cfg.product==='cloth'?'cloth':cfg.product==='camelMilk'?'milk':cfg.product==='wool'?'shears':'collect');
+    this.notify('Продукция добавлена в амбар'); this.playSound(cfg.product==='cloth'?'cloth':cfg.product==='camelMilk'?'milk':cfg.product==='wool'?'shears':({flour:'fx_flour',honey:'fx_honey',oliveOil:'fx_oil',cuminOil:'fx_oil'})[cfg.product]||'collect');
    } else {
     this.s.inventory[cfg.feed] -= cfg.feedAmount;
     this.s.water -= cfg.water;
     tile.productionAt = Date.now() + cfg.duration * 1000 / (1 + .1 * Math.max(0,(tile.buildingLevel||1)-1));
-    this.notify('Производство началось'); if(livestock)this.playSound('feed');
+    this.notify('Производство началось'); this.playSound(livestock?'feed':cfg.feed==='olive'?'fx_olives':cfg.feed==='wool'?'fx_wool':cfg.feed==='flowers'?'': 'fx_grain');
    }
    error.hidden = true;
    this.save(); this.render();

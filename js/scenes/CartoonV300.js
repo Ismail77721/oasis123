@@ -3,7 +3,38 @@
 const edit=s=>['canal','building','move','remove'].includes(s.tool);
 const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
-LoadingScene.prototype.preload=function(){for(const [key,a] of Object.entries(A))this.load.image('cartoon-'+key,a.file+'?v=3.4.0');this.load.on('loaderror',f=>(window.OasisLoadErrors||=[]).push(f.key));};
+LoadingScene.prototype.preload=function(){
+ if(location.protocol==='file:')return;
+ for(const [key,asset] of Object.entries(A))this.load.image('cartoon-'+key,asset.file+'?v=3.6.1');
+};
+LoadingScene.prototype.create=function(){
+ const missing=()=>Object.keys(A).filter(key=>!this.textures.exists('cartoon-'+key));
+ const needed=missing();
+ if(!needed.length){this.scene.start('MainScene');return;}
+ const fail=()=>{
+  const cover=document.getElementById('loading36');
+  cover.replaceChildren();
+  const message=document.createElement('strong'),retry=document.createElement('button');
+  message.textContent='Не удалось загрузить графику фермы. Проверьте, что архив распакован целиком.';
+  retry.textContent='Повторить загрузку';retry.onclick=()=>location.reload();
+  cover.append(message,retry);
+ };
+ const script=document.createElement('script');
+ script.src='js/core/LocalTextures361.js?v=3.6.1';
+ script.onerror=fail;
+ script.onload=async()=>{
+  try{await window.OasisTextureBackupReady;}catch{fail();return;}
+  const pack=window.OasisTextureBackup;
+  if(!pack||needed.some(key=>!pack[key])){fail();return;}
+  this.load.once('complete',()=>{
+   delete window.OasisTextureBackup;
+   if(missing().length)fail();else this.scene.start('MainScene');
+  });
+  for(const key of needed)this.load.image('cartoon-'+key,pack[key]);
+  this.load.start();
+ };
+ document.head.append(script);
+};
 M.preload=function(){};
 M.mapGeometry=function(w,h){const top=(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hud-top'))||0)+48;return{top,height:Math.max(120,h-top-20),tw:28*(this.mapZoom||1)};};
 M.drawCultivatedSoil=function(){};
@@ -40,18 +71,25 @@ M.render=function(){if(!this.s||!this.g)return;const now=Date.now(),s=this.s;Oas
  for(const spr of Object.values(this.art))spr?.setVisible(false);
  this.cells=[];const n=s.worldSize,geo=this.mapGeometry(w,h),tw=geo.tw,th=tw/2,ox=w/2+(this.panX||0),oy=geo.top+(geo.height-n*th)/2+(this.panY||0);
  this.drawFence(g,ox,oy,tw,th,n);this.drawCanalNetwork?.();
+ const groups=new Map();
  const rs=[],cs=[];for(const X of [-tw*10,w+tw*10])for(const Y of [-tw*10,h+tw*10]){rs.push((Y-oy)/th-(X-ox)/tw);cs.push((Y-oy)/th+(X-ox)/tw);}
  const r0=Math.max(0,Math.floor(Math.min(...rs))),r1=Math.min(n-1,Math.ceil(Math.max(...rs))),c0=Math.max(0,Math.floor(Math.min(...cs))),c1=Math.min(n-1,Math.ceil(Math.max(...cs)));
  for(let r=r0;r<=r1;r++)for(let c=c0;c<=c1;c++){const i=r*n+c,t=s.tiles[i],cell=this.cellPosition(i),{x,y}=cell;if(x< -tw*8||x>w+tw*8||y< -tw*8||y>h+tw*8)continue;this.cells.push(cell);
   if(edit(s)||this.plantMode){g.lineStyle(.7,0x946037,.25);g.strokePoints([{x,y:y-th/2},{x:x+tw/2,y},{x,y:y+th/2},{x:x-tw/2,y}],true);}
   
   this.renderArtwork(i,t,x,y,tw,th);
-  if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,meta=window.OasisPlacement34?.[t.building+"-"+(Math.min(3,t.buildingLevel||1)-1)],py=meta?spr.y-spr.displayHeight/2+meta.box[1]*spr.displayHeight/meta.height-5:spr.y-spr.displayHeight*(spr.originY??1)-5;ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
+  if(!edit(s)&&((t.crop&&OasisTimeSystem.isReady(t))||(t.productionAt>0&&t.productionAt<=now))){const spr=this.art[i],px=spr.x,meta=window.OasisPlacement34?.[t.building+"-"+(Math.min(3,t.buildingLevel||1)-1)],py=meta?spr.y-spr.displayHeight/2+meta.box[1]*spr.displayHeight/meta.height-5:spr.y-spr.displayHeight*(spr.originY??1)-5;if(tw<16&&t.crop){const key=Math.floor(px/44)+','+Math.floor(py/32);const group=groups.get(key)||{x:0,y:0,n:0};group.x+=px;group.y+=py;group.n++;groups.set(key,group);continue;}ui.fillStyle(0xfff3cc);ui.fillCircle(px,py,5);ui.lineStyle(1.5,0x348745);ui.strokeCircle(px,py,5);ui.lineBetween(px-2,py,px,py+2);ui.lineBetween(px,py+2,px+3,py-2);}
  }
+ this.harvestLabels||=[];let used=0;
+ for(const group of groups.values()){
+  const marker=this.harvestLabels[used]||(this.harvestLabels[used]=this.add.text(0,0,'',{fontSize:'12px',color:'#fff8df',backgroundColor:'#377747',padding:{x:3,y:1}}).setOrigin(.5).setDepth(10001));
+  marker.setText(String(group.n)).setPosition(group.x/group.n,group.y/group.n).setVisible(true);used++;
+ }
+ for(let i=used;i<this.harvestLabels.length;i++)this.harvestLabels[i].setVisible(false);
  this.drawHouseImage();const well=this.cellPosition(C.wellIndex);this.wellCell=well;this.well=well;this.renderWellSprite(well.x,well.y,tw,th);
  this.drawEditPreview();this.drawPlantPreview?.();this.drawWorkerIndicator?.();
  document.body.classList.toggle('farm-editing',edit(s));$('stop-build').hidden=!edit(s);$('mode-chip').hidden=true;$('quest-banner').hidden=true;
- OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.5.0';
+ OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v3.6.1';
  if(!$('farm').hidden)this.updateFarmStatus?.();if(this.guideActive)this.positionGuide();
  const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);this.notify('Уровень '+level+(names.length?' · Открыто: '+names.join(', '):''));this.lastAnnouncedLevel=level;}
 };

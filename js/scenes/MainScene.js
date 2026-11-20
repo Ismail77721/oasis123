@@ -496,6 +496,8 @@ class MainScene extends Phaser.Scene {
  renderQuests(){
   const target=document.getElementById('quests-list');if(!target)return;target.replaceChildren();
   const dailyHeading=document.createElement('h4');dailyHeading.textContent='☀️ Ежедневные задания · обновляются каждый день';target.append(dailyHeading);
+  OasisDailyQuests.ensure(this.s);
+  if(this.s.savedReward36>0){const button=document.createElement('button');button.textContent='Забрать за прошлые дни · '+this.s.savedReward36+' монет';button.onclick=()=>{this.s.coins+=this.s.savedReward36;this.s.savedReward36=0;this.save();this.render();this.renderQuests();};target.append(button);}
   OasisDailyQuests.overview(this.s).forEach(q=>{
    const row=document.createElement('div');row.className='quest-row';
    const label=document.createElement('span');label.textContent=(q.claimed?'✓ ':'')+q.title+' ('+Math.floor(q.progress)+'/'+q.goal+')';

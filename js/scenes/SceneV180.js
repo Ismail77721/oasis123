@@ -192,7 +192,7 @@
  M.commitRemoval=function(){
   const i=this.pendingRemoval,t=this.s.tiles[i];if(!t){this.closeRemoval();return;}
   const wasCrop=!!t.crop;const result=wasCrop?F.uproot(this.s,i):F.dismantle(this.s,i);
-  this.closeRemoval();if(result.ok){this.save();this.render();if(wasCrop)this.playSound?.('remove');this.notify(wasCrop?'🌱 Семя или саженец возвращён':'🪓 Канал разобран');}
+  this.closeRemoval();if(result.ok){this.save();this.render();this.playSound?.(wasCrop?'remove':'fx_canal');this.notify(wasCrop?'🌱 Семя или саженец возвращён':'🪓 Канал разобран');}
  };
  M.openUpgrades=function(){oldOpenUpgrades.call(this);const list=get('upgrade-items');for(const item of list.children){if(item.textContent.includes('Ведро для воды'))item.remove();}};
  M.renderHome=function(){

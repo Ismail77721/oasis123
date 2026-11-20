@@ -29,7 +29,7 @@ MP.goBack=function(){if(!el('reply-modal').hidden){el('reply-modal').hidden=true
 };
 MP.showBlessing=function(message){text('reply-modal-text',message||'Да воздаст тебе Аллах благом!');el('reply-modal').hidden=false;};
 MP.productName=function(id){if(L.labels(id)!==id)return L.icons(id)+' '+L.labels(id);return oldName.call(this,id);};
-MP.openHome=function(){if(!this.s)return;this.closeAllPanels();this.renderHome();el('home-panel').hidden=false;this.playSound?.('click');};
+MP.openHome=function(){if(!this.s)return;if(el('home-panel').hidden)this.audio?.play('fx_house');this.closeAllPanels();this.renderHome();el('home-panel').hidden=false;this.playSound?.('click');};
 MP.renderHome=function(){L.ensure(this.s);
  const s=this.s,f=s.family,level=s.house.level,side=L.houseSide(s.house);
  text('home-intro','Семейный дом · уровень '+level+'/5');
