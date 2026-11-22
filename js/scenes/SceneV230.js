@@ -30,6 +30,15 @@ M.drawSandDecoration=function(){}; // Tile-shaped decoration patches removed; co
 M.drawFence=function(g,ox,oy,tw,th,n){
  for(const s of Object.values(this.fenceArt||{}))s.setVisible(false);
  const v=[{x:ox,y:oy-th/2},{x:ox+n*tw/2,y:oy+(n-1)*th/2},{x:ox,y:oy+(n-.5)*th},{x:ox-n*tw/2,y:oy+(n-1)*th/2}];
+ if(tw<9){
+  // At distant zoom draw each rail in one pass, avoiding flicker from subpixel boards.
+  for(let side=0;side<4;side++){
+   const a=v[side],b=v[(side+1)%4],posts=Math.min(Math.ceil(n/2),Math.max(1,Math.floor(Math.hypot(b.x-a.x,b.y-a.y)/9)));
+   g.lineStyle(Math.max(.7,tw*.13),0x94613b);g.lineBetween(a.x,a.y-tw*.2,b.x,b.y-tw*.2);
+   for(let j=0;j<posts;j++){const t=j/posts,x=a.x+(b.x-a.x)*t,y=a.y+(b.y-a.y)*t;g.lineStyle(Math.max(.8,tw*.17),0x714a30);g.lineBetween(x,y,x,y-Math.max(1.5,tw*.48));}
+  }
+  return;
+ }
  const drawPost=(x,y)=>{const h=tw*.45,w=Math.max(.5,tw*.13);g.fillStyle(0x83502a);g.fillRect(x-w/2,y-h,w,h);g.fillStyle(0xd3a56b);g.fillRect(x-w/2,y-h,w*.35,h);g.fillStyle(0xe9c389);g.fillEllipse(x,y-h,w,w*.5);g.lineStyle(Math.max(.6,tw*.025),0x5d3d26,.7);g.lineBetween(x+w*.2,y-h*.9,x+w*.2,y-h*.15);};
  for(let side=0;side<4;side++){const a=v[side],b=v[(side+1)%4],steps=Math.ceil(n/2);for(let k=0;k<steps;k++){const t=k/steps,u=(k+1)/steps,x=a.x+(b.x-a.x)*t,y=a.y+(b.y-a.y)*t,X=a.x+(b.x-a.x)*u,Y=a.y+(b.y-a.y)*u;if(Math.max(x,X)<-50||Math.min(x,X)>this.scale.width+50||Math.max(y,Y)<-50||Math.min(y,Y)>this.scale.height+50)continue;
  const gate=side===1&&k===Math.floor(steps/2);

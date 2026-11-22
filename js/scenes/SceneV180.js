@@ -56,7 +56,7 @@
   get('market-screen').hidden=false;this.marketOpen=true;document.body.classList.add('market-active');this.playSound?.('click');
   if(stall&&stall!=='produce'&&stall!=='square')this.renderMarketTab(stall);
   else this.showMarketSquare();
-  this.audio?.pauseAmbience?.();this.startMarketSound();this.guideEvent('market');
+  this.guideEvent('market');
  };
  M.renderMarketTab=function(stall='produce'){
   if(stall==='square'){this.showMarketSquare();return;}

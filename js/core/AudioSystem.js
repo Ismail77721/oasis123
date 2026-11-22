@@ -7,7 +7,7 @@
   const KEY = 'oasis_audio_v1';
   const ROOT = 'assets/audio/';
   const FX = Object.freeze({
-    fx_house: .55,fx_barn: .55,fx_apiary: .55,fx_mill: .55,fx_cumin_press: .55,fx_olive_press: .55,fx_loom: .55,fx_grain: .55,fx_olives: .55,fx_wool: .55,fx_flour: .55,fx_honey: .55,fx_oil: .55,fx_basket: .55,fx_canal: .55, click: 0.27, plant: 0.46, plant2:0.46, water: 0.53, harvest: 0.50, grass:.5, cloth:.5, sale:.5, sheep:.35, ui_open:.4, ui_close:.35,
+    v37_trip: .65, v37_produce: .65, v37_seeds: .65, v37_orders: .65, v37_tools: .65, v37_sadaka: .65, v37_help: .65, v37_daily: .65, fx_house: .55,fx_barn: .55,fx_apiary: .55,fx_mill: .55,fx_cumin_press: .55,fx_olive_press: .55,fx_loom: .55,fx_grain: .55,fx_olives: .55,fx_wool: .55,fx_flour: .55,fx_honey: .55,fx_oil: .55,fx_basket: .55,fx_canal: .55, click: 0.27, plant: 0.46, plant2:0.46, water: 0.53, harvest: 0.50, grass:.5, cloth:.5, sale:.5, sheep:.35, ui_open:.4, ui_close:.35,
     canal: 0.47, build: 0.48, coin: 0.57, upgrade: 0.49,
     collect: 0.48, error: 0.26, quest: 0.51, camel:.35, feed:.45, time_limit:.5, tool_upgrade:.45, milk:.45, shears:.45, worker:.4, remove:.4
   });
@@ -20,7 +20,7 @@
       this.volume = .65;
       this.unlocked = false;
       this.phase = 'day';
-      this.bound = false; this.context = 'menu'; this.lastFX = Object.create(null);
+      this.fadeGeneration=0;this.bound = false; this.context = 'menu'; this.lastFX = Object.create(null);
       this.activeFX = Object.create(null);
       this.loops = Object.create(null);
       this.supported = typeof Audio !== 'undefined';
@@ -79,7 +79,7 @@
         if (!settings.hidden) this.syncUI();
       });
       close.addEventListener('click', () => settings.hidden = true);
-      slider.addEventListener('input', () => this.setVolume(Number(slider.value)/100));
+      slider.addEventListener('input', () => {this.enabled=true;this.setVolume(Number(slider.value)/100);});
       ambientCheckbox.addEventListener('change', () => this.setAmbience(ambientCheckbox.checked));
       this.syncUI();
     }
@@ -95,23 +95,36 @@
     }
     applyVolumes() {
       if (!this.supported) return;
-      const active = this.enabled && this.ambience && (typeof document === 'undefined' || !document.hidden);
-      for (const clip of Object.values(this.loops)) clip.volume = active ? this.volume * .16 : 0;
       for (const [name,clips] of Object.entries(this.activeFX)) for (const clip of clips) clip.volume = this.enabled ? this.volume * FX[name] : 0;
     }
     startAmbience() {
       if (!this.unlocked || !this.supported) return;
       if (!this.enabled || !this.ambience || !this.volume || document.hidden) {this.pauseAmbience(); return;}
-      this.applyVolumes();
-      if (this.context === 'menu') {this.pauseAmbience();return;}
-      const name=this.context==='market'?'market_loop':'water_loop';
-      for(const [key,clip] of Object.entries(this.loops)) if(key!==name)clip.pause();
-      const clip=this.loops[name]||(this.loops[name]=this.make(name,true));
-      this.applyVolumes(); if(clip.paused)this.tryPlay(clip);
+      const name=this.context==='market'?'market_loop':this.context==='farm'?'water_loop':null;
+      if(name&&!this.loops[name]){this.loops[name]=this.make(name,true);this.loops[name].volume=0;}
+      if(name&&this.loops[name].paused)this.tryPlay(this.loops[name]);
+      const goal=name?this.volume*.16:0;
+      if(this.loopName===name && this.loopGoal===goal)return;
+      this.loopName=name;this.loopGoal=goal;
+      const generation=++this.fadeGeneration;
+      const levels=Object.entries(this.loops).map(([key,clip])=>({clip,from:clip.volume,to:key===name?goal:0}));
+      const update=fraction=>{
+        for(const {clip,from,to} of levels){clip.volume=from+(to-from)*fraction;if(fraction===1&&!to)clip.pause();}
+      };
+      if(typeof requestAnimationFrame!=='function'){update(1);return;}
+      const start=performance.now();
+      const fade=now=>{
+        if(this.fadeGeneration!==generation)return;
+        const fraction=Math.min(1,(now-start)/220);update(fraction);
+        if(fraction<1)requestAnimationFrame(fade);
+      };
+      requestAnimationFrame(fade);
     }
     setContext(context) {if(this.context===context)return;this.context=context;this.startAmbience();}
-
-    pauseAmbience() {for (const audio of Object.values(this.loops)) audio.pause();}
+    pauseAmbience() {
+      this.fadeGeneration++;this.loopName=null;this.loopGoal=0;
+      for(const audio of Object.values(this.loops)){audio.pause();audio.volume=0;}
+    }
     pauseAll() {
       this.pauseAmbience();
       for (const clips of Object.values(this.activeFX)) for (const clip of clips) clip.pause();
@@ -167,8 +180,8 @@
       const volume = document.getElementById('sound-volume');
       const amount = document.getElementById('sound-volume-value');
       const ambience = document.getElementById('sound-ambience');
-      if (volume) volume.value = String(Math.round(this.volume * 100));
-      if (amount) amount.textContent = Math.round(this.volume*100) + '%';
+      if (volume) volume.value = String(this.enabled ? Math.round(this.volume * 100) : 0);
+      if (amount) amount.textContent = (this.enabled ? Math.round(this.volume*100) : 0) + '%';
       if (ambience) { ambience.checked = this.ambience; ambience.disabled = false; const label=ambience.closest?.("label"); if(label)label.hidden=false; }
     }
   }

@@ -136,7 +136,7 @@ class MainScene extends Phaser.Scene {
  bindToolbar(){
   document.querySelectorAll('#toolbar button').forEach(b=>b.addEventListener('click',()=>{
    const a=b.dataset.action;
-   if(a==='market')this.openMarket();
+   if(a==='market')this.travelToMarket();
    else if(a==='inventory')this.openStorage();
    else if(a==='quests'){const panel=document.getElementById('quests-panel');panel.hidden=!panel.hidden;if(!panel.hidden)this.renderQuests();}
    else if(a==='build')this.openBuildMenu();
@@ -153,7 +153,7 @@ class MainScene extends Phaser.Scene {
    this.save();this.render();
   }));
   document.getElementById('storage-close').addEventListener('click',()=>this.closePanel('storage-screen'));
-  document.getElementById('storage-go-market').addEventListener('click',()=>{this.closePanel('storage-screen');this.openMarket();});
+  document.getElementById('storage-go-market').addEventListener('click',()=>{this.closePanel('storage-screen');this.travelToMarket();});
  }
  openBuildMenu(){this.closeAllPanels();this.guideEvent('buildMenu');const hint=document.querySelector('[data-build="canal"] small');if(hint)hint.textContent='Провести воду · '+OasisProgression.canalPrice(this.s)+' 🪙';document.getElementById('build-menu').hidden=false;this.positionGuide();}
  closeAllPanels(){for(const id of ['build-menu','buildings','farm','picker','upgrades','storage-screen'])document.getElementById(id).hidden=true;}
@@ -454,7 +454,7 @@ class MainScene extends Phaser.Scene {
    row.append(label,b);target.append(row);
   }
   const go=document.createElement('button');go.className='primary-wide';go.textContent='🏺 Купить семена на торговой площади';
-  go.addEventListener('click',()=>{this.closePanel('picker');this.openMarket('seeds');});target.append(go);
+  go.addEventListener('click',()=>{this.closePanel('picker');this.travelToMarket('seeds');});target.append(go);
   document.getElementById('picker').hidden=false;
  }
  openUpgrades(){
@@ -467,7 +467,7 @@ class MainScene extends Phaser.Scene {
    row.append(info);target.append(row);
   }
   const go=document.createElement('button');go.className='primary-wide';go.textContent='🏺 Перейти в мастерскую торговой площади';
-  go.addEventListener('click',()=>{this.closePanel('upgrades');this.openMarket('tools');});target.append(go);
+  go.addEventListener('click',()=>{this.closePanel('upgrades');this.travelToMarket('tools');});target.append(go);
   document.getElementById('upgrades').hidden=false;
  }
 
@@ -502,7 +502,7 @@ class MainScene extends Phaser.Scene {
    const row=document.createElement('div');row.className='quest-row';
    const label=document.createElement('span');label.textContent=(q.claimed?'✓ ':'')+q.title+' ('+Math.floor(q.progress)+'/'+q.goal+')';
    const btn=document.createElement('button');btn.textContent=q.claimed?'Получено':q.progress>=q.goal?'Забрать +'+q.reward:'+'+q.reward+' 🪙';btn.disabled=q.claimed||q.progress<q.goal;
-   btn.addEventListener('click',()=>{const result=OasisDailyQuests.claim(this.s,q.index);if(result.ok){this.save();this.notify('Ежедневная награда: +'+result.reward+' монет');this.playSound('quest');this.render();this.renderQuests();}});
+   btn.addEventListener('click',()=>{const result=OasisDailyQuests.claim(this.s,q.index);if(result.ok){this.save();this.notify('Ежедневная награда: +'+result.reward+' монет');this.render();this.renderQuests();}});
    row.append(label,btn);target.append(row);
   });
   if(this.getQuests().some((_,i)=>!this.s.claimedQuests.includes(i))){const heading=document.createElement('h4');heading.textContent='🏅 Достижения · выполняются один раз';target.append(heading);}

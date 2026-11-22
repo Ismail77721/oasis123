@@ -13,7 +13,7 @@
   x.inventory=Object.assign({},f.inventory,s.inventory||{});
   for(const key of Object.keys(x.inventory))x.inventory[key]=Number.isFinite(x.inventory[key])?Math.max(0,Math.floor(x.inventory[key])):0;
   x.profile=Object.assign({},f.profile,s.profile||{});x.profile.name=String(x.profile.name||'').slice(0,24);x.profile.gender=['male','female'].includes(x.profile.gender)?x.profile.gender:'';x.profile.created=!!x.profile.created;
-  x.tutorialStep=Number.isInteger(x.tutorialStep)?Math.max(0,Math.min(7,x.tutorialStep)):0;x.tutorialDone=!!x.tutorialDone;
+  x.tutorialStep=Number.isInteger(x.tutorialStep)?Math.max(0,Math.min(11,x.tutorialStep)):0;x.tutorialDone=!!x.tutorialDone;
   x.tools=Object.assign({},f.tools,s.tools||{});
   if(!s.tools){x.tools.rake=Math.max(1,Math.min(10,(Number(s.upgrades?.harvest)||1)*2-1));x.tools.spade=Math.max(1,Math.min(10,(Number(s.upgrades?.irrigation)||1)*2-1));}
   for(const id of Object.keys(f.tools))x.tools[id]=Number.isInteger(x.tools[id])?Math.max(1,Math.min(10,x.tools[id])):1;

@@ -1,0 +1,40 @@
+:root{--oasis-font:system-ui,-apple-system,"Segoe UI",sans-serif;--safe-l:max(12px,env(safe-area-inset-left),var(--controls-left,0px));--safe-r:max(12px,env(safe-area-inset-right),var(--controls-right,0px))}
+body.release35,body.release35 :is(button,input,select,textarea,h1,h2,h3,small,strong,label){font-family:var(--oasis-font)!important}
+body.release35 #start-menu .start-bg{background:#dfb778 url('../assets/ui37/menu.webp') center/cover no-repeat!important}
+body.release35 #start-menu .start-card{display:flex!important;flex-direction:column!important;gap:5px!important;width:clamp(240px,32vw,340px)!important;margin:auto clamp(12px,14vw,240px) auto auto!important;padding:10px 16px!important;border:2px solid #85582d;border-radius:16px;background:linear-gradient(#ffefc9,#f1d397)}
+body.release35 #start-menu .start-card h1{position:static!important;font-size:clamp(22px,6vh,40px)!important;text-align:center;margin:0!important}
+body.release35 #start-menu :is(.start-emblem,.menu-extras,.eyebrow,#menu-greeting,.menu-footnote,.start-card>small){display:none!important}
+body.release35 #start-menu .start-actions,body.release35 #start-menu .v3-menu-links{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;width:100%!important;margin:0!important}
+body.release35 #start-menu .start-actions button,body.release35 #start-menu #tutorial-menu,body.release35 #time-left{grid-column:1/-1}
+body.release35 #start-menu :is(.start-actions,.v3-menu-links)>button{padding:4px 7px!important;min-height:32px!important;width:100%!important;font-size:14px!important}
+body.release35 #start-menu #menu-continue{background:#366e50!important;color:white!important}
+body.release35 #start-menu #time-left{text-align:center;margin:3px 0 0!important}
+body.release35 #toolbar{width:clamp(106px,14vw,128px)!important;left:var(--safe-l)!important}
+body.release35 #toolbar button{flex:0 0 auto!important;width:100%!important;min-height:32px!important}
+body.release35 #toolbar img.ui-sprite{width:26px!important;height:26px!important;object-fit:contain}
+body.reward36 #open-menu::after{display:none!important}
+body.release35 .ui-modal.ui-modal{padding-left:var(--safe-l)!important;padding-right:var(--safe-r)!important}
+body.release35 :is(#home-panel,.ui-modal).ui-modal>.market-card{width:min(620px,92%)!important}
+body.release35 #settings-v3.ui-modal>.market-card,body.release35 #farm.ui-modal>.market-card{width:min(420px,92%)!important}
+body.release35 .ui-modal .dialog-header33{grid-template-columns:minmax(0,1fr) 42px!important;grid-template-rows:auto!important;align-items:center!important;top:-12px!important}
+body.release35 .ui-modal .dialog-header33>h2{grid-column:1!important;grid-row:1!important;justify-content:start!important;text-align:left!important;margin:0!important}
+body.release35 .ui-modal .dialog-header33>button:first-child{grid-column:2!important;grid-row:1!important;position:static!important;float:none!important}
+body.release35 #market-counter,body.release35 #market-topbar{width:min(900px,calc(100% - var(--safe-l) - var(--safe-r)))!important;margin:0 auto!important;box-sizing:border-box!important}
+body.release35 #settings-v3 #sound-settings{display:block!important;position:static!important;inset:auto!important;transform:none!important;width:auto!important;max-height:none!important;margin:0 0 8px!important;padding:4px 0!important;background:transparent!important;border:none!important;box-shadow:none!important}
+body.release35 #settings-v3 :is(#settings-sound32,#sound-settings-close,#sound-settings h3,#sound-settings p){display:none!important}
+#settings-v3 #sound-volume{display:block;width:100%;accent-color:#397651}
+#settings-v3 .sound-option{display:flex;align-items:center;justify-content:space-between;margin:12px 0}
+#settings-v3 #sound-ambience{order:2;appearance:none;width:40px;height:24px;background:#998972;border-radius:20px;position:relative}
+#settings-v3 #sound-ambience:before{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff7dc}
+#settings-v3 #sound-ambience:checked{background:#397651}
+#settings-v3 #sound-ambience:checked:before{left:19px}
+#trip37:not([hidden]){position:fixed;inset:0;z-index:50000;background:radial-gradient(ellipse,#fff0ca,#dfae69);display:block}
+#trip37 canvas{width:100%;height:100%;display:block}
+#trip37 h2{position:absolute;bottom:max(6%,env(safe-area-inset-bottom));width:100%;text-align:center;font-size:clamp(18px,3vw,36px);margin:0;color:#49321d}
+
+body.release35 #home-panel .home-card #home-close{position:static!important;grid-column:2!important;grid-row:1!important}
+body.release35 #start-menu .start-card #menu-continue[hidden]{display:none!important}
+body.release35 #settings-v3 #sound-settings label{position:static!important}
+body.release35 .charity-project>.item-icon35{margin-inline-end:6px}
+body.release35 #trip37[hidden]{display:none!important}
+body.release35 #edit-controls #edit-axis[hidden]{display:none!important}
