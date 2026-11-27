@@ -79,14 +79,20 @@ M.render=function(){
   open.call(this,index);
   const t=this.s.tiles[index],cfg=OASIS_BUILDINGS[t?.building];if(!cfg)return;
   const lv=Math.min(3,Math.max(1,t.buildingLevel||1));
-  const p=document.createElement('p');p.textContent='Уровень постройки '+lv+' из 3';document.getElementById('farm-actions').append(p);
+  const p=document.createElement('p');p.textContent='Уровень постройки '+lv+' из 3';const actions=document.getElementById('farm-actions');let upgrades=actions;if(t.building==='bakery'){upgrades=document.createElement('details');const summary=document.createElement('summary');summary.textContent=p.textContent+(lv<3?' · Улучшение':'');upgrades.append(summary);actions.append(upgrades);}else actions.append(p);
   if(lv>=3)return;
   const cost=Math.round(cfg.cost*(lv===1?15:65));
   const b=document.createElement('button');b.textContent='Улучшить · '+cost+' монет';
-  b.disabled=this.s.coins<cost || t.productionAt>0;
-  b.onclick=()=>{if(this.s.coins<cost||t.productionAt>0||(t.buildingLevel||1)!==lv)return;this.s.coins-=cost;t.buildingLevel=lv+1;this.save();this.render();this.openFarm(index);};
+  const canUpgrade=()=>this.s.coins>=cost && !t.productionAt && (t.buildingLevel||1)===lv;
+  const updateProduction=this.updateFarmStatus;
+  this.updateFarmStatus=()=>{
+   updateProduction.call(this);
+   b.disabled=!canUpgrade();
+  };
+  this.updateFarmStatus();
+  b.onclick=()=>{if(!canUpgrade())return;this.s.coins-=cost;t.buildingLevel=lv+1;this.save();this.render();this.openFarm(index);};
   const detail=document.createElement('p');detail.textContent='Новый облик, +1 продукт за цикл и быстрее производство. Улучшение доступно после сбора.';
-  document.getElementById('farm-actions').append(detail,b);
+  if(window.OasisProduction38?.owns(t.building))detail.textContent='Следующий уровень ускоряет производство. Улучшение доступно после сбора.';upgrades.append(detail,b);
  };
 })();
 (function(){

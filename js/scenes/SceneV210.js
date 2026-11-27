@@ -261,6 +261,8 @@
  M.openFarm = function (index) {
   const tile = this.s.tiles[index], cfg = OASIS_BUILDINGS[tile?.building];
   if (!cfg) return;
+  byId('farm').classList.toggle('production38',OasisProduction38.owns(tile.building));
+  if(OasisProduction38.owns(tile.building)){this.openProduction38(index);return;}
   this.openFarmIndex = index;
   const status = byId('farm-status'), error = byId('farm-error'), actions = byId('farm-actions');
   const livestock = ['sheep', 'camel'].includes(tile.building);

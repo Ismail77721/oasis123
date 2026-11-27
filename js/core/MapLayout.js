@@ -18,7 +18,7 @@
   if (row + rows > n || col + cols > n) return null;
   return Array.from({length: rows * cols}, (_, i) => (row + Math.floor(i / cols)) * n + col + i % cols);
  }
- const buildingSize = (id, rotated) => id==='camel' ? (rotated ? [5,7] : [7,5]) : [5,5];
+ const buildingSize = (id, rotated) => ['coop','bakery'].includes(id)?[6,6]:id==='camel' ? (rotated ? [5,7] : [7,5]) : [5,5];
  function buildingArea(s, i, t = s.tiles[i]) {
   return t?.buildingArea === true ? rectangle(s, i, ...buildingSize(t.building,t.buildingRotated)) || [i] : [i];
  }

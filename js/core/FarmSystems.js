@@ -4,7 +4,7 @@
  const C=window.OASIS_CONFIG,E=window.OasisEconomy;
  const dayMS=()=>((C.dayMinutes||60)+(C.nightMinutes||60))*60*1000;
  const round=n=>Math.round(n*100)/100;
- const jobs={gardener:{name:'Работник хозяйства',cost:350,salary:38,icon:''}};
+ const jobs={gardener:{name:'Работник хозяйства',cost:550,salary:60,icon:''}};
  const notes={
   watermelon:'Арбуз — сочный плод, который помогает разнообразить летний рацион.',
   clover:'Клевер обогащает кормовую базу хозяйства. Его выращивают также для улучшения почвы.',

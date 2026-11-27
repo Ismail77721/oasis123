@@ -1,0 +1,9 @@
+body.release35 #start-menu .start-card h1{width:100%!important;text-align:center!important;align-self:stretch!important;box-sizing:border-box;padding-inline:0!important}
+body.release35 #start-menu .start-card,body.release35 #start-menu .start-actions,body.release35 #start-menu .v3-menu-links{gap:10px!important}
+body.release35 #start-menu .start-card{max-height:calc(100dvh - 12px);overflow-y:auto}
+body.release35 #start-menu .start-card button{margin:0!important;box-shadow:0 2px 0 #86592f!important}
+#farm.production38 #farm-status:empty{display:none}#farm.production38 #farm-actions{display:grid;gap:8px}
+#farm .recipes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#farm .recipes button{min-width:0;font:inherit;font-size:14px;display:flex;align-items:center;justify-content:center;gap:4px;padding:5px}#farm .recipes img{width:22px;height:22px;object-fit:contain}#farm .recipes [aria-pressed=true]{background:#eac17d}
+#farm .line{display:grid;grid-template-columns:minmax(0,1fr) 48px 65px;gap:5px}#farm .line span~span{text-align:right}#farm .needs .line:first-child{font-weight:650;border-bottom:1px solid #d6b880}#farm.production38 .farm-primary{width:100%;margin:0}
+#level38:not([hidden]){display:block;position:fixed;z-index:45;left:50%;top:var(--controls-top,12px);transform:translateX(-50%);max-width:75vw;padding:8px 14px;background:#fff0cb;border:2px solid #986e38;color:#4b351f;border-radius:10px}

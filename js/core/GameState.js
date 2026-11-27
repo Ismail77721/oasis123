@@ -4,7 +4,7 @@
  const size=()=>OASIS_CONFIG.worldSize;
  function fresh(){const seedBank={},inventory={};for(const id of Object.keys(OASIS_CONFIG.crops)){seedBank[id]=0;inventory[id]=0;}
   Object.assign(seedBank,{watermelon:2,clover:3});
-  for(const b of Object.values(OASIS_BUILDINGS))inventory[b.product]=0;
+  for(const b of Object.values(OASIS_BUILDINGS))inventory[b.product]=0;for(const k of Object.keys(window.OasisProduction38?.goods||{}))inventory[k]=0;
   return {version:OASIS_CONFIG.version,worldSize:size(),createdAt:Date.now(),lastSavedAt:Date.now(),coins:100,energy:20,water:10,selectedCrop:'watermelon',seedEconomyVersion:1,seedBank,orders:[],ordersCompleted:0,lastRecoveryAt:0,tool:'plant',inventory,hiddenSadaqaTotal:0,barakatLevel:0,barakatPoints:0,totalDonated:0,totalSold:0,donationHistory:[],profile:{name:'',gender:'',created:false},tutorialStep:0,tutorialDone:false,dailyQuests:null,tools:{rake:1,spade:1,shears:1,vessel:1,bucket:1},upgrades:{harvest:1,irrigation:1},stats:{planted:0,harvested:0,canalsBuilt:0,buildingsBuilt:0},claimedQuests:[],tiles:Array.from({length:size()*size()},tile)};
  }
  function normalize(s){const f=fresh();if(!s||typeof s!=='object')return f;

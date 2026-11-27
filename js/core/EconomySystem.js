@@ -57,7 +57,7 @@
  }
  function sell(s,id,quantity){
   const crop=crops()[id];const b=Object.values(OASIS_BUILDINGS).find(v=>v.product===id);
-  const unit=crop?crop.sellPrice:b?.price;
+  const unit=crop?crop.sellPrice:(window.OasisProduction38?.goods[id]?.price||b?.price);
   if(!unit)return fail('Товар нельзя продать');
   if(quantity==null)quantity=s.inventory[id]||0;
   if(!Number.isInteger(quantity)||quantity<1||(s.inventory[id]||0)<quantity)return fail('Не хватает товара');

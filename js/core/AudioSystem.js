@@ -7,7 +7,7 @@
   const KEY = 'oasis_audio_v1';
   const ROOT = 'assets/audio/';
   const FX = Object.freeze({
-    v37_trip: .65, v37_produce: .65, v37_seeds: .65, v37_orders: .65, v37_tools: .65, v37_sadaka: .65, v37_help: .65, v37_daily: .65, fx_house: .55,fx_barn: .55,fx_apiary: .55,fx_mill: .55,fx_cumin_press: .55,fx_olive_press: .55,fx_loom: .55,fx_grain: .55,fx_olives: .55,fx_wool: .55,fx_flour: .55,fx_honey: .55,fx_oil: .55,fx_basket: .55,fx_canal: .55, click: 0.27, plant: 0.46, plant2:0.46, water: 0.53, harvest: 0.50, grass:.5, cloth:.5, sale:.5, sheep:.35, ui_open:.4, ui_close:.35,
+    coop38:.6,door38:.6,cook38:.6,feed38:.6,eggs38:.6,bread38:.6,v37_trip: .65, v37_produce: .65, v37_seeds: .65, v37_orders: .65, v37_tools: .65, v37_sadaka: .65, v37_help: .65, v37_daily: .65, fx_house: .55,fx_barn: .55,fx_apiary: .55,fx_mill: .55,fx_cumin_press: .55,fx_olive_press: .55,fx_loom: .55,fx_grain: .55,fx_olives: .55,fx_wool: .55,fx_flour: .55,fx_honey: .55,fx_oil: .55,fx_basket: .55,fx_canal: .55, click: 0.27, plant: 0.46, plant2:0.46, water: 0.53, harvest: 0.50, grass:.5, cloth:.5, sale:.5, sheep:.35, ui_open:.4, ui_close:.35,
     canal: 0.47, build: 0.48, coin: 0.57, upgrade: 0.49,
     collect: 0.48, error: 0.26, quest: 0.51, camel:.35, feed:.45, time_limit:.5, tool_upgrade:.45, milk:.45, shears:.45, worker:.4, remove:.4
   });

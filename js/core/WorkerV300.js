@@ -5,7 +5,7 @@ F.ensure=function(s){ensure(s);const p=s.workerPlan;if(!p.multiVersion){p.plantC
  for(const k of ['plantCrops','harvestCrops','collectBuildings','feedAnimals'])p[k]=[...new Set((Array.isArray(p[k])?p[k]:[]).filter(id=>(k.endsWith('Crops')?C.crops:B)[id]))];
  return s;};
 F.jobs.gardener.name='Работник';
-function production(s,i,action,now){const t=s.tiles[i],b=B[t?.building];if(!b)return{ok:false};
+function production(s,i,action,now){const t=s.tiles[i],b=B[t?.building];if(!b)return{ok:false};if(window.OasisProduction38?.owns(t.building))return OasisProduction38.cycle(s,t,action,now);
  if(action==='collect'&&t.productionAt>0&&t.productionAt<=now){const bonus=b.product==='wool'?OasisProgression.woolBonus(s):b.product==='camelMilk'?OasisProgression.milkBonus(s):0;const amount=b.amount+bonus+Math.max(0,(t.buildingLevel||1)-1);s.inventory[b.product]=(s.inventory[b.product]||0)+amount;t.productionAt=0;return{ok:true,amount};}
  if(action==='feed'&&!t.productionAt&&(s.inventory[b.feed]||0)>=b.feedAmount&&s.water>=b.water){s.inventory[b.feed]-=b.feedAmount;s.water-=b.water;t.productionAt=now+b.duration*1000/(1+.1*Math.max(0,(t.buildingLevel||1)-1));return{ok:true};}return{ok:false};}
 function choose(s,wet,now){const p=s.workerPlan,allowed=i=>!Array.isArray(p.area)||p.area.includes(i),n=s.tiles.length;
@@ -15,7 +15,7 @@ function choose(s,wet,now){const p=s.workerPlan,allowed=i=>!Array.isArray(p.area
    const seeds=p.plantCrops.filter(id=>(s.seedBank[id]||0)>0&&C.crops[id].unlock<=OasisProgression.level(s));if(seeds.length){const seed=seeds[(p.plantCursor||0)%seeds.length];for(let i=0;i<n;i++)if(allowed(i)&&wet(i)&&OasisMapLayout.check(s,i,{kind:'crop'}).ok){job={index:i,action,seed};break;}}
   }else for(let i=0;i<n;i++){const t=s.tiles[i];if(action==='harvest'&&allowed(i)&&p.harvestCrops.includes(t.crop)&&wet(i)&&OasisTimeSystem.isReady(t,now)){job={index:i,action};break;}
    if(action==='collect'&&p.collectBuildings.includes(t.building)&&t.productionAt>0&&t.productionAt<=now){job={index:i,action};break;}
-   if(action==='feed'&&p.feedAnimals.includes(t.building)&&!t.productionAt){const b=B[t.building];if(b&&(s.inventory[b.feed]||0)>=b.feedAmount&&s.water>=b.water){job={index:i,action};break;}}
+   if(action==='feed'&&p.feedAnimals.includes(t.building)&&!t.productionAt){const b=B[t.building];if(b&&(!window.OasisProduction38?.owns(t.building)||OasisProduction38.enough(s,t))&&(s.inventory[b.feed]||0)>=b.feedAmount&&s.water>=b.water){job={index:i,action};break;}}
   }
   if(job){p.taskCursor=(kinds.indexOf(action)+1)%4;return job;}
  }return null;}

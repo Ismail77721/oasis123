@@ -5,7 +5,7 @@ const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
 LoadingScene.prototype.preload=function(){
  if(location.protocol==='file:')return;
- for(const [key,asset] of Object.entries(A))this.load.image('cartoon-'+key,asset.file+'?v=3.6.1');
+ for(const [key,asset] of Object.entries(A))this.load.image('cartoon-'+key,asset.file+'?v=3.8.0');
 };
 LoadingScene.prototype.create=function(){
  const missing=()=>Object.keys(A).filter(key=>!this.textures.exists('cartoon-'+key));
@@ -20,7 +20,7 @@ LoadingScene.prototype.create=function(){
   cover.append(message,retry);
  };
  const script=document.createElement('script');
- script.src='js/core/LocalTextures361.js?v=3.6.1';
+ script.src='js/core/LocalTextures361.js?v=3.8.0';
  script.onerror=fail;
  script.onload=async()=>{
   try{await window.OasisTextureBackupReady;}catch{fail();return;}
@@ -91,7 +91,7 @@ M.render=function(){if(!this.s||!this.g)return;const now=Date.now(),s=this.s;Oas
  document.body.classList.toggle('farm-editing',edit(s));$('stop-build').hidden=!edit(s);$('mode-chip').hidden=true;$('quest-banner').hidden=true;
  OasisUI.currency($('resources'),s.coins);const seeds=Object.values(s.seedBank).reduce((a,b)=>a+b,0),stock=Object.values(s.inventory).reduce((a,b)=>a+b,0);$('family-hud').textContent='Ур. '+this.getLevel()+' · Семена '+seeds+' · Амбар '+stock;$('phase').textContent='День '+(1+Math.floor((now-s.createdAt)/7200000))+' · v'+C.version;
  if(!$('farm').hidden)this.updateFarmStatus?.();if(this.guideActive)this.positionGuide();
- const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);this.notify('Уровень '+level+(names.length?' · Открыто: '+names.join(', '):''));this.lastAnnouncedLevel=level;}
+ const level=this.getLevel();if(this.levelProfile!==s){this.levelProfile=s;this.lastAnnouncedLevel=level;}if(level>this.lastAnnouncedLevel){const names=[...Object.values(C.crops),...Object.values(OASIS_BUILDINGS)].filter(c=>c.unlock>this.lastAnnouncedLevel&&c.unlock<=level).map(c=>c.title);const message='Уровень '+level+(names.length?' · Теперь доступны: '+names.join(', '):'');this.notify(message);const banner=$('level38');banner.textContent=message+'   ×';banner.hidden=false;banner.onclick=()=>{banner.hidden=true;};clearTimeout(this.levelTimer38);this.levelTimer38=setTimeout(()=>{banner.hidden=true;},7000);this.lastAnnouncedLevel=level;}
 };
 M.installUnifiedIcons=function(){
  const products={wool:0,camelMilk:1,honey:2,cuminOil:3,oliveOil:4,flour:5,cloth:6};

@@ -1,15 +1,15 @@
 (function(){'use strict';
 const M=MainScene.prototype,C=OASIS_CONFIG,L=OasisMapLayout,$=id=>document.getElementById(id),products={wool:0,camelMilk:1,honey:2,cuminOil:3,oliveOil:4,flour:5,cloth:6};
-const file=(id,seed=false)=>C.crops[id]?'assets/ui37/'+(seed?'seed-':'')+id+'.webp':'assets/cartoon/products-'+(products[id]??7)+'.webp';
-const label=id=>C.crops[id]?.title||OasisFamilyLand.labels(id);
+const file=(id,seed=false)=>window.OasisProduction38?.goods[id]?'assets/ui38/'+id+'.webp':C.crops[id]?'assets/ui37/'+(seed?'seed-':'')+id+'.webp':'assets/cartoon/products-'+(products[id]??7)+'.webp';
+const label=id=>window.OasisProduction38?.goods[id]?.title||window.OasisProduction38?.goods[id]?'assets/ui38/'+id+'.webp':C.crops[id]?.title||OasisFamilyLand.labels(id);
 const node=(tag,text,cls)=>{const e=document.createElement(tag);if(text!=null)e.textContent=text;if(cls)e.className=cls;return e;};
 const img=src=>{const e=node('img',null,'item-icon35');e.src=src;e.alt='';return e;};
 const preview=M.drawEditPreview;M.drawEditPreview=function(){if(['building','canal','move','remove'].includes(this.s.tool)){
  const outline=(a,rows,cols)=>{const c=this.cellPosition(a);if(c.x<-c.w*20||c.x>this.scale.width+c.w*20||c.y<-c.h*20||c.y>this.scale.height+c.h*20)return;const p=[{x:c.x,y:c.y-c.h/2},{x:c.x+cols*c.w/2,y:c.y+(cols-1)*c.h/2},{x:c.x+(cols-rows)*c.w/2,y:c.y+(rows+cols-1)*c.h/2},{x:c.x-rows*c.w/2,y:c.y+(rows-1)*c.h/2}];this.overlay.fillStyle(0xbd5140,.22);this.overlay.fillPoints(p,true);this.overlay.lineStyle(Math.max(1.6,c.w*.055),0xb34736,.9);this.overlay.strokePoints(p,true);};
  const h=this.s.house;outline(h.row*this.s.worldSize+h.col,h.size,h.size);outline(C.wellIndex,this.s.wellSize,this.s.wellSize);this.s.tiles.forEach((t,i)=>{if(t.building)outline(i,...L.buildingSize(t.building,t.buildingRotated));});}preview.call(this);};
-const farm=M.openFarm;M.openFarm=function(i,...a){const entering=$('farm').hidden||this.openFarmIndex!==i,r=farm.call(this,i,...a),id=this.s.tiles[i]?.building;const fx={sheep:'sheep',camel:'camel',apiary:'fx_apiary',loom:'fx_loom',mill:'fx_mill',olivepress:'fx_olive_press',oilpress:'fx_cumin_press'}[id];if(entering&&fx)this.audio?.play(fx);return r;};
+const farm=M.openFarm;M.openFarm=function(i,...a){const entering=$('farm').hidden||this.openFarmIndex!==i,r=farm.call(this,i,...a),id=this.s.tiles[i]?.building;const fx={coop:'coop38',bakery:'door38',sheep:'sheep',camel:'camel',apiary:'fx_apiary',loom:'fx_loom',mill:'fx_mill',olivepress:'fx_olive_press',oilpress:'fx_cumin_press'}[id];if(entering&&fx)this.audio?.play(fx);return r;};
 M.openStorage=function(){if($('storage-screen').hidden)this.audio?.play('fx_barn');this.closeAllPanels();$('storage-screen').hidden=false;const root=$('storage-items');root.replaceChildren();const tabs=node('div',null,'storage-tabs35'),body=node('div',null,'storage-list35');tabs.setAttribute('role','tablist');
- const groups=[['Семена и саженцы','seed',Object.keys(C.crops),'seeds'],['Сырьё','raw',[...Object.keys(C.crops),'wool','camelMilk'],'raw'],['Готовая продукция','product',['honey','cuminOil','oliveOil','flour','cloth'],'products']];
+ const groups=[['Семена и саженцы','seed',Object.keys(C.crops),'seeds'],['Сырьё','raw',[...Object.keys(C.crops),'wool','camelMilk','egg'],'raw'],['Готовая продукция','product',['honey','cuminOil','oliveOil','flour','cloth','flat','loaf','bun'],'products']];
  const show=key=>{this.storageTab35=key;body.replaceChildren();for(const b of tabs.children)b.setAttribute('aria-selected',String(b.dataset.tab===key));for(const id of groups.find(g=>g[1]===key)[2]){const row=node('div',null,'storage-row35');row.append(img(file(id,key==='seed')),node('span',label(id)),node('strong',String((key==='seed'?this.s.seedBank:this.s.inventory)[id]||0)));body.append(row);}};
  for(const [title,key,ids,icon] of groups){const b=node('button');b.type='button';b.dataset.tab=key;b.setAttribute('role','tab');b.append(img('assets/ui35/'+icon+'.svg'),node('span',title));b.onclick=()=>show(key);tabs.append(b);}root.append(tabs,body);show(this.storageTab35||'seed');};
 function row(title,items,detail,buttonText,disabled,click){const r=node('div',null,'shipment-row35'),text=node('div',null,'shipment-text35');text.append(node('strong',title));if(items?.length){const goods=node('div',null,'goods35');for(const x of items){const it=node('span',null,'goods-item35');it.append(img(file(x.id,x.category==='seed')),node('span',(x.category==='seed'?'Семена: ':'')+label(x.id)+' '+x.stock+'/'+x.quantity));goods.append(it);}text.append(goods);}if(detail)text.append(node('small',detail));const b=node('button',buttonText);b.disabled=disabled;b.onclick=click;r.append(text,b);return r;}
@@ -25,7 +25,7 @@ const market=M.renderMarketTab;M.renderMarketTab=function(stall='produce'){
  this.save();}
  if(stall==='seeds'){
  const rows=$('market-items');rows.replaceChildren();
- for(const [id,c] of Object.entries(C.crops)){
+ for(const [id,c] of OasisProduction38.crops()){
  const r=node('div',null,'seed-row35'),text=node('div',null,'shipment-text35'),actions=node('div',null,'quantity-actions');
  text.append(node('strong',(c.type==='perennial'?'Саженец: ':'Семена: ')+c.title),node('small','В запасе: '+(this.s.seedBank[id]||0)+' · цена за штуку: '+c.seedCost+' монет'));
  const input=node('input');input.type='number';input.min='1';input.max='100';input.step='1';input.value='1';input.inputMode='numeric';input.setAttribute('aria-label','Количество: '+c.title);const b=node('button','Купить');
