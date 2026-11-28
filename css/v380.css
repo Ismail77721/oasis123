@@ -7,3 +7,9 @@ body.release35 #start-menu .start-card button{margin:0!important;box-shadow:0 2p
 #farm .recipes button{min-width:0;font:inherit;font-size:14px;display:flex;align-items:center;justify-content:center;gap:4px;padding:5px}#farm .recipes img{width:22px;height:22px;object-fit:contain}#farm .recipes [aria-pressed=true]{background:#eac17d}
 #farm .line{display:grid;grid-template-columns:minmax(0,1fr) 48px 65px;gap:5px}#farm .line span~span{text-align:right}#farm .needs .line:first-child{font-weight:650;border-bottom:1px solid #d6b880}#farm.production38 .farm-primary{width:100%;margin:0}
 #level38:not([hidden]){display:block;position:fixed;z-index:45;left:50%;top:var(--controls-top,12px);transform:translateX(-50%);max-width:75vw;padding:8px 14px;background:#fff0cb;border:2px solid #986e38;color:#4b351f;border-radius:10px}
+
+body.release35.farm-editing #edit-controls:not([hidden]){overflow:hidden!important;max-height:calc(var(--vh35,100dvh) - var(--ui-top35,0px) - 68px - env(safe-area-inset-bottom,0px))!important;align-items:stretch!important}
+.edit-scroll381{min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;overscroll-behavior:contain}
+body.release35 #edit-controls .edit-scroll381>*{flex:none!important}
+body.release35.farm-editing #edit-controls #stop-build:not([hidden]){flex:0 0 auto!important;transform:none!important;width:100%!important;background:#356c4b!important;color:white!important}
+body.release35 #worker-panel .task-grid input:is([data-task="collectBuildings"],[data-task="feedAnimals"])+img{flex:0 0 30px!important;width:30px!important;height:30px!important;object-fit:contain!important}

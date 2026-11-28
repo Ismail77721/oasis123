@@ -1,6 +1,6 @@
 (function(){'use strict';
 const C=OASIS_CONFIG,B=OASIS_BUILDINGS,E=OasisEconomy,S=OasisSadaka;
-C.version='3.8.0';
+C.version='3.8.1';
 const data=[['Запасы для каравана','dates','flour'],['Фрукты для торговца','watermelon','melon'],['Заказ пекарни','flour','oliveOil'],['Пополнение масляной лавки','oliveOil','cuminOil'],['Поставка ткачу','wool'],['Ткань для торговых навесов','cloth'],['Корм для караванной стоянки','clover','barley'],['Запасы зерновой лавки','wheat','barley'],['Сладости к столу','honey','fig'],['Заказ фруктовой лавки','pomegranate','dates'],['Оливки для переработки','olive'],['Поставка на мельницу','wheat'],['Заказ молочной лавки','camelMilk'],['Тмин для маслобойни','cumin'],['Цветы для пасеки','flowers'],['Редкие плоды','sidr','fig'],['Провизия для постоялого двора','flour','camelMilk','dates'],['Большая фруктовая поставка','watermelon','melon','pomegranate'],['Товары для выездной торговли','honey','cuminOil','cloth'],['Заказ соседнего поселения','flour','oliveOil','dates']];
 const product=id=>Object.values(B).find(b=>b.product===id),price=id=>C.crops[id]?.sellPrice||product(id)?.price||1;
 const unlocked=(s,id)=>C.crops[id]?C.crops[id].unlock<=OasisProgression.level(s):s.tiles.some(t=>B[t.building]?.product===id);

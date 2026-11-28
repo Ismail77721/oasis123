@@ -5,7 +5,7 @@ const file=key=>A[key]?.file||A['products-8'].file;
 window.OasisArtFile=file;
 LoadingScene.prototype.preload=function(){
  if(location.protocol==='file:')return;
- for(const [key,asset] of Object.entries(A))this.load.image('cartoon-'+key,asset.file+'?v=3.8.0');
+ for(const [key,asset] of Object.entries(A))this.load.image('cartoon-'+key,asset.file+'?v=3.8.1');
 };
 LoadingScene.prototype.create=function(){
  const missing=()=>Object.keys(A).filter(key=>!this.textures.exists('cartoon-'+key));
@@ -20,7 +20,7 @@ LoadingScene.prototype.create=function(){
   cover.append(message,retry);
  };
  const script=document.createElement('script');
- script.src='js/core/LocalTextures361.js?v=3.8.0';
+ script.src='js/core/LocalTextures361.js?v=3.8.1';
  script.onerror=fail;
  script.onload=async()=>{
   try{await window.OasisTextureBackupReady;}catch{fail();return;}
